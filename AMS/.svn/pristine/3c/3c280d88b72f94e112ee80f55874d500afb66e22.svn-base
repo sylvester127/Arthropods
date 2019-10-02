@@ -1,0 +1,467 @@
+package io.realm;
+
+
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.util.JsonReader;
+import android.util.JsonToken;
+import io.realm.exceptions.RealmMigrationNeededException;
+import io.realm.internal.ColumnInfo;
+import io.realm.internal.LinkView;
+import io.realm.internal.OsObject;
+import io.realm.internal.OsObjectSchemaInfo;
+import io.realm.internal.Property;
+import io.realm.internal.RealmObjectProxy;
+import io.realm.internal.Row;
+import io.realm.internal.SharedRealm;
+import io.realm.internal.Table;
+import io.realm.internal.android.JsonUtils;
+import io.realm.log.RealmLog;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+@SuppressWarnings("all")
+public class UserRealmProxy extends com.sylvester.ams.model.User
+    implements RealmObjectProxy, UserRealmProxyInterface {
+
+    static final class UserColumnInfo extends ColumnInfo {
+        long scrapingDateIndex;
+        long initDataIndex;
+
+        UserColumnInfo(SharedRealm realm, Table table) {
+            super(2);
+            this.scrapingDateIndex = addColumnDetails(table, "scrapingDate", RealmFieldType.STRING);
+            this.initDataIndex = addColumnDetails(table, "initData", RealmFieldType.BOOLEAN);
+        }
+
+        UserColumnInfo(ColumnInfo src, boolean mutable) {
+            super(src, mutable);
+            copy(src, this);
+        }
+
+        @Override
+        protected final ColumnInfo copy(boolean mutable) {
+            return new UserColumnInfo(this, mutable);
+        }
+
+        @Override
+        protected final void copy(ColumnInfo rawSrc, ColumnInfo rawDst) {
+            final UserColumnInfo src = (UserColumnInfo) rawSrc;
+            final UserColumnInfo dst = (UserColumnInfo) rawDst;
+            dst.scrapingDateIndex = src.scrapingDateIndex;
+            dst.initDataIndex = src.initDataIndex;
+        }
+    }
+
+    private UserColumnInfo columnInfo;
+    private ProxyState<com.sylvester.ams.model.User> proxyState;
+    private static final OsObjectSchemaInfo expectedObjectSchemaInfo = createExpectedObjectSchemaInfo();
+    private static final List<String> FIELD_NAMES;
+    static {
+        List<String> fieldNames = new ArrayList<String>();
+        fieldNames.add("scrapingDate");
+        fieldNames.add("initData");
+        FIELD_NAMES = Collections.unmodifiableList(fieldNames);
+    }
+
+    UserRealmProxy() {
+        proxyState.setConstructionFinished();
+    }
+
+    @Override
+    public void realm$injectObjectContext() {
+        if (this.proxyState != null) {
+            return;
+        }
+        final BaseRealm.RealmObjectContext context = BaseRealm.objectContext.get();
+        this.columnInfo = (UserColumnInfo) context.getColumnInfo();
+        this.proxyState = new ProxyState<com.sylvester.ams.model.User>(this);
+        proxyState.setRealm$realm(context.getRealm());
+        proxyState.setRow$realm(context.getRow());
+        proxyState.setAcceptDefaultValue$realm(context.getAcceptDefaultValue());
+        proxyState.setExcludeFields$realm(context.getExcludeFields());
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$scrapingDate() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.scrapingDateIndex);
+    }
+
+    @Override
+    public void realmSet$scrapingDate(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.scrapingDateIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.scrapingDateIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.scrapingDateIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.scrapingDateIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public boolean realmGet$initData() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (boolean) proxyState.getRow$realm().getBoolean(columnInfo.initDataIndex);
+    }
+
+    @Override
+    public void realmSet$initData(boolean value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setBoolean(columnInfo.initDataIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setBoolean(columnInfo.initDataIndex, value);
+    }
+
+    private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
+        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("User");
+        builder.addProperty("scrapingDate", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addProperty("initData", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        return builder.build();
+    }
+
+    public static OsObjectSchemaInfo getExpectedObjectSchemaInfo() {
+         return expectedObjectSchemaInfo;
+    }
+
+    public static UserColumnInfo validateTable(SharedRealm sharedRealm, boolean allowExtraColumns) {
+        if (!sharedRealm.hasTable("class_User")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "The 'User' class is missing from the schema for this Realm.");
+        }
+        Table table = sharedRealm.getTable("class_User");
+        final long columnCount = table.getColumnCount();
+        if (columnCount != 2) {
+            if (columnCount < 2) {
+                throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field count is less than expected - expected 2 but was " + columnCount);
+            }
+            if (allowExtraColumns) {
+                RealmLog.debug("Field count is more than expected - expected 2 but was %1$d", columnCount);
+            } else {
+                throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field count is more than expected - expected 2 but was " + columnCount);
+            }
+        }
+        Map<String, RealmFieldType> columnTypes = new HashMap<String, RealmFieldType>();
+        for (long i = 0; i < columnCount; i++) {
+            columnTypes.put(table.getColumnName(i), table.getColumnType(i));
+        }
+
+        final UserColumnInfo columnInfo = new UserColumnInfo(sharedRealm, table);
+
+        if (table.hasPrimaryKey()) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Primary Key defined for field " + table.getColumnName(table.getPrimaryKey()) + " was removed.");
+        }
+
+        if (!columnTypes.containsKey("scrapingDate")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'scrapingDate' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("scrapingDate") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'scrapingDate' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.scrapingDateIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'scrapingDate' is required. Either set @Required to field 'scrapingDate' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("initData")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'initData' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("initData") != RealmFieldType.BOOLEAN) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'boolean' for field 'initData' in existing Realm file.");
+        }
+        if (table.isColumnNullable(columnInfo.initDataIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'initData' does support null values in the existing Realm file. Use corresponding boxed type for field 'initData' or migrate using RealmObjectSchema.setNullable().");
+        }
+
+        return columnInfo;
+    }
+
+    public static String getTableName() {
+        return "class_User";
+    }
+
+    public static List<String> getFieldNames() {
+        return FIELD_NAMES;
+    }
+
+    @SuppressWarnings("cast")
+    public static com.sylvester.ams.model.User createOrUpdateUsingJsonObject(Realm realm, JSONObject json, boolean update)
+        throws JSONException {
+        final List<String> excludeFields = Collections.<String> emptyList();
+        com.sylvester.ams.model.User obj = realm.createObjectInternal(com.sylvester.ams.model.User.class, true, excludeFields);
+        if (json.has("scrapingDate")) {
+            if (json.isNull("scrapingDate")) {
+                ((UserRealmProxyInterface) obj).realmSet$scrapingDate(null);
+            } else {
+                ((UserRealmProxyInterface) obj).realmSet$scrapingDate((String) json.getString("scrapingDate"));
+            }
+        }
+        if (json.has("initData")) {
+            if (json.isNull("initData")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'initData' to null.");
+            } else {
+                ((UserRealmProxyInterface) obj).realmSet$initData((boolean) json.getBoolean("initData"));
+            }
+        }
+        return obj;
+    }
+
+    @SuppressWarnings("cast")
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static com.sylvester.ams.model.User createUsingJsonStream(Realm realm, JsonReader reader)
+        throws IOException {
+        com.sylvester.ams.model.User obj = new com.sylvester.ams.model.User();
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (false) {
+            } else if (name.equals("scrapingDate")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((UserRealmProxyInterface) obj).realmSet$scrapingDate(null);
+                } else {
+                    ((UserRealmProxyInterface) obj).realmSet$scrapingDate((String) reader.nextString());
+                }
+            } else if (name.equals("initData")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'initData' to null.");
+                } else {
+                    ((UserRealmProxyInterface) obj).realmSet$initData((boolean) reader.nextBoolean());
+                }
+            } else {
+                reader.skipValue();
+            }
+        }
+        reader.endObject();
+        obj = realm.copyToRealm(obj);
+        return obj;
+    }
+
+    public static com.sylvester.ams.model.User copyOrUpdate(Realm realm, com.sylvester.ams.model.User object, boolean update, Map<RealmModel,RealmObjectProxy> cache) {
+        if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().threadId != realm.threadId) {
+            throw new IllegalArgumentException("Objects which belong to Realm instances in other threads cannot be copied into this Realm instance.");
+        }
+        if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+            return object;
+        }
+        final BaseRealm.RealmObjectContext objectContext = BaseRealm.objectContext.get();
+        RealmObjectProxy cachedRealmObject = cache.get(object);
+        if (cachedRealmObject != null) {
+            return (com.sylvester.ams.model.User) cachedRealmObject;
+        }
+
+        return copy(realm, object, update, cache);
+    }
+
+    public static com.sylvester.ams.model.User copy(Realm realm, com.sylvester.ams.model.User newObject, boolean update, Map<RealmModel,RealmObjectProxy> cache) {
+        RealmObjectProxy cachedRealmObject = cache.get(newObject);
+        if (cachedRealmObject != null) {
+            return (com.sylvester.ams.model.User) cachedRealmObject;
+        }
+
+        // rejecting default values to avoid creating unexpected objects from RealmModel/RealmList fields.
+        com.sylvester.ams.model.User realmObject = realm.createObjectInternal(com.sylvester.ams.model.User.class, false, Collections.<String>emptyList());
+        cache.put(newObject, (RealmObjectProxy) realmObject);
+
+        UserRealmProxyInterface realmObjectSource = (UserRealmProxyInterface) newObject;
+        UserRealmProxyInterface realmObjectCopy = (UserRealmProxyInterface) realmObject;
+
+        realmObjectCopy.realmSet$scrapingDate(realmObjectSource.realmGet$scrapingDate());
+        realmObjectCopy.realmSet$initData(realmObjectSource.realmGet$initData());
+        return realmObject;
+    }
+
+    public static long insert(Realm realm, com.sylvester.ams.model.User object, Map<RealmModel,Long> cache) {
+        if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+            return ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex();
+        }
+        Table table = realm.getTable(com.sylvester.ams.model.User.class);
+        long tableNativePtr = table.getNativePtr();
+        UserColumnInfo columnInfo = (UserColumnInfo) realm.schema.getColumnInfo(com.sylvester.ams.model.User.class);
+        long rowIndex = OsObject.createRow(table);
+        cache.put(object, rowIndex);
+        String realmGet$scrapingDate = ((UserRealmProxyInterface) object).realmGet$scrapingDate();
+        if (realmGet$scrapingDate != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.scrapingDateIndex, rowIndex, realmGet$scrapingDate, false);
+        }
+        Table.nativeSetBoolean(tableNativePtr, columnInfo.initDataIndex, rowIndex, ((UserRealmProxyInterface) object).realmGet$initData(), false);
+        return rowIndex;
+    }
+
+    public static void insert(Realm realm, Iterator<? extends RealmModel> objects, Map<RealmModel,Long> cache) {
+        Table table = realm.getTable(com.sylvester.ams.model.User.class);
+        long tableNativePtr = table.getNativePtr();
+        UserColumnInfo columnInfo = (UserColumnInfo) realm.schema.getColumnInfo(com.sylvester.ams.model.User.class);
+        com.sylvester.ams.model.User object = null;
+        while (objects.hasNext()) {
+            object = (com.sylvester.ams.model.User) objects.next();
+            if (cache.containsKey(object)) {
+                continue;
+            }
+            if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+                cache.put(object, ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex());
+                continue;
+            }
+            long rowIndex = OsObject.createRow(table);
+            cache.put(object, rowIndex);
+            String realmGet$scrapingDate = ((UserRealmProxyInterface) object).realmGet$scrapingDate();
+            if (realmGet$scrapingDate != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.scrapingDateIndex, rowIndex, realmGet$scrapingDate, false);
+            }
+            Table.nativeSetBoolean(tableNativePtr, columnInfo.initDataIndex, rowIndex, ((UserRealmProxyInterface) object).realmGet$initData(), false);
+        }
+    }
+
+    public static long insertOrUpdate(Realm realm, com.sylvester.ams.model.User object, Map<RealmModel,Long> cache) {
+        if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+            return ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex();
+        }
+        Table table = realm.getTable(com.sylvester.ams.model.User.class);
+        long tableNativePtr = table.getNativePtr();
+        UserColumnInfo columnInfo = (UserColumnInfo) realm.schema.getColumnInfo(com.sylvester.ams.model.User.class);
+        long rowIndex = OsObject.createRow(table);
+        cache.put(object, rowIndex);
+        String realmGet$scrapingDate = ((UserRealmProxyInterface) object).realmGet$scrapingDate();
+        if (realmGet$scrapingDate != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.scrapingDateIndex, rowIndex, realmGet$scrapingDate, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.scrapingDateIndex, rowIndex, false);
+        }
+        Table.nativeSetBoolean(tableNativePtr, columnInfo.initDataIndex, rowIndex, ((UserRealmProxyInterface) object).realmGet$initData(), false);
+        return rowIndex;
+    }
+
+    public static void insertOrUpdate(Realm realm, Iterator<? extends RealmModel> objects, Map<RealmModel,Long> cache) {
+        Table table = realm.getTable(com.sylvester.ams.model.User.class);
+        long tableNativePtr = table.getNativePtr();
+        UserColumnInfo columnInfo = (UserColumnInfo) realm.schema.getColumnInfo(com.sylvester.ams.model.User.class);
+        com.sylvester.ams.model.User object = null;
+        while (objects.hasNext()) {
+            object = (com.sylvester.ams.model.User) objects.next();
+            if (cache.containsKey(object)) {
+                continue;
+            }
+            if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+                cache.put(object, ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex());
+                continue;
+            }
+            long rowIndex = OsObject.createRow(table);
+            cache.put(object, rowIndex);
+            String realmGet$scrapingDate = ((UserRealmProxyInterface) object).realmGet$scrapingDate();
+            if (realmGet$scrapingDate != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.scrapingDateIndex, rowIndex, realmGet$scrapingDate, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.scrapingDateIndex, rowIndex, false);
+            }
+            Table.nativeSetBoolean(tableNativePtr, columnInfo.initDataIndex, rowIndex, ((UserRealmProxyInterface) object).realmGet$initData(), false);
+        }
+    }
+
+    public static com.sylvester.ams.model.User createDetachedCopy(com.sylvester.ams.model.User realmObject, int currentDepth, int maxDepth, Map<RealmModel, CacheData<RealmModel>> cache) {
+        if (currentDepth > maxDepth || realmObject == null) {
+            return null;
+        }
+        CacheData<RealmModel> cachedObject = cache.get(realmObject);
+        com.sylvester.ams.model.User unmanagedObject;
+        if (cachedObject == null) {
+            unmanagedObject = new com.sylvester.ams.model.User();
+            cache.put(realmObject, new RealmObjectProxy.CacheData<RealmModel>(currentDepth, unmanagedObject));
+        } else {
+            // Reuse cached object or recreate it because it was encountered at a lower depth.
+            if (currentDepth >= cachedObject.minDepth) {
+                return (com.sylvester.ams.model.User) cachedObject.object;
+            }
+            unmanagedObject = (com.sylvester.ams.model.User) cachedObject.object;
+            cachedObject.minDepth = currentDepth;
+        }
+        UserRealmProxyInterface unmanagedCopy = (UserRealmProxyInterface) unmanagedObject;
+        UserRealmProxyInterface realmSource = (UserRealmProxyInterface) realmObject;
+        unmanagedCopy.realmSet$scrapingDate(realmSource.realmGet$scrapingDate());
+        unmanagedCopy.realmSet$initData(realmSource.realmGet$initData());
+        return unmanagedObject;
+    }
+
+    @Override
+    @SuppressWarnings("ArrayToString")
+    public String toString() {
+        if (!RealmObject.isValid(this)) {
+            return "Invalid object";
+        }
+        StringBuilder stringBuilder = new StringBuilder("User = proxy[");
+        stringBuilder.append("{scrapingDate:");
+        stringBuilder.append(realmGet$scrapingDate() != null ? realmGet$scrapingDate() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{initData:");
+        stringBuilder.append(realmGet$initData());
+        stringBuilder.append("}");
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
+
+    @Override
+    public ProxyState<?> realmGet$proxyState() {
+        return proxyState;
+    }
+
+    @Override
+    public int hashCode() {
+        String realmName = proxyState.getRealm$realm().getPath();
+        String tableName = proxyState.getRow$realm().getTable().getName();
+        long rowIndex = proxyState.getRow$realm().getIndex();
+
+        int result = 17;
+        result = 31 * result + ((realmName != null) ? realmName.hashCode() : 0);
+        result = 31 * result + ((tableName != null) ? tableName.hashCode() : 0);
+        result = 31 * result + (int) (rowIndex ^ (rowIndex >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserRealmProxy aUser = (UserRealmProxy)o;
+
+        String path = proxyState.getRealm$realm().getPath();
+        String otherPath = aUser.proxyState.getRealm$realm().getPath();
+        if (path != null ? !path.equals(otherPath) : otherPath != null) return false;
+
+        String tableName = proxyState.getRow$realm().getTable().getName();
+        String otherTableName = aUser.proxyState.getRow$realm().getTable().getName();
+        if (tableName != null ? !tableName.equals(otherTableName) : otherTableName != null) return false;
+
+        if (proxyState.getRow$realm().getIndex() != aUser.proxyState.getRow$realm().getIndex()) return false;
+
+        return true;
+    }
+
+}

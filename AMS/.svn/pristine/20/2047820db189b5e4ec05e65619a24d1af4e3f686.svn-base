@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tarantula</string>
+    <string name="action_search">검색</string>
+    <string name="action_sort">정렬</string>
+    <string name="detail_et_name">"이름: "</string>
+    <string name="detail_tv_sex">"성별 : "</string>
+    <string name="detail_fed">"피딩주기 : "</string>
+    <string name="detail_postpone_fed">"탈피 후 피딩 연기일 : "</string>
+</resources>

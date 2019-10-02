@@ -1,0 +1,1586 @@
+package io.realm;
+
+
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.util.JsonReader;
+import android.util.JsonToken;
+import io.realm.exceptions.RealmMigrationNeededException;
+import io.realm.internal.ColumnInfo;
+import io.realm.internal.LinkView;
+import io.realm.internal.OsObject;
+import io.realm.internal.OsObjectSchemaInfo;
+import io.realm.internal.Property;
+import io.realm.internal.RealmObjectProxy;
+import io.realm.internal.Row;
+import io.realm.internal.SharedRealm;
+import io.realm.internal.Table;
+import io.realm.internal.android.JsonUtils;
+import io.realm.log.RealmLog;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+@SuppressWarnings("all")
+public class TarantulaObjectRealmProxy extends com.sylvester.ams.model.TarantulaObject
+    implements RealmObjectProxy, TarantulaObjectRealmProxyInterface {
+
+    static final class TarantulaObjectColumnInfo extends ColumnInfo {
+        long keyIndex;
+        long drawableIdIndex;
+        long nameIndex;
+        long tarantulaInfoIndex;
+        long last_fedIndex;
+        long hungryIndex;
+        long postpone_fedIndex;
+        long fed_cycleIndex;
+        long postpone_fed_dateIndex;
+        long sexIndex;
+        long recive_dateIndex;
+        long last_rehouseIndex;
+        long statusIndex;
+        long life_stagesIndex;
+        long molt_historyIndex;
+        long memoIndex;
+
+        TarantulaObjectColumnInfo(SharedRealm realm, Table table) {
+            super(16);
+            this.keyIndex = addColumnDetails(table, "key", RealmFieldType.STRING);
+            this.drawableIdIndex = addColumnDetails(table, "drawableId", RealmFieldType.INTEGER);
+            this.nameIndex = addColumnDetails(table, "name", RealmFieldType.STRING);
+            this.tarantulaInfoIndex = addColumnDetails(table, "tarantulaInfo", RealmFieldType.OBJECT);
+            this.last_fedIndex = addColumnDetails(table, "last_fed", RealmFieldType.STRING);
+            this.hungryIndex = addColumnDetails(table, "hungry", RealmFieldType.INTEGER);
+            this.postpone_fedIndex = addColumnDetails(table, "postpone_fed", RealmFieldType.BOOLEAN);
+            this.fed_cycleIndex = addColumnDetails(table, "fed_cycle", RealmFieldType.INTEGER);
+            this.postpone_fed_dateIndex = addColumnDetails(table, "postpone_fed_date", RealmFieldType.INTEGER);
+            this.sexIndex = addColumnDetails(table, "sex", RealmFieldType.INTEGER);
+            this.recive_dateIndex = addColumnDetails(table, "recive_date", RealmFieldType.STRING);
+            this.last_rehouseIndex = addColumnDetails(table, "last_rehouse", RealmFieldType.STRING);
+            this.statusIndex = addColumnDetails(table, "status", RealmFieldType.STRING);
+            this.life_stagesIndex = addColumnDetails(table, "life_stages", RealmFieldType.STRING);
+            this.molt_historyIndex = addColumnDetails(table, "molt_history", RealmFieldType.STRING);
+            this.memoIndex = addColumnDetails(table, "memo", RealmFieldType.STRING);
+        }
+
+        TarantulaObjectColumnInfo(ColumnInfo src, boolean mutable) {
+            super(src, mutable);
+            copy(src, this);
+        }
+
+        @Override
+        protected final ColumnInfo copy(boolean mutable) {
+            return new TarantulaObjectColumnInfo(this, mutable);
+        }
+
+        @Override
+        protected final void copy(ColumnInfo rawSrc, ColumnInfo rawDst) {
+            final TarantulaObjectColumnInfo src = (TarantulaObjectColumnInfo) rawSrc;
+            final TarantulaObjectColumnInfo dst = (TarantulaObjectColumnInfo) rawDst;
+            dst.keyIndex = src.keyIndex;
+            dst.drawableIdIndex = src.drawableIdIndex;
+            dst.nameIndex = src.nameIndex;
+            dst.tarantulaInfoIndex = src.tarantulaInfoIndex;
+            dst.last_fedIndex = src.last_fedIndex;
+            dst.hungryIndex = src.hungryIndex;
+            dst.postpone_fedIndex = src.postpone_fedIndex;
+            dst.fed_cycleIndex = src.fed_cycleIndex;
+            dst.postpone_fed_dateIndex = src.postpone_fed_dateIndex;
+            dst.sexIndex = src.sexIndex;
+            dst.recive_dateIndex = src.recive_dateIndex;
+            dst.last_rehouseIndex = src.last_rehouseIndex;
+            dst.statusIndex = src.statusIndex;
+            dst.life_stagesIndex = src.life_stagesIndex;
+            dst.molt_historyIndex = src.molt_historyIndex;
+            dst.memoIndex = src.memoIndex;
+        }
+    }
+
+    private TarantulaObjectColumnInfo columnInfo;
+    private ProxyState<com.sylvester.ams.model.TarantulaObject> proxyState;
+    private static final OsObjectSchemaInfo expectedObjectSchemaInfo = createExpectedObjectSchemaInfo();
+    private static final List<String> FIELD_NAMES;
+    static {
+        List<String> fieldNames = new ArrayList<String>();
+        fieldNames.add("key");
+        fieldNames.add("drawableId");
+        fieldNames.add("name");
+        fieldNames.add("tarantulaInfo");
+        fieldNames.add("last_fed");
+        fieldNames.add("hungry");
+        fieldNames.add("postpone_fed");
+        fieldNames.add("fed_cycle");
+        fieldNames.add("postpone_fed_date");
+        fieldNames.add("sex");
+        fieldNames.add("recive_date");
+        fieldNames.add("last_rehouse");
+        fieldNames.add("status");
+        fieldNames.add("life_stages");
+        fieldNames.add("molt_history");
+        fieldNames.add("memo");
+        FIELD_NAMES = Collections.unmodifiableList(fieldNames);
+    }
+
+    TarantulaObjectRealmProxy() {
+        proxyState.setConstructionFinished();
+    }
+
+    @Override
+    public void realm$injectObjectContext() {
+        if (this.proxyState != null) {
+            return;
+        }
+        final BaseRealm.RealmObjectContext context = BaseRealm.objectContext.get();
+        this.columnInfo = (TarantulaObjectColumnInfo) context.getColumnInfo();
+        this.proxyState = new ProxyState<com.sylvester.ams.model.TarantulaObject>(this);
+        proxyState.setRealm$realm(context.getRealm());
+        proxyState.setRow$realm(context.getRow());
+        proxyState.setAcceptDefaultValue$realm(context.getAcceptDefaultValue());
+        proxyState.setExcludeFields$realm(context.getExcludeFields());
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$key() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.keyIndex);
+    }
+
+    @Override
+    public void realmSet$key(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.keyIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.keyIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.keyIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.keyIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public int realmGet$drawableId() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (int) proxyState.getRow$realm().getLong(columnInfo.drawableIdIndex);
+    }
+
+    @Override
+    public void realmSet$drawableId(int value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setLong(columnInfo.drawableIdIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setLong(columnInfo.drawableIdIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$name() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.nameIndex);
+    }
+
+    @Override
+    public void realmSet$name(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.nameIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.nameIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.nameIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.nameIndex, value);
+    }
+
+    @Override
+    public com.sylvester.ams.model.TarantulaInfo realmGet$tarantulaInfo() {
+        proxyState.getRealm$realm().checkIfValid();
+        if (proxyState.getRow$realm().isNullLink(columnInfo.tarantulaInfoIndex)) {
+            return null;
+        }
+        return proxyState.getRealm$realm().get(com.sylvester.ams.model.TarantulaInfo.class, proxyState.getRow$realm().getLink(columnInfo.tarantulaInfoIndex), false, Collections.<String>emptyList());
+    }
+
+    @Override
+    public void realmSet$tarantulaInfo(com.sylvester.ams.model.TarantulaInfo value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            if (proxyState.getExcludeFields$realm().contains("tarantulaInfo")) {
+                return;
+            }
+            if (value != null && !RealmObject.isManaged(value)) {
+                value = ((Realm) proxyState.getRealm$realm()).copyToRealm(value);
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                // Table#nullifyLink() does not support default value. Just using Row.
+                row.nullifyLink(columnInfo.tarantulaInfoIndex);
+                return;
+            }
+            if (!RealmObject.isValid(value)) {
+                throw new IllegalArgumentException("'value' is not a valid managed object.");
+            }
+            if (((RealmObjectProxy) value).realmGet$proxyState().getRealm$realm() != proxyState.getRealm$realm()) {
+                throw new IllegalArgumentException("'value' belongs to a different Realm.");
+            }
+            row.getTable().setLink(columnInfo.tarantulaInfoIndex, row.getIndex(), ((RealmObjectProxy) value).realmGet$proxyState().getRow$realm().getIndex(), true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().nullifyLink(columnInfo.tarantulaInfoIndex);
+            return;
+        }
+        if (!(RealmObject.isManaged(value) && RealmObject.isValid(value))) {
+            throw new IllegalArgumentException("'value' is not a valid managed object.");
+        }
+        if (((RealmObjectProxy) value).realmGet$proxyState().getRealm$realm() != proxyState.getRealm$realm()) {
+            throw new IllegalArgumentException("'value' belongs to a different Realm.");
+        }
+        proxyState.getRow$realm().setLink(columnInfo.tarantulaInfoIndex, ((RealmObjectProxy)value).realmGet$proxyState().getRow$realm().getIndex());
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$last_fed() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.last_fedIndex);
+    }
+
+    @Override
+    public void realmSet$last_fed(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.last_fedIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.last_fedIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.last_fedIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.last_fedIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public int realmGet$hungry() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (int) proxyState.getRow$realm().getLong(columnInfo.hungryIndex);
+    }
+
+    @Override
+    public void realmSet$hungry(int value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setLong(columnInfo.hungryIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setLong(columnInfo.hungryIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public boolean realmGet$postpone_fed() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (boolean) proxyState.getRow$realm().getBoolean(columnInfo.postpone_fedIndex);
+    }
+
+    @Override
+    public void realmSet$postpone_fed(boolean value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setBoolean(columnInfo.postpone_fedIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setBoolean(columnInfo.postpone_fedIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public int realmGet$fed_cycle() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (int) proxyState.getRow$realm().getLong(columnInfo.fed_cycleIndex);
+    }
+
+    @Override
+    public void realmSet$fed_cycle(int value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setLong(columnInfo.fed_cycleIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setLong(columnInfo.fed_cycleIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public int realmGet$postpone_fed_date() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (int) proxyState.getRow$realm().getLong(columnInfo.postpone_fed_dateIndex);
+    }
+
+    @Override
+    public void realmSet$postpone_fed_date(int value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setLong(columnInfo.postpone_fed_dateIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setLong(columnInfo.postpone_fed_dateIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public int realmGet$sex() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (int) proxyState.getRow$realm().getLong(columnInfo.sexIndex);
+    }
+
+    @Override
+    public void realmSet$sex(int value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setLong(columnInfo.sexIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setLong(columnInfo.sexIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$recive_date() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.recive_dateIndex);
+    }
+
+    @Override
+    public void realmSet$recive_date(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.recive_dateIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.recive_dateIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.recive_dateIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.recive_dateIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$last_rehouse() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.last_rehouseIndex);
+    }
+
+    @Override
+    public void realmSet$last_rehouse(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.last_rehouseIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.last_rehouseIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.last_rehouseIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.last_rehouseIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$status() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.statusIndex);
+    }
+
+    @Override
+    public void realmSet$status(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.statusIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.statusIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.statusIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.statusIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$life_stages() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.life_stagesIndex);
+    }
+
+    @Override
+    public void realmSet$life_stages(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.life_stagesIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.life_stagesIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.life_stagesIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.life_stagesIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$molt_history() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.molt_historyIndex);
+    }
+
+    @Override
+    public void realmSet$molt_history(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.molt_historyIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.molt_historyIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.molt_historyIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.molt_historyIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public String realmGet$memo() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.memoIndex);
+    }
+
+    @Override
+    public void realmSet$memo(String value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            if (value == null) {
+                row.getTable().setNull(columnInfo.memoIndex, row.getIndex(), true);
+                return;
+            }
+            row.getTable().setString(columnInfo.memoIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        if (value == null) {
+            proxyState.getRow$realm().setNull(columnInfo.memoIndex);
+            return;
+        }
+        proxyState.getRow$realm().setString(columnInfo.memoIndex, value);
+    }
+
+    private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
+        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("TarantulaObject");
+        builder.addProperty("key", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addProperty("drawableId", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addProperty("name", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addLinkedProperty("tarantulaInfo", RealmFieldType.OBJECT, "TarantulaInfo");
+        builder.addProperty("last_fed", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addProperty("hungry", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addProperty("postpone_fed", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addProperty("fed_cycle", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addProperty("postpone_fed_date", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addProperty("sex", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addProperty("recive_date", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addProperty("last_rehouse", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addProperty("status", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addProperty("life_stages", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addProperty("molt_history", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addProperty("memo", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        return builder.build();
+    }
+
+    public static OsObjectSchemaInfo getExpectedObjectSchemaInfo() {
+         return expectedObjectSchemaInfo;
+    }
+
+    public static TarantulaObjectColumnInfo validateTable(SharedRealm sharedRealm, boolean allowExtraColumns) {
+        if (!sharedRealm.hasTable("class_TarantulaObject")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "The 'TarantulaObject' class is missing from the schema for this Realm.");
+        }
+        Table table = sharedRealm.getTable("class_TarantulaObject");
+        final long columnCount = table.getColumnCount();
+        if (columnCount != 16) {
+            if (columnCount < 16) {
+                throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field count is less than expected - expected 16 but was " + columnCount);
+            }
+            if (allowExtraColumns) {
+                RealmLog.debug("Field count is more than expected - expected 16 but was %1$d", columnCount);
+            } else {
+                throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field count is more than expected - expected 16 but was " + columnCount);
+            }
+        }
+        Map<String, RealmFieldType> columnTypes = new HashMap<String, RealmFieldType>();
+        for (long i = 0; i < columnCount; i++) {
+            columnTypes.put(table.getColumnName(i), table.getColumnType(i));
+        }
+
+        final TarantulaObjectColumnInfo columnInfo = new TarantulaObjectColumnInfo(sharedRealm, table);
+
+        if (table.hasPrimaryKey()) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Primary Key defined for field " + table.getColumnName(table.getPrimaryKey()) + " was removed.");
+        }
+
+        if (!columnTypes.containsKey("key")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'key' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("key") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'key' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.keyIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'key' is required. Either set @Required to field 'key' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("drawableId")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'drawableId' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("drawableId") != RealmFieldType.INTEGER) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'int' for field 'drawableId' in existing Realm file.");
+        }
+        if (table.isColumnNullable(columnInfo.drawableIdIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'drawableId' does support null values in the existing Realm file. Use corresponding boxed type for field 'drawableId' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("name")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'name' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("name") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'name' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.nameIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'name' is required. Either set @Required to field 'name' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("tarantulaInfo")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'tarantulaInfo' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("tarantulaInfo") != RealmFieldType.OBJECT) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'TarantulaInfo' for field 'tarantulaInfo'");
+        }
+        if (!sharedRealm.hasTable("class_TarantulaInfo")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing class 'class_TarantulaInfo' for field 'tarantulaInfo'");
+        }
+        Table table_3 = sharedRealm.getTable("class_TarantulaInfo");
+        if (!table.getLinkTarget(columnInfo.tarantulaInfoIndex).hasSameSchema(table_3)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid RealmObject for field 'tarantulaInfo': '" + table.getLinkTarget(columnInfo.tarantulaInfoIndex).getName() + "' expected - was '" + table_3.getName() + "'");
+        }
+        if (!columnTypes.containsKey("last_fed")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'last_fed' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("last_fed") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'last_fed' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.last_fedIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'last_fed' is required. Either set @Required to field 'last_fed' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("hungry")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'hungry' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("hungry") != RealmFieldType.INTEGER) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'int' for field 'hungry' in existing Realm file.");
+        }
+        if (table.isColumnNullable(columnInfo.hungryIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'hungry' does support null values in the existing Realm file. Use corresponding boxed type for field 'hungry' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("postpone_fed")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'postpone_fed' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("postpone_fed") != RealmFieldType.BOOLEAN) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'boolean' for field 'postpone_fed' in existing Realm file.");
+        }
+        if (table.isColumnNullable(columnInfo.postpone_fedIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'postpone_fed' does support null values in the existing Realm file. Use corresponding boxed type for field 'postpone_fed' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("fed_cycle")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'fed_cycle' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("fed_cycle") != RealmFieldType.INTEGER) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'int' for field 'fed_cycle' in existing Realm file.");
+        }
+        if (table.isColumnNullable(columnInfo.fed_cycleIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'fed_cycle' does support null values in the existing Realm file. Use corresponding boxed type for field 'fed_cycle' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("postpone_fed_date")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'postpone_fed_date' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("postpone_fed_date") != RealmFieldType.INTEGER) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'int' for field 'postpone_fed_date' in existing Realm file.");
+        }
+        if (table.isColumnNullable(columnInfo.postpone_fed_dateIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'postpone_fed_date' does support null values in the existing Realm file. Use corresponding boxed type for field 'postpone_fed_date' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("sex")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'sex' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("sex") != RealmFieldType.INTEGER) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'int' for field 'sex' in existing Realm file.");
+        }
+        if (table.isColumnNullable(columnInfo.sexIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'sex' does support null values in the existing Realm file. Use corresponding boxed type for field 'sex' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("recive_date")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'recive_date' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("recive_date") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'recive_date' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.recive_dateIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'recive_date' is required. Either set @Required to field 'recive_date' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("last_rehouse")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'last_rehouse' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("last_rehouse") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'last_rehouse' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.last_rehouseIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'last_rehouse' is required. Either set @Required to field 'last_rehouse' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("status")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'status' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("status") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'status' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.statusIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'status' is required. Either set @Required to field 'status' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("life_stages")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'life_stages' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("life_stages") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'life_stages' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.life_stagesIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'life_stages' is required. Either set @Required to field 'life_stages' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("molt_history")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'molt_history' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("molt_history") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'molt_history' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.molt_historyIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'molt_history' is required. Either set @Required to field 'molt_history' or migrate using RealmObjectSchema.setNullable().");
+        }
+        if (!columnTypes.containsKey("memo")) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Missing field 'memo' in existing Realm file. Either remove field or migrate using io.realm.internal.Table.addColumn().");
+        }
+        if (columnTypes.get("memo") != RealmFieldType.STRING) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Invalid type 'String' for field 'memo' in existing Realm file.");
+        }
+        if (!table.isColumnNullable(columnInfo.memoIndex)) {
+            throw new RealmMigrationNeededException(sharedRealm.getPath(), "Field 'memo' is required. Either set @Required to field 'memo' or migrate using RealmObjectSchema.setNullable().");
+        }
+
+        return columnInfo;
+    }
+
+    public static String getTableName() {
+        return "class_TarantulaObject";
+    }
+
+    public static List<String> getFieldNames() {
+        return FIELD_NAMES;
+    }
+
+    @SuppressWarnings("cast")
+    public static com.sylvester.ams.model.TarantulaObject createOrUpdateUsingJsonObject(Realm realm, JSONObject json, boolean update)
+        throws JSONException {
+        final List<String> excludeFields = new ArrayList<String>(1);
+        if (json.has("tarantulaInfo")) {
+            excludeFields.add("tarantulaInfo");
+        }
+        com.sylvester.ams.model.TarantulaObject obj = realm.createObjectInternal(com.sylvester.ams.model.TarantulaObject.class, true, excludeFields);
+        if (json.has("key")) {
+            if (json.isNull("key")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$key(null);
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$key((String) json.getString("key"));
+            }
+        }
+        if (json.has("drawableId")) {
+            if (json.isNull("drawableId")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'drawableId' to null.");
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$drawableId((int) json.getInt("drawableId"));
+            }
+        }
+        if (json.has("name")) {
+            if (json.isNull("name")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$name(null);
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$name((String) json.getString("name"));
+            }
+        }
+        if (json.has("tarantulaInfo")) {
+            if (json.isNull("tarantulaInfo")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$tarantulaInfo(null);
+            } else {
+                com.sylvester.ams.model.TarantulaInfo tarantulaInfoObj = TarantulaInfoRealmProxy.createOrUpdateUsingJsonObject(realm, json.getJSONObject("tarantulaInfo"), update);
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$tarantulaInfo(tarantulaInfoObj);
+            }
+        }
+        if (json.has("last_fed")) {
+            if (json.isNull("last_fed")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$last_fed(null);
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$last_fed((String) json.getString("last_fed"));
+            }
+        }
+        if (json.has("hungry")) {
+            if (json.isNull("hungry")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'hungry' to null.");
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$hungry((int) json.getInt("hungry"));
+            }
+        }
+        if (json.has("postpone_fed")) {
+            if (json.isNull("postpone_fed")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'postpone_fed' to null.");
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$postpone_fed((boolean) json.getBoolean("postpone_fed"));
+            }
+        }
+        if (json.has("fed_cycle")) {
+            if (json.isNull("fed_cycle")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'fed_cycle' to null.");
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$fed_cycle((int) json.getInt("fed_cycle"));
+            }
+        }
+        if (json.has("postpone_fed_date")) {
+            if (json.isNull("postpone_fed_date")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'postpone_fed_date' to null.");
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$postpone_fed_date((int) json.getInt("postpone_fed_date"));
+            }
+        }
+        if (json.has("sex")) {
+            if (json.isNull("sex")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'sex' to null.");
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$sex((int) json.getInt("sex"));
+            }
+        }
+        if (json.has("recive_date")) {
+            if (json.isNull("recive_date")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$recive_date(null);
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$recive_date((String) json.getString("recive_date"));
+            }
+        }
+        if (json.has("last_rehouse")) {
+            if (json.isNull("last_rehouse")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$last_rehouse(null);
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$last_rehouse((String) json.getString("last_rehouse"));
+            }
+        }
+        if (json.has("status")) {
+            if (json.isNull("status")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$status(null);
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$status((String) json.getString("status"));
+            }
+        }
+        if (json.has("life_stages")) {
+            if (json.isNull("life_stages")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$life_stages(null);
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$life_stages((String) json.getString("life_stages"));
+            }
+        }
+        if (json.has("molt_history")) {
+            if (json.isNull("molt_history")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$molt_history(null);
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$molt_history((String) json.getString("molt_history"));
+            }
+        }
+        if (json.has("memo")) {
+            if (json.isNull("memo")) {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$memo(null);
+            } else {
+                ((TarantulaObjectRealmProxyInterface) obj).realmSet$memo((String) json.getString("memo"));
+            }
+        }
+        return obj;
+    }
+
+    @SuppressWarnings("cast")
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static com.sylvester.ams.model.TarantulaObject createUsingJsonStream(Realm realm, JsonReader reader)
+        throws IOException {
+        com.sylvester.ams.model.TarantulaObject obj = new com.sylvester.ams.model.TarantulaObject();
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (false) {
+            } else if (name.equals("key")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$key(null);
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$key((String) reader.nextString());
+                }
+            } else if (name.equals("drawableId")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'drawableId' to null.");
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$drawableId((int) reader.nextInt());
+                }
+            } else if (name.equals("name")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$name(null);
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$name((String) reader.nextString());
+                }
+            } else if (name.equals("tarantulaInfo")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$tarantulaInfo(null);
+                } else {
+                    com.sylvester.ams.model.TarantulaInfo tarantulaInfoObj = TarantulaInfoRealmProxy.createUsingJsonStream(realm, reader);
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$tarantulaInfo(tarantulaInfoObj);
+                }
+            } else if (name.equals("last_fed")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$last_fed(null);
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$last_fed((String) reader.nextString());
+                }
+            } else if (name.equals("hungry")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'hungry' to null.");
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$hungry((int) reader.nextInt());
+                }
+            } else if (name.equals("postpone_fed")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'postpone_fed' to null.");
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$postpone_fed((boolean) reader.nextBoolean());
+                }
+            } else if (name.equals("fed_cycle")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'fed_cycle' to null.");
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$fed_cycle((int) reader.nextInt());
+                }
+            } else if (name.equals("postpone_fed_date")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'postpone_fed_date' to null.");
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$postpone_fed_date((int) reader.nextInt());
+                }
+            } else if (name.equals("sex")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'sex' to null.");
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$sex((int) reader.nextInt());
+                }
+            } else if (name.equals("recive_date")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$recive_date(null);
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$recive_date((String) reader.nextString());
+                }
+            } else if (name.equals("last_rehouse")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$last_rehouse(null);
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$last_rehouse((String) reader.nextString());
+                }
+            } else if (name.equals("status")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$status(null);
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$status((String) reader.nextString());
+                }
+            } else if (name.equals("life_stages")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$life_stages(null);
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$life_stages((String) reader.nextString());
+                }
+            } else if (name.equals("molt_history")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$molt_history(null);
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$molt_history((String) reader.nextString());
+                }
+            } else if (name.equals("memo")) {
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.skipValue();
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$memo(null);
+                } else {
+                    ((TarantulaObjectRealmProxyInterface) obj).realmSet$memo((String) reader.nextString());
+                }
+            } else {
+                reader.skipValue();
+            }
+        }
+        reader.endObject();
+        obj = realm.copyToRealm(obj);
+        return obj;
+    }
+
+    public static com.sylvester.ams.model.TarantulaObject copyOrUpdate(Realm realm, com.sylvester.ams.model.TarantulaObject object, boolean update, Map<RealmModel,RealmObjectProxy> cache) {
+        if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().threadId != realm.threadId) {
+            throw new IllegalArgumentException("Objects which belong to Realm instances in other threads cannot be copied into this Realm instance.");
+        }
+        if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+            return object;
+        }
+        final BaseRealm.RealmObjectContext objectContext = BaseRealm.objectContext.get();
+        RealmObjectProxy cachedRealmObject = cache.get(object);
+        if (cachedRealmObject != null) {
+            return (com.sylvester.ams.model.TarantulaObject) cachedRealmObject;
+        }
+
+        return copy(realm, object, update, cache);
+    }
+
+    public static com.sylvester.ams.model.TarantulaObject copy(Realm realm, com.sylvester.ams.model.TarantulaObject newObject, boolean update, Map<RealmModel,RealmObjectProxy> cache) {
+        RealmObjectProxy cachedRealmObject = cache.get(newObject);
+        if (cachedRealmObject != null) {
+            return (com.sylvester.ams.model.TarantulaObject) cachedRealmObject;
+        }
+
+        // rejecting default values to avoid creating unexpected objects from RealmModel/RealmList fields.
+        com.sylvester.ams.model.TarantulaObject realmObject = realm.createObjectInternal(com.sylvester.ams.model.TarantulaObject.class, false, Collections.<String>emptyList());
+        cache.put(newObject, (RealmObjectProxy) realmObject);
+
+        TarantulaObjectRealmProxyInterface realmObjectSource = (TarantulaObjectRealmProxyInterface) newObject;
+        TarantulaObjectRealmProxyInterface realmObjectCopy = (TarantulaObjectRealmProxyInterface) realmObject;
+
+        realmObjectCopy.realmSet$key(realmObjectSource.realmGet$key());
+        realmObjectCopy.realmSet$drawableId(realmObjectSource.realmGet$drawableId());
+        realmObjectCopy.realmSet$name(realmObjectSource.realmGet$name());
+
+        com.sylvester.ams.model.TarantulaInfo tarantulaInfoObj = realmObjectSource.realmGet$tarantulaInfo();
+        if (tarantulaInfoObj == null) {
+            realmObjectCopy.realmSet$tarantulaInfo(null);
+        } else {
+            com.sylvester.ams.model.TarantulaInfo cachetarantulaInfo = (com.sylvester.ams.model.TarantulaInfo) cache.get(tarantulaInfoObj);
+            if (cachetarantulaInfo != null) {
+                realmObjectCopy.realmSet$tarantulaInfo(cachetarantulaInfo);
+            } else {
+                realmObjectCopy.realmSet$tarantulaInfo(TarantulaInfoRealmProxy.copyOrUpdate(realm, tarantulaInfoObj, update, cache));
+            }
+        }
+        realmObjectCopy.realmSet$last_fed(realmObjectSource.realmGet$last_fed());
+        realmObjectCopy.realmSet$hungry(realmObjectSource.realmGet$hungry());
+        realmObjectCopy.realmSet$postpone_fed(realmObjectSource.realmGet$postpone_fed());
+        realmObjectCopy.realmSet$fed_cycle(realmObjectSource.realmGet$fed_cycle());
+        realmObjectCopy.realmSet$postpone_fed_date(realmObjectSource.realmGet$postpone_fed_date());
+        realmObjectCopy.realmSet$sex(realmObjectSource.realmGet$sex());
+        realmObjectCopy.realmSet$recive_date(realmObjectSource.realmGet$recive_date());
+        realmObjectCopy.realmSet$last_rehouse(realmObjectSource.realmGet$last_rehouse());
+        realmObjectCopy.realmSet$status(realmObjectSource.realmGet$status());
+        realmObjectCopy.realmSet$life_stages(realmObjectSource.realmGet$life_stages());
+        realmObjectCopy.realmSet$molt_history(realmObjectSource.realmGet$molt_history());
+        realmObjectCopy.realmSet$memo(realmObjectSource.realmGet$memo());
+        return realmObject;
+    }
+
+    public static long insert(Realm realm, com.sylvester.ams.model.TarantulaObject object, Map<RealmModel,Long> cache) {
+        if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+            return ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex();
+        }
+        Table table = realm.getTable(com.sylvester.ams.model.TarantulaObject.class);
+        long tableNativePtr = table.getNativePtr();
+        TarantulaObjectColumnInfo columnInfo = (TarantulaObjectColumnInfo) realm.schema.getColumnInfo(com.sylvester.ams.model.TarantulaObject.class);
+        long rowIndex = OsObject.createRow(table);
+        cache.put(object, rowIndex);
+        String realmGet$key = ((TarantulaObjectRealmProxyInterface) object).realmGet$key();
+        if (realmGet$key != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.keyIndex, rowIndex, realmGet$key, false);
+        }
+        Table.nativeSetLong(tableNativePtr, columnInfo.drawableIdIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$drawableId(), false);
+        String realmGet$name = ((TarantulaObjectRealmProxyInterface) object).realmGet$name();
+        if (realmGet$name != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.nameIndex, rowIndex, realmGet$name, false);
+        }
+
+        com.sylvester.ams.model.TarantulaInfo tarantulaInfoObj = ((TarantulaObjectRealmProxyInterface) object).realmGet$tarantulaInfo();
+        if (tarantulaInfoObj != null) {
+            Long cachetarantulaInfo = cache.get(tarantulaInfoObj);
+            if (cachetarantulaInfo == null) {
+                cachetarantulaInfo = TarantulaInfoRealmProxy.insert(realm, tarantulaInfoObj, cache);
+            }
+            Table.nativeSetLink(tableNativePtr, columnInfo.tarantulaInfoIndex, rowIndex, cachetarantulaInfo, false);
+        }
+        String realmGet$last_fed = ((TarantulaObjectRealmProxyInterface) object).realmGet$last_fed();
+        if (realmGet$last_fed != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.last_fedIndex, rowIndex, realmGet$last_fed, false);
+        }
+        Table.nativeSetLong(tableNativePtr, columnInfo.hungryIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$hungry(), false);
+        Table.nativeSetBoolean(tableNativePtr, columnInfo.postpone_fedIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$postpone_fed(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.fed_cycleIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$fed_cycle(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.postpone_fed_dateIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$postpone_fed_date(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.sexIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$sex(), false);
+        String realmGet$recive_date = ((TarantulaObjectRealmProxyInterface) object).realmGet$recive_date();
+        if (realmGet$recive_date != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.recive_dateIndex, rowIndex, realmGet$recive_date, false);
+        }
+        String realmGet$last_rehouse = ((TarantulaObjectRealmProxyInterface) object).realmGet$last_rehouse();
+        if (realmGet$last_rehouse != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.last_rehouseIndex, rowIndex, realmGet$last_rehouse, false);
+        }
+        String realmGet$status = ((TarantulaObjectRealmProxyInterface) object).realmGet$status();
+        if (realmGet$status != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.statusIndex, rowIndex, realmGet$status, false);
+        }
+        String realmGet$life_stages = ((TarantulaObjectRealmProxyInterface) object).realmGet$life_stages();
+        if (realmGet$life_stages != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.life_stagesIndex, rowIndex, realmGet$life_stages, false);
+        }
+        String realmGet$molt_history = ((TarantulaObjectRealmProxyInterface) object).realmGet$molt_history();
+        if (realmGet$molt_history != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.molt_historyIndex, rowIndex, realmGet$molt_history, false);
+        }
+        String realmGet$memo = ((TarantulaObjectRealmProxyInterface) object).realmGet$memo();
+        if (realmGet$memo != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.memoIndex, rowIndex, realmGet$memo, false);
+        }
+        return rowIndex;
+    }
+
+    public static void insert(Realm realm, Iterator<? extends RealmModel> objects, Map<RealmModel,Long> cache) {
+        Table table = realm.getTable(com.sylvester.ams.model.TarantulaObject.class);
+        long tableNativePtr = table.getNativePtr();
+        TarantulaObjectColumnInfo columnInfo = (TarantulaObjectColumnInfo) realm.schema.getColumnInfo(com.sylvester.ams.model.TarantulaObject.class);
+        com.sylvester.ams.model.TarantulaObject object = null;
+        while (objects.hasNext()) {
+            object = (com.sylvester.ams.model.TarantulaObject) objects.next();
+            if (cache.containsKey(object)) {
+                continue;
+            }
+            if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+                cache.put(object, ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex());
+                continue;
+            }
+            long rowIndex = OsObject.createRow(table);
+            cache.put(object, rowIndex);
+            String realmGet$key = ((TarantulaObjectRealmProxyInterface) object).realmGet$key();
+            if (realmGet$key != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.keyIndex, rowIndex, realmGet$key, false);
+            }
+            Table.nativeSetLong(tableNativePtr, columnInfo.drawableIdIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$drawableId(), false);
+            String realmGet$name = ((TarantulaObjectRealmProxyInterface) object).realmGet$name();
+            if (realmGet$name != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.nameIndex, rowIndex, realmGet$name, false);
+            }
+
+            com.sylvester.ams.model.TarantulaInfo tarantulaInfoObj = ((TarantulaObjectRealmProxyInterface) object).realmGet$tarantulaInfo();
+            if (tarantulaInfoObj != null) {
+                Long cachetarantulaInfo = cache.get(tarantulaInfoObj);
+                if (cachetarantulaInfo == null) {
+                    cachetarantulaInfo = TarantulaInfoRealmProxy.insert(realm, tarantulaInfoObj, cache);
+                }
+                table.setLink(columnInfo.tarantulaInfoIndex, rowIndex, cachetarantulaInfo, false);
+            }
+            String realmGet$last_fed = ((TarantulaObjectRealmProxyInterface) object).realmGet$last_fed();
+            if (realmGet$last_fed != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.last_fedIndex, rowIndex, realmGet$last_fed, false);
+            }
+            Table.nativeSetLong(tableNativePtr, columnInfo.hungryIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$hungry(), false);
+            Table.nativeSetBoolean(tableNativePtr, columnInfo.postpone_fedIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$postpone_fed(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.fed_cycleIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$fed_cycle(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.postpone_fed_dateIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$postpone_fed_date(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.sexIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$sex(), false);
+            String realmGet$recive_date = ((TarantulaObjectRealmProxyInterface) object).realmGet$recive_date();
+            if (realmGet$recive_date != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.recive_dateIndex, rowIndex, realmGet$recive_date, false);
+            }
+            String realmGet$last_rehouse = ((TarantulaObjectRealmProxyInterface) object).realmGet$last_rehouse();
+            if (realmGet$last_rehouse != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.last_rehouseIndex, rowIndex, realmGet$last_rehouse, false);
+            }
+            String realmGet$status = ((TarantulaObjectRealmProxyInterface) object).realmGet$status();
+            if (realmGet$status != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.statusIndex, rowIndex, realmGet$status, false);
+            }
+            String realmGet$life_stages = ((TarantulaObjectRealmProxyInterface) object).realmGet$life_stages();
+            if (realmGet$life_stages != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.life_stagesIndex, rowIndex, realmGet$life_stages, false);
+            }
+            String realmGet$molt_history = ((TarantulaObjectRealmProxyInterface) object).realmGet$molt_history();
+            if (realmGet$molt_history != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.molt_historyIndex, rowIndex, realmGet$molt_history, false);
+            }
+            String realmGet$memo = ((TarantulaObjectRealmProxyInterface) object).realmGet$memo();
+            if (realmGet$memo != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.memoIndex, rowIndex, realmGet$memo, false);
+            }
+        }
+    }
+
+    public static long insertOrUpdate(Realm realm, com.sylvester.ams.model.TarantulaObject object, Map<RealmModel,Long> cache) {
+        if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+            return ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex();
+        }
+        Table table = realm.getTable(com.sylvester.ams.model.TarantulaObject.class);
+        long tableNativePtr = table.getNativePtr();
+        TarantulaObjectColumnInfo columnInfo = (TarantulaObjectColumnInfo) realm.schema.getColumnInfo(com.sylvester.ams.model.TarantulaObject.class);
+        long rowIndex = OsObject.createRow(table);
+        cache.put(object, rowIndex);
+        String realmGet$key = ((TarantulaObjectRealmProxyInterface) object).realmGet$key();
+        if (realmGet$key != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.keyIndex, rowIndex, realmGet$key, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.keyIndex, rowIndex, false);
+        }
+        Table.nativeSetLong(tableNativePtr, columnInfo.drawableIdIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$drawableId(), false);
+        String realmGet$name = ((TarantulaObjectRealmProxyInterface) object).realmGet$name();
+        if (realmGet$name != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.nameIndex, rowIndex, realmGet$name, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.nameIndex, rowIndex, false);
+        }
+
+        com.sylvester.ams.model.TarantulaInfo tarantulaInfoObj = ((TarantulaObjectRealmProxyInterface) object).realmGet$tarantulaInfo();
+        if (tarantulaInfoObj != null) {
+            Long cachetarantulaInfo = cache.get(tarantulaInfoObj);
+            if (cachetarantulaInfo == null) {
+                cachetarantulaInfo = TarantulaInfoRealmProxy.insertOrUpdate(realm, tarantulaInfoObj, cache);
+            }
+            Table.nativeSetLink(tableNativePtr, columnInfo.tarantulaInfoIndex, rowIndex, cachetarantulaInfo, false);
+        } else {
+            Table.nativeNullifyLink(tableNativePtr, columnInfo.tarantulaInfoIndex, rowIndex);
+        }
+        String realmGet$last_fed = ((TarantulaObjectRealmProxyInterface) object).realmGet$last_fed();
+        if (realmGet$last_fed != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.last_fedIndex, rowIndex, realmGet$last_fed, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.last_fedIndex, rowIndex, false);
+        }
+        Table.nativeSetLong(tableNativePtr, columnInfo.hungryIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$hungry(), false);
+        Table.nativeSetBoolean(tableNativePtr, columnInfo.postpone_fedIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$postpone_fed(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.fed_cycleIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$fed_cycle(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.postpone_fed_dateIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$postpone_fed_date(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.sexIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$sex(), false);
+        String realmGet$recive_date = ((TarantulaObjectRealmProxyInterface) object).realmGet$recive_date();
+        if (realmGet$recive_date != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.recive_dateIndex, rowIndex, realmGet$recive_date, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.recive_dateIndex, rowIndex, false);
+        }
+        String realmGet$last_rehouse = ((TarantulaObjectRealmProxyInterface) object).realmGet$last_rehouse();
+        if (realmGet$last_rehouse != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.last_rehouseIndex, rowIndex, realmGet$last_rehouse, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.last_rehouseIndex, rowIndex, false);
+        }
+        String realmGet$status = ((TarantulaObjectRealmProxyInterface) object).realmGet$status();
+        if (realmGet$status != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.statusIndex, rowIndex, realmGet$status, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.statusIndex, rowIndex, false);
+        }
+        String realmGet$life_stages = ((TarantulaObjectRealmProxyInterface) object).realmGet$life_stages();
+        if (realmGet$life_stages != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.life_stagesIndex, rowIndex, realmGet$life_stages, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.life_stagesIndex, rowIndex, false);
+        }
+        String realmGet$molt_history = ((TarantulaObjectRealmProxyInterface) object).realmGet$molt_history();
+        if (realmGet$molt_history != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.molt_historyIndex, rowIndex, realmGet$molt_history, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.molt_historyIndex, rowIndex, false);
+        }
+        String realmGet$memo = ((TarantulaObjectRealmProxyInterface) object).realmGet$memo();
+        if (realmGet$memo != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.memoIndex, rowIndex, realmGet$memo, false);
+        } else {
+            Table.nativeSetNull(tableNativePtr, columnInfo.memoIndex, rowIndex, false);
+        }
+        return rowIndex;
+    }
+
+    public static void insertOrUpdate(Realm realm, Iterator<? extends RealmModel> objects, Map<RealmModel,Long> cache) {
+        Table table = realm.getTable(com.sylvester.ams.model.TarantulaObject.class);
+        long tableNativePtr = table.getNativePtr();
+        TarantulaObjectColumnInfo columnInfo = (TarantulaObjectColumnInfo) realm.schema.getColumnInfo(com.sylvester.ams.model.TarantulaObject.class);
+        com.sylvester.ams.model.TarantulaObject object = null;
+        while (objects.hasNext()) {
+            object = (com.sylvester.ams.model.TarantulaObject) objects.next();
+            if (cache.containsKey(object)) {
+                continue;
+            }
+            if (object instanceof RealmObjectProxy && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm() != null && ((RealmObjectProxy) object).realmGet$proxyState().getRealm$realm().getPath().equals(realm.getPath())) {
+                cache.put(object, ((RealmObjectProxy) object).realmGet$proxyState().getRow$realm().getIndex());
+                continue;
+            }
+            long rowIndex = OsObject.createRow(table);
+            cache.put(object, rowIndex);
+            String realmGet$key = ((TarantulaObjectRealmProxyInterface) object).realmGet$key();
+            if (realmGet$key != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.keyIndex, rowIndex, realmGet$key, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.keyIndex, rowIndex, false);
+            }
+            Table.nativeSetLong(tableNativePtr, columnInfo.drawableIdIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$drawableId(), false);
+            String realmGet$name = ((TarantulaObjectRealmProxyInterface) object).realmGet$name();
+            if (realmGet$name != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.nameIndex, rowIndex, realmGet$name, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.nameIndex, rowIndex, false);
+            }
+
+            com.sylvester.ams.model.TarantulaInfo tarantulaInfoObj = ((TarantulaObjectRealmProxyInterface) object).realmGet$tarantulaInfo();
+            if (tarantulaInfoObj != null) {
+                Long cachetarantulaInfo = cache.get(tarantulaInfoObj);
+                if (cachetarantulaInfo == null) {
+                    cachetarantulaInfo = TarantulaInfoRealmProxy.insertOrUpdate(realm, tarantulaInfoObj, cache);
+                }
+                Table.nativeSetLink(tableNativePtr, columnInfo.tarantulaInfoIndex, rowIndex, cachetarantulaInfo, false);
+            } else {
+                Table.nativeNullifyLink(tableNativePtr, columnInfo.tarantulaInfoIndex, rowIndex);
+            }
+            String realmGet$last_fed = ((TarantulaObjectRealmProxyInterface) object).realmGet$last_fed();
+            if (realmGet$last_fed != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.last_fedIndex, rowIndex, realmGet$last_fed, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.last_fedIndex, rowIndex, false);
+            }
+            Table.nativeSetLong(tableNativePtr, columnInfo.hungryIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$hungry(), false);
+            Table.nativeSetBoolean(tableNativePtr, columnInfo.postpone_fedIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$postpone_fed(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.fed_cycleIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$fed_cycle(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.postpone_fed_dateIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$postpone_fed_date(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.sexIndex, rowIndex, ((TarantulaObjectRealmProxyInterface) object).realmGet$sex(), false);
+            String realmGet$recive_date = ((TarantulaObjectRealmProxyInterface) object).realmGet$recive_date();
+            if (realmGet$recive_date != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.recive_dateIndex, rowIndex, realmGet$recive_date, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.recive_dateIndex, rowIndex, false);
+            }
+            String realmGet$last_rehouse = ((TarantulaObjectRealmProxyInterface) object).realmGet$last_rehouse();
+            if (realmGet$last_rehouse != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.last_rehouseIndex, rowIndex, realmGet$last_rehouse, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.last_rehouseIndex, rowIndex, false);
+            }
+            String realmGet$status = ((TarantulaObjectRealmProxyInterface) object).realmGet$status();
+            if (realmGet$status != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.statusIndex, rowIndex, realmGet$status, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.statusIndex, rowIndex, false);
+            }
+            String realmGet$life_stages = ((TarantulaObjectRealmProxyInterface) object).realmGet$life_stages();
+            if (realmGet$life_stages != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.life_stagesIndex, rowIndex, realmGet$life_stages, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.life_stagesIndex, rowIndex, false);
+            }
+            String realmGet$molt_history = ((TarantulaObjectRealmProxyInterface) object).realmGet$molt_history();
+            if (realmGet$molt_history != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.molt_historyIndex, rowIndex, realmGet$molt_history, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.molt_historyIndex, rowIndex, false);
+            }
+            String realmGet$memo = ((TarantulaObjectRealmProxyInterface) object).realmGet$memo();
+            if (realmGet$memo != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.memoIndex, rowIndex, realmGet$memo, false);
+            } else {
+                Table.nativeSetNull(tableNativePtr, columnInfo.memoIndex, rowIndex, false);
+            }
+        }
+    }
+
+    public static com.sylvester.ams.model.TarantulaObject createDetachedCopy(com.sylvester.ams.model.TarantulaObject realmObject, int currentDepth, int maxDepth, Map<RealmModel, CacheData<RealmModel>> cache) {
+        if (currentDepth > maxDepth || realmObject == null) {
+            return null;
+        }
+        CacheData<RealmModel> cachedObject = cache.get(realmObject);
+        com.sylvester.ams.model.TarantulaObject unmanagedObject;
+        if (cachedObject == null) {
+            unmanagedObject = new com.sylvester.ams.model.TarantulaObject();
+            cache.put(realmObject, new RealmObjectProxy.CacheData<RealmModel>(currentDepth, unmanagedObject));
+        } else {
+            // Reuse cached object or recreate it because it was encountered at a lower depth.
+            if (currentDepth >= cachedObject.minDepth) {
+                return (com.sylvester.ams.model.TarantulaObject) cachedObject.object;
+            }
+            unmanagedObject = (com.sylvester.ams.model.TarantulaObject) cachedObject.object;
+            cachedObject.minDepth = currentDepth;
+        }
+        TarantulaObjectRealmProxyInterface unmanagedCopy = (TarantulaObjectRealmProxyInterface) unmanagedObject;
+        TarantulaObjectRealmProxyInterface realmSource = (TarantulaObjectRealmProxyInterface) realmObject;
+        unmanagedCopy.realmSet$key(realmSource.realmGet$key());
+        unmanagedCopy.realmSet$drawableId(realmSource.realmGet$drawableId());
+        unmanagedCopy.realmSet$name(realmSource.realmGet$name());
+
+        // Deep copy of tarantulaInfo
+        unmanagedCopy.realmSet$tarantulaInfo(TarantulaInfoRealmProxy.createDetachedCopy(realmSource.realmGet$tarantulaInfo(), currentDepth + 1, maxDepth, cache));
+        unmanagedCopy.realmSet$last_fed(realmSource.realmGet$last_fed());
+        unmanagedCopy.realmSet$hungry(realmSource.realmGet$hungry());
+        unmanagedCopy.realmSet$postpone_fed(realmSource.realmGet$postpone_fed());
+        unmanagedCopy.realmSet$fed_cycle(realmSource.realmGet$fed_cycle());
+        unmanagedCopy.realmSet$postpone_fed_date(realmSource.realmGet$postpone_fed_date());
+        unmanagedCopy.realmSet$sex(realmSource.realmGet$sex());
+        unmanagedCopy.realmSet$recive_date(realmSource.realmGet$recive_date());
+        unmanagedCopy.realmSet$last_rehouse(realmSource.realmGet$last_rehouse());
+        unmanagedCopy.realmSet$status(realmSource.realmGet$status());
+        unmanagedCopy.realmSet$life_stages(realmSource.realmGet$life_stages());
+        unmanagedCopy.realmSet$molt_history(realmSource.realmGet$molt_history());
+        unmanagedCopy.realmSet$memo(realmSource.realmGet$memo());
+        return unmanagedObject;
+    }
+
+    @Override
+    @SuppressWarnings("ArrayToString")
+    public String toString() {
+        if (!RealmObject.isValid(this)) {
+            return "Invalid object";
+        }
+        StringBuilder stringBuilder = new StringBuilder("TarantulaObject = proxy[");
+        stringBuilder.append("{key:");
+        stringBuilder.append(realmGet$key() != null ? realmGet$key() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{drawableId:");
+        stringBuilder.append(realmGet$drawableId());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{name:");
+        stringBuilder.append(realmGet$name() != null ? realmGet$name() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{tarantulaInfo:");
+        stringBuilder.append(realmGet$tarantulaInfo() != null ? "TarantulaInfo" : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{last_fed:");
+        stringBuilder.append(realmGet$last_fed() != null ? realmGet$last_fed() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{hungry:");
+        stringBuilder.append(realmGet$hungry());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{postpone_fed:");
+        stringBuilder.append(realmGet$postpone_fed());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{fed_cycle:");
+        stringBuilder.append(realmGet$fed_cycle());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{postpone_fed_date:");
+        stringBuilder.append(realmGet$postpone_fed_date());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{sex:");
+        stringBuilder.append(realmGet$sex());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{recive_date:");
+        stringBuilder.append(realmGet$recive_date() != null ? realmGet$recive_date() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{last_rehouse:");
+        stringBuilder.append(realmGet$last_rehouse() != null ? realmGet$last_rehouse() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{status:");
+        stringBuilder.append(realmGet$status() != null ? realmGet$status() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{life_stages:");
+        stringBuilder.append(realmGet$life_stages() != null ? realmGet$life_stages() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{molt_history:");
+        stringBuilder.append(realmGet$molt_history() != null ? realmGet$molt_history() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{memo:");
+        stringBuilder.append(realmGet$memo() != null ? realmGet$memo() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append("]");
+        return stringBuilder.toString();
+    }
+
+    @Override
+    public ProxyState<?> realmGet$proxyState() {
+        return proxyState;
+    }
+
+    @Override
+    public int hashCode() {
+        String realmName = proxyState.getRealm$realm().getPath();
+        String tableName = proxyState.getRow$realm().getTable().getName();
+        long rowIndex = proxyState.getRow$realm().getIndex();
+
+        int result = 17;
+        result = 31 * result + ((realmName != null) ? realmName.hashCode() : 0);
+        result = 31 * result + ((tableName != null) ? tableName.hashCode() : 0);
+        result = 31 * result + (int) (rowIndex ^ (rowIndex >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TarantulaObjectRealmProxy aTarantulaObject = (TarantulaObjectRealmProxy)o;
+
+        String path = proxyState.getRealm$realm().getPath();
+        String otherPath = aTarantulaObject.proxyState.getRealm$realm().getPath();
+        if (path != null ? !path.equals(otherPath) : otherPath != null) return false;
+
+        String tableName = proxyState.getRow$realm().getTable().getName();
+        String otherTableName = aTarantulaObject.proxyState.getRow$realm().getTable().getName();
+        if (tableName != null ? !tableName.equals(otherTableName) : otherTableName != null) return false;
+
+        if (proxyState.getRow$realm().getIndex() != aTarantulaObject.proxyState.getRow$realm().getIndex()) return false;
+
+        return true;
+    }
+
+}

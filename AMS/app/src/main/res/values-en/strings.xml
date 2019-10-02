@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_search">Search</string>
+    <string name="action_sort">Sort</string>
+    <string name="detail_et_name">"Name: "</string>
+    <string name="detail_tv_sex">"sex : "</string>
+    <string name="detail_fed">"fed cycle : "</string>
+    <string name="detail_postpone_fed">"postpone feding : "</string>
+    <string name="detail_stop_fed">stop feding</string>
+    <string name="detail_tv_recent_fed_date">"recent feding date : "</string>
+    <string name="detail_tv_starve_date">"days hungry : "</string>
+</resources>
