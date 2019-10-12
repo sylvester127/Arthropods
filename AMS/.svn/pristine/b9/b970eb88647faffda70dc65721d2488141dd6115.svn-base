@@ -1,9 +1,0 @@
-package io.realm;
-
-
-public interface UserRealmProxyInterface {
-    public String realmGet$scrapingDate();
-    public void realmSet$scrapingDate(String value);
-    public boolean realmGet$initData();
-    public void realmSet$initData(boolean value);
-}

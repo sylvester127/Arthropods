@@ -101,7 +101,7 @@ public class DetailBasicInfo extends Fragment {
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     String title = "Genus";
 
-                    showDialog(title, scientific_name);
+//                    showDialog(title, scientific_name);
                 }
                 return false;
             }
@@ -113,7 +113,7 @@ public class DetailBasicInfo extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     String title = "Species";
-                    showDialog(title, scientific_name);
+//                    showDialog(title, scientific_name);
                 }
                 return false;
             }

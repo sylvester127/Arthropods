@@ -78,9 +78,9 @@ public class List extends AppCompatActivity
 
         // RecyclerView의 리스트에 아무것도 들어있지 않는다면, 샘플을 생성한다.
         if (realmController.getTarantulaObjects().isEmpty() == true) {
-            TarantulaObject sampleObject = new TarantulaObject(R.drawable.ic_tarantula, realmController.sampleObject());
-            sampleObject.setName("따따라니");
-            realmController.setTarantulaObject(sampleObject);
+//            TarantulaObject sampleObject = new TarantulaObject(R.drawable.ic_tarantula, realmController.sampleObject());
+////            sampleObject.setName("따따라니");
+////            realmController.setTarantulaObject(sampleObject);
         }
 
         // Realm에서 읽어오기
