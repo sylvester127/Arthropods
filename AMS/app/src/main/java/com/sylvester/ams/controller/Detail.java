@@ -1,14 +1,12 @@
-package com.sylvester.ams.ui;
+package com.sylvester.ams.controller;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -19,11 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.adapters.TabPagerAdapter;
-import com.sylvester.ams.funtion.CustomViewPager;
+import com.sylvester.ams.controller.adapters.TabPagerAdapter;
+import com.sylvester.ams.controller.funtion.CustomViewPager;
 import com.sylvester.ams.model.TarantulaInfo;
 import com.sylvester.ams.model.TarantulaObject;
-import com.sylvester.ams.realm.RealmController;
+import com.sylvester.ams.model.realm.RealmController;
 
 import java.util.ArrayList;
 

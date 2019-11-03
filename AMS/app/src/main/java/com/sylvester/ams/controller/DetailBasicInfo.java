@@ -1,4 +1,4 @@
-package com.sylvester.ams.ui;
+package com.sylvester.ams.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,16 +12,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.model.TarantulaInfo;
 import com.sylvester.ams.model.TarantulaObject;
-import com.sylvester.ams.realm.RealmController;
+import com.sylvester.ams.model.realm.RealmController;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class DetailBasicInfo extends Fragment {
     private RealmController realmController = RealmController.getInstance();

@@ -1,4 +1,4 @@
-package com.sylvester.ams.ui;
+package com.sylvester.ams.controller;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

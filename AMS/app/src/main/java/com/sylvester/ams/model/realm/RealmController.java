@@ -1,4 +1,4 @@
-package com.sylvester.ams.realm;
+package com.sylvester.ams.model.realm;
 
 import android.app.Activity;
 import android.app.Application;
@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 public class RealmController implements Serializable {
@@ -45,14 +46,33 @@ public class RealmController implements Serializable {
         return realm;
     }
 
-    //Refresh the realm istance
-    public void refresh() {
+    public static void initRealm(Activity activity){
+        // Realm을 초기화한다.
+        Realm.init(activity);
+
+        // Realm 데이터베이스 파일의 위치, 이름, 스키마버전 등을 설정한다.
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .name("tarantulaDB.realm")
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+        System.out.println(config.getPath());
+    }
+
+    // Refresh the realm istance
+    public void refreshRealm() {
         realm.refresh();
     }
 
-    public void close() {
+    public void closeRealm() {
         realm.close();
     }
+
+
+
+
+
+
 
     // User 쿼리
     public User getUser() {

@@ -1,4 +1,4 @@
-package com.sylvester.ams.funtion;
+package com.sylvester.ams.controller.funtion;
 
 import java.util.List;
 import java.util.Map;

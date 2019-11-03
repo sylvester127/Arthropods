@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.Detail"
+    tools:context=".controller.Detail"
     tools:showIn="@layout/activity_detail">
 
     <LinearLayout
@@ -44,12 +44,12 @@
                 android:text="사육정보" />
         </android.support.design.widget.TabLayout>
 
-        <com.sylvester.ams.funtion.CustomViewPager
+        <com.sylvester.ams.controller.funtion.CustomViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </com.sylvester.ams.funtion.CustomViewPager>
+        </com.sylvester.ams.controller.funtion.CustomViewPager>
 
     </LinearLayout>
 

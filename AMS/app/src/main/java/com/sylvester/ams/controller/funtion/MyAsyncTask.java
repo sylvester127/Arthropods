@@ -1,4 +1,4 @@
-package com.sylvester.ams.funtion;
+package com.sylvester.ams.controller.funtion;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,8 +8,8 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.sylvester.ams.model.TarantulaInfo;
-import com.sylvester.ams.realm.RealmController;
-import com.sylvester.ams.ui.List;
+import com.sylvester.ams.model.realm.RealmController;
+import com.sylvester.ams.controller.List;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -1,4 +1,4 @@
-package com.sylvester.ams.funtion;
+package com.sylvester.ams.controller.funtion;
 
 import android.content.Context;
 import android.widget.Toast;

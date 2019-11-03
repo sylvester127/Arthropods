@@ -9,7 +9,7 @@
         android:roundIcon="@drawable/ic_tarantula"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.Title">
+        <activity android:name=".controller.Title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,11 +17,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.List"
+            android:name=".controller.List"
             android:label="@string/title_activity_tarantula_drawer"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ui.Detail"
+            android:name=".controller.Detail"
             android:windowSoftInputMode="adjustResize"/>
     </application>
 </manifest>

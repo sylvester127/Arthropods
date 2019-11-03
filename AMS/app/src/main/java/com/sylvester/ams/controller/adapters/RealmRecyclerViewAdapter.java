@@ -1,4 +1,4 @@
-package com.sylvester.ams.adapters;
+package com.sylvester.ams.controller.adapters;
 
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.model.TarantulaObject;
-import com.sylvester.ams.ui.Detail;
+import com.sylvester.ams.controller.Detail;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

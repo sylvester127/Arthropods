@@ -1,14 +1,14 @@
-package com.sylvester.ams.adapters;
+package com.sylvester.ams.controller.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
-import com.sylvester.ams.funtion.CustomViewPager;
-import com.sylvester.ams.ui.DetailBasicInfo;
-import com.sylvester.ams.ui.DetailBreedingInfo;
-import com.sylvester.ams.ui.DetailFeeding;
+import com.sylvester.ams.controller.funtion.CustomViewPager;
+import com.sylvester.ams.controller.DetailBasicInfo;
+import com.sylvester.ams.controller.DetailBreedingInfo;
+import com.sylvester.ams.controller.DetailFeeding;
 
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
     // Count number of tabs

@@ -1,4 +1,4 @@
-package com.sylvester.ams.ui;
+package com.sylvester.ams.controller;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,9 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.adapters.RealmRecyclerViewAdapter;
+import com.sylvester.ams.controller.adapters.RealmRecyclerViewAdapter;
 import com.sylvester.ams.model.TarantulaObject;
-import com.sylvester.ams.realm.RealmController;
+import com.sylvester.ams.model.realm.RealmController;
 
 import java.util.ArrayList;
 
