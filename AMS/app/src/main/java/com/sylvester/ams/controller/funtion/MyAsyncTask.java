@@ -7,8 +7,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.widget.Toast;
 
+import com.sylvester.ams.controller.service.realm.RealmContext;
 import com.sylvester.ams.model.TarantulaInfo;
-import com.sylvester.ams.model.realm.RealmController;
 import com.sylvester.ams.controller.List;
 
 import java.io.BufferedReader;
@@ -119,7 +119,7 @@ public class MyAsyncTask extends AsyncTask<String, Void, ArrayList<TarantulaInfo
         super.onPostExecute(result);
 
         for(int i = 0; i<tempArrList.size(); i++)
-        RealmController.getInstance().setTarantulaInfo(tempArrList.get(i));
+        RealmContext.getInstance().setTarantulaInfo(tempArrList.get(i));
 
         asyncDialog.dismiss();;
         Toast.makeText(context, "데이터 받아오기 완료", Toast.LENGTH_SHORT).show();

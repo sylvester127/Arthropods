@@ -14,8 +14,8 @@ import android.view.MenuItem;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.controller.adapters.RealmRecyclerViewAdapter;
+import com.sylvester.ams.controller.service.realm.RealmContext;
 import com.sylvester.ams.model.TarantulaObject;
-import com.sylvester.ams.model.realm.RealmController;
 
 import java.util.ArrayList;
 
@@ -24,7 +24,7 @@ import io.realm.Realm;
 public class List extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Realm realm;
-    RealmController realmController;
+    RealmContext realmContext;
     ArrayList<TarantulaObject> tarantulaObjectArrayList = new ArrayList<>();
     RecyclerView mRecyclerView;
     RecyclerView.LayoutManager mLayoutManager;
@@ -61,8 +61,8 @@ public class List extends AppCompatActivity
     }
 
     private void bindModel() {
-        realmController = RealmController.getInstance();
-        realm = realmController.getRealm();
+        realmContext = RealmContext.getInstance();
+        realm = realmContext.getRealm();
     }
 
     // RecyclerView의 초기화하는 함수
@@ -77,14 +77,14 @@ public class List extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
 
         // RecyclerView의 리스트에 아무것도 들어있지 않는다면, 샘플을 생성한다.
-        if (realmController.getTarantulaObjects().isEmpty() == true) {
-//            TarantulaObject sampleObject = new TarantulaObject(R.drawable.ic_tarantula, realmController.sampleObject());
+        if (realmContext.getTarantulaObjects().isEmpty() == true) {
+//            TarantulaObject sampleObject = new TarantulaObject(R.drawable.ic_tarantula, realmContext.sampleObject());
 ////            sampleObject.setName("따따라니");
-////            realmController.setTarantulaObject(sampleObject);
+////            realmContext.setTarantulaObject(sampleObject);
         }
 
         // Realm에서 읽어오기
-        tarantulaObjectArrayList = (ArrayList<TarantulaObject>) realm.copyFromRealm(realmController.getTarantulaObjects());
+        tarantulaObjectArrayList = (ArrayList<TarantulaObject>) realm.copyFromRealm(realmContext.getTarantulaObjects());
 
         // Adapter에 지정한다.
         mRecyclerView.setLayoutManager(mLayoutManager);

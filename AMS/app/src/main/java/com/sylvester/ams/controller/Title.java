@@ -12,14 +12,14 @@ import android.widget.TextView;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.controller.funtion.MyAsyncTask;
+import com.sylvester.ams.controller.service.realm.RealmContext;
+import com.sylvester.ams.controller.service.realm.UserSerivece;
 import com.sylvester.ams.model.User;
-import com.sylvester.ams.model.realm.RealmController;
 
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import java.util.Date;
 
 public class Title extends AppCompatActivity {
-    RealmController realmController;
+    RealmContext realmContext;
     Context context = this;
 
     @Override
@@ -29,10 +29,10 @@ public class Title extends AppCompatActivity {
         // contentView activity_title 로 설정
         setContentView(R.layout.activity_title);
 
-        // realm 을 초기화하고 RealmController 인스턴스를 얻는다.
-        RealmController.initRealm(this);
-        RealmController.with(this);
-        realmController = RealmController.getInstance();
+        // realm 을 초기화하고 RealmContext 인스턴스를 얻는다.
+        RealmContext.initRealm(this);
+        RealmContext.with(this);
+        realmContext = RealmContext.getInstance();
 //        Realm.deleteRealm(config);
 
         bindModel();
@@ -42,28 +42,26 @@ public class Title extends AppCompatActivity {
 
     // User 정보가 없으면 초기화를 하고 있으면 갱신하는 함수
     private void bindModel() {
-        User user;
+        UserSerivece userSerivece = new UserSerivece();
+        User user = userSerivece.getUser();
 
-        if (realmController.getUser() == null) {    // User에 정보가 없으면 초기화를 한 후 업데이트를 한다.
-            user = new User();
-            user.setScrapingDate(System.currentTimeMillis());
-            realmController.setUser(user);
+        if (user != null) {    // User에 정보가 있으면 업데이트 체크를 한다.
+            boolean updateData = user.updateCheck(60);
 
-            popupAlertDialog();    // 다이얼로그를 띄운다.
-
-            user.setInitData(true);
-            realmController.setUser(user);
-        }
-        else {  // User에 정보가 있으면 업데이트 체크를 한다.
-            if (realmController.getUser().updateCheck(60)) {
+            if (updateData) {
                 popupAlertDialog();
 
-                user = realmController.getUser();
-                user.setScrapingDate(System.currentTimeMillis());
-                realmController.setUser(user);
+                user.setUpdateDate(new Date());
+                userSerivece.setUser(user);
             }
-            activityHandler();
+        } else {  // User에 정보가 없으면 초기화를 한 후 업데이트를 한다.
+            userSerivece.setUser(user);
+
+            popupAlertDialog();    // 다이얼로그를 띄운다.
+            user.setInitData(true);
+            realmContext.setUser(user);
         }
+//        activityHandler();
     }
 
     // TextView의 알파값을 조절하여 깜박이게하는 함수
@@ -80,7 +78,7 @@ public class Title extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String message, button;
 
-        if (realmController.getUser().getInitData()) {  // 앱을 처음 실행하지 않았을 때
+        if (realmContext.getUser().getInitData()) {  // 앱을 처음 실행하지 않았을 때
             message = "최신 버전이 등록되었습니다.\n" +
                     "지금 최신 버전으로 업데이트 하시겠습니까\n?" +
                     "\nWi-Fi가 아닐 경우 데이터 요금이 발생할 수 있습니다.";
@@ -103,7 +101,7 @@ public class Title extends AppCompatActivity {
         builder.setNegativeButton("나중에",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (realmController.getUser().getInitData()) {  // 처음 실행이 아닌경우 기존 데이터만으로 실행
+                        if (realmContext.getUser().getInitData()) {  // 처음 실행이 아닌경우 기존 데이터만으로 실행
                             activityHandler();
                         } else {
                             finish();

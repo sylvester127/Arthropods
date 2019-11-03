@@ -21,12 +21,12 @@ import com.sylvester.ams.controller.adapters.TabPagerAdapter;
 import com.sylvester.ams.controller.funtion.CustomViewPager;
 import com.sylvester.ams.model.TarantulaInfo;
 import com.sylvester.ams.model.TarantulaObject;
-import com.sylvester.ams.model.realm.RealmController;
+import com.sylvester.ams.controller.service.realm.RealmContext;
 
 import java.util.ArrayList;
 
 public class Detail extends AppCompatActivity {
-    private RealmController realmController = RealmController.getInstance();
+    private RealmContext realmContext = RealmContext.getInstance();
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TarantulaObject tarantulaObject;

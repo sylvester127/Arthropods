@@ -15,14 +15,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sylvester.ams.R;
+import com.sylvester.ams.controller.service.realm.RealmContext;
 import com.sylvester.ams.model.TarantulaInfo;
 import com.sylvester.ams.model.TarantulaObject;
-import com.sylvester.ams.model.realm.RealmController;
 
 import java.util.ArrayList;
 
 public class DetailBasicInfo extends Fragment {
-    private RealmController realmController = RealmController.getInstance();
+    private RealmContext realmContext = RealmContext.getInstance();
     private TarantulaObject tarantulaObject;
     private ArrayList<TarantulaInfo> tarantulaInfoList;
     private ArrayList<String> genus;
@@ -51,11 +51,11 @@ public class DetailBasicInfo extends Fragment {
         String key = intent.getStringExtra("tarantulaObj");
 
         // List에서 선택한 TarantulaObject Realm에서 받아오기.
-        tarantulaObject = realmController.getTarantulaObject(key);
+        tarantulaObject = realmContext.getTarantulaObject(key);
 
         // Dialog에서 보여줄 listview에 들어갈 데이터들
         tarantulaInfoList = new ArrayList<>();
-        tarantulaInfoList = realmController.getTarantulaInfos();
+        tarantulaInfoList = realmContext.getTarantulaInfos();
         genus = new ArrayList<>();
         species = new ArrayList<>();
     }

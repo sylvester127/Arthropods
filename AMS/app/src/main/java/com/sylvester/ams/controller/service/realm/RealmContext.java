@@ -1,11 +1,10 @@
-package com.sylvester.ams.model.realm;
+package com.sylvester.ams.controller.service.realm;
 
 import android.app.Activity;
 import android.app.Application;
 
 import com.sylvester.ams.model.TarantulaInfo;
 import com.sylvester.ams.model.TarantulaObject;
-import com.sylvester.ams.model.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,31 +13,31 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
-public class RealmController implements Serializable {
-    private static RealmController instance;
+public class RealmContext implements Serializable {
+    private static RealmContext instance;
     private Realm realm;
 
     // 생성자
-    public RealmController(Application application) {
+    public RealmContext(Application application) {
         // 이 스레드의 Realm의 인스턴스를 얻는다.
         realm = Realm.getDefaultInstance();
     }
 
-    public static RealmController with(Activity activity) {
+    public static RealmContext with(Activity activity) {
         if(instance == null) {
-            instance = new RealmController(activity.getApplication());
+            instance = new RealmContext(activity.getApplication());
         }
         return instance;
     }
 
-    public static RealmController with(Application application) {
+    public static RealmContext with(Application application) {
         if(instance == null) {
-            instance = new RealmController(application);
+            instance = new RealmContext(application);
         }
         return instance;
     }
 
-    public static RealmController getInstance() {
+    public static RealmContext getInstance() {
         return instance;
     }
 
@@ -69,26 +68,6 @@ public class RealmController implements Serializable {
     }
 
 
-
-
-
-
-
-    // User 쿼리
-    public User getUser() {
-        return realm.where(User.class).findFirst();
-    }
-
-    public void setUser(final User user) {
-        if(user == null) {return;}
-
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealm(user);
-            }
-        });
-    }
 
     // TarantulaInfo 저장 쿼리
     public void setTarantulaInfo(final TarantulaInfo tarantulaInfo) {
