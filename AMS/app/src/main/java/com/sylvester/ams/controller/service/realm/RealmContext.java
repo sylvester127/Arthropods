@@ -51,11 +51,11 @@ public class RealmContext implements Serializable {
 
         // Realm 데이터베이스 파일의 위치, 이름, 스키마버전 등을 설정한다.
         RealmConfiguration config = new RealmConfiguration.Builder()
-                .name("tarantulaDB.realm")
+                .name("arthropodsDB.realm")
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
-        System.out.println(config.getPath());
+        Realm.deleteRealm(config);
     }
 
     // Refresh the realm istance

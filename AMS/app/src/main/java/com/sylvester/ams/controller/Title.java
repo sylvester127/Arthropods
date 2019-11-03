@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.sylvester.ams.R;
 import com.sylvester.ams.controller.funtion.MyAsyncTask;
 import com.sylvester.ams.controller.service.realm.RealmContext;
-import com.sylvester.ams.controller.service.realm.UserSerivece;
+import com.sylvester.ams.controller.service.realm.UserService;
 import com.sylvester.ams.model.User;
 
 import java.util.Date;
@@ -33,60 +33,50 @@ public class Title extends AppCompatActivity {
         RealmContext.initRealm(this);
         RealmContext.with(this);
         realmContext = RealmContext.getInstance();
-//        Realm.deleteRealm(config);
-
-        bindModel();
 
         tweenTextAlpha();
+
+        bindModel();
     }
 
     // User 정보가 없으면 초기화를 하고 있으면 갱신하는 함수
     private void bindModel() {
-        UserSerivece userSerivece = new UserSerivece();
-        User user = userSerivece.getUser();
+        UserService service = new UserService();
+        User user = service.getUser();
 
-        if (user != null) {    // User에 정보가 있으면 업데이트 체크를 한다.
-            boolean updateData = user.updateCheck(60);
+        if (user == null) {    // 설치한 후 실행을 한 번도 안했다면
+            user = new User(new Date(), true);
 
-            if (updateData) {
-                popupAlertDialog();
+            popupUpdateDialog(user);    // 업데이트 다이얼로그를 띄운다.
 
+            user.setFirstOn(false);
+            service.setUser(user);
+        } else {
+            // 한 달에 한번 절지류 데이터를 받아온다.
+            if (service.checkUpdate(30)) {
                 user.setUpdateDate(new Date());
-                userSerivece.setUser(user);
-            }
-        } else {  // User에 정보가 없으면 초기화를 한 후 업데이트를 한다.
-            userSerivece.setUser(user);
+                service.setUser(user);
 
-            popupAlertDialog();    // 다이얼로그를 띄운다.
-            user.setInitData(true);
-            realmContext.setUser(user);
+                popupUpdateDialog(user);
+            } else
+                activityHandler();
         }
-//        activityHandler();
-    }
-
-    // TextView의 알파값을 조절하여 깜박이게하는 함수
-    private void tweenTextAlpha() {
-        TextView tv_wait = (TextView) findViewById(R.id.tv_wait);
-
-        // 애니메이션을 이용하여 알파값을 조절한다.
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
-        tv_wait.startAnimation(animation);
     }
 
     // 다이얼로그를 띄우는 함수
-    private void popupAlertDialog() {
+    private void popupUpdateDialog(User user) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String message, button;
-
-        if (realmContext.getUser().getInitData()) {  // 앱을 처음 실행하지 않았을 때
+        final boolean firstOn = user.isFirstOn();
+        if (firstOn) {  // 앱을 처음 실행 했을 때
+            message = "추가 데이터를 받아옵니다.\n" +
+                    "\nWi-Fi가 아닐 경우 데이터 요금이 발생할 수 있습니다.";
+            button = "확인";
+        } else {  // 앱을 2번 이상 실행 했을 때
             message = "최신 버전이 등록되었습니다.\n" +
                     "지금 최신 버전으로 업데이트 하시겠습니까\n?" +
                     "\nWi-Fi가 아닐 경우 데이터 요금이 발생할 수 있습니다.";
             button = "업데이트 하기";
-        } else {  // 앱을 처음 실행했을 때
-            message = "추가 데이터를 받아옵니다.\n" +
-                    "\nWi-Fi가 아닐 경우 데이터 요금이 발생할 수 있습니다.";
-            button = "확인";
         }
 
         builder.setMessage(message);
@@ -101,10 +91,10 @@ public class Title extends AppCompatActivity {
         builder.setNegativeButton("나중에",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (realmContext.getUser().getInitData()) {  // 처음 실행이 아닌경우 기존 데이터만으로 실행
-                            activityHandler();
-                        } else {
+                        if (firstOn) {  // 처음 실행인 경우 앱 종료
                             finish();
+                        } else {    // 처음 실행이 아닌경우 기존 데이터만으로 실행
+                            activityHandler();
                         }
                     }
                 });
@@ -115,6 +105,15 @@ public class Title extends AppCompatActivity {
         alertDialog.setCanceledOnTouchOutside(false);   // alertDialog 외 화면을 터치해도 취소버튼을 누르지않게 한다.
 
         alertDialog.show();
+    }
+
+    // TextView의 알파값을 조절하여 깜박이게하는 함수
+    private void tweenTextAlpha() {
+        TextView tv_wait = (TextView) findViewById(R.id.tv_wait);
+
+        // 애니메이션을 이용하여 알파값을 조절한다.
+        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
+        tv_wait.startAnimation(animation);
     }
 
     private void activityHandler() {

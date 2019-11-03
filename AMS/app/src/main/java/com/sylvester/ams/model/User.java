@@ -1,47 +1,20 @@
 package com.sylvester.ams.model;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.RealmObject;
 
 public class User extends RealmObject {
     private Date updateDate;
+    private boolean firstOn;
 
     public User() {
-        updateDate = new Date();
+        this(new Date(),true);
     }
 
-    public boolean updateCheck(long updateCycle) {
-        boolean result = false;
-
-        if (updateDate == null) {  // 널값 체크
-            return result;
-        }
-
-        // 디바이스에서 현재시간을 받아온다.
-        Date now = new Date(System.currentTimeMillis());
-
-        // 날짜 형식을 설정
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        try {
-            // parse()를 통해 String형을 Date형으로 변환.
-            Date past = dateFormat.parse(updateDate);
-            long duration = Math.abs(now.getTime() - past.getTime());
-            duration = duration / (24 * 60 * 60 * 1000);
-
-            // 정해진 기간보다 업데이트를 안한 기간이 더 길면
-            if (updateCycle < duration) {
-                result = true;
-            }
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return result;
+    public User(Date updateDate, boolean firstOn) {
+        this.updateDate = updateDate;
+        this.firstOn = firstOn;
     }
 
     // Standard getters & setters generated
@@ -51,5 +24,13 @@ public class User extends RealmObject {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public boolean isFirstOn() {
+        return firstOn;
+    }
+
+    public void setFirstOn(boolean firstOn) {
+        this.firstOn = firstOn;
     }
 }
