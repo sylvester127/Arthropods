@@ -24,7 +24,6 @@ public class CustomViewPager extends ViewPager
             @Override
             public void onPageSelected(int position) {
                 requestLayout();
-                
             }
         });
     }

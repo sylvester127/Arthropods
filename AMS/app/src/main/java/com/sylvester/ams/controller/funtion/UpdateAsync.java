@@ -7,8 +7,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.sylvester.ams.controller.service.realm.RealmContext;
-import com.sylvester.ams.model.TarantulaInfo;
+import com.sylvester.ams.controller.service.realm.ArthropodInfoService;
+import com.sylvester.ams.model.ArthropodInfo;
 import com.sylvester.ams.controller.List;
 
 import java.io.BufferedReader;
@@ -16,13 +16,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MyAsyncTask extends AsyncTask<String, Void, ArrayList<TarantulaInfo>> {
-    Context context;
-    ProgressDialog asyncDialog;
-    String address;
-    ArrayList<TarantulaInfo> tempArrList;
+public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ArthropodInfo>> {
+    private Context context;
+    private ProgressDialog asyncDialog;
+    private String address;
+    private ArrayList<ArthropodInfo> tempList;
 
-    public MyAsyncTask(Context context) {
+    public UpdateAsync(Context context) {
         this.context = context;
     }
 
@@ -44,16 +44,16 @@ public class MyAsyncTask extends AsyncTask<String, Void, ArrayList<TarantulaInfo
         address = "https://www.tarantupedia.com/list";
 
         // realm에 넘겨줄 임시 리스트
-        tempArrList = new ArrayList<>();
+        tempList = new ArrayList<>();
     }
 
     // background 스레드로 일처리를 한다.
     @Override
-    protected ArrayList<TarantulaInfo> doInBackground(String... strings) {
+    protected ArrayList<ArthropodInfo> doInBackground(String... strings) {
         try {
             URL url = new URL(address); // URL화 한다.
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "euc-kr"));  // 문자열 셋 세팅
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));  // 문자열 셋 세팅
 
             String line;
 
@@ -97,10 +97,10 @@ public class MyAsyncTask extends AsyncTask<String, Void, ArrayList<TarantulaInfo
                     // 임시 리스트에 저장
                     if(saveCheck == 2)
                     {
-                        TarantulaInfo tarantulaInfo = new TarantulaInfo();
-                        tarantulaInfo.setScientific_name(tempS);
-                        tarantulaInfo.setDistribution(tempD);
-                        tempArrList.add(tarantulaInfo);
+                        ArthropodInfo arthropodInfo = new ArthropodInfo();
+                        arthropodInfo.setScientificName(tempS);
+                        arthropodInfo.setDistribution(tempD);
+                        tempList.add(arthropodInfo);
                         startSaveCheck = false;
                         saveCheck = 0;
                     }
@@ -111,15 +111,15 @@ public class MyAsyncTask extends AsyncTask<String, Void, ArrayList<TarantulaInfo
         catch (Exception e) {
             System.out.print("Err: " + e.getMessage());
         }
-        return tempArrList;
+        return tempList;
     }
 
     @Override
-    protected void onPostExecute(ArrayList<TarantulaInfo> result) {
+    protected void onPostExecute(ArrayList<ArthropodInfo> result) {
         super.onPostExecute(result);
 
-        for(int i = 0; i<tempArrList.size(); i++)
-        RealmContext.getInstance().setTarantulaInfo(tempArrList.get(i));
+        ArthropodInfoService service = new ArthropodInfoService();
+        service.setArthropodInfos(tempList);
 
         asyncDialog.dismiss();;
         Toast.makeText(context, "데이터 받아오기 완료", Toast.LENGTH_SHORT).show();

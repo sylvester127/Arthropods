@@ -14,8 +14,11 @@ import android.view.MenuItem;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.controller.adapters.RealmRecyclerViewAdapter;
+import com.sylvester.ams.controller.service.realm.ArthropodInfoService;
+import com.sylvester.ams.controller.service.realm.ArthropodService;
 import com.sylvester.ams.controller.service.realm.RealmContext;
-import com.sylvester.ams.model.TarantulaObject;
+import com.sylvester.ams.model.Arthropod;
+import com.sylvester.ams.model.ArthropodInfo;
 
 import java.util.ArrayList;
 
@@ -23,11 +26,11 @@ import io.realm.Realm;
 
 public class List extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    Realm realm;
-    RealmContext realmContext;
-    ArrayList<TarantulaObject> tarantulaObjectArrayList = new ArrayList<>();
-    RecyclerView mRecyclerView;
-    RecyclerView.LayoutManager mLayoutManager;
+    private Realm realm;
+    private RealmContext realmContext;
+    private ArrayList<Arthropod> arthropodArrayList = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +46,6 @@ public class List extends AppCompatActivity
         initDrawerLayout(toolbar);
 
         bindModel();
-
-        // RecyclerView의 초기화
-        initRecyclerView();
     }
 
     // Drawer layout의 동작을 설정하는 함수
@@ -63,10 +63,7 @@ public class List extends AppCompatActivity
     private void bindModel() {
         realmContext = RealmContext.getInstance();
         realm = realmContext.getRealm();
-    }
 
-    // RecyclerView의 초기화하는 함수
-    private void initRecyclerView() {
         mRecyclerView = findViewById(R.id.rv_list);
 
         // use this setting to improve performance if you know that changes
@@ -77,18 +74,25 @@ public class List extends AppCompatActivity
         mLayoutManager = new LinearLayoutManager(this);
 
         // RecyclerView의 리스트에 아무것도 들어있지 않는다면, 샘플을 생성한다.
-        if (realmContext.getTarantulaObjects().isEmpty() == true) {
-//            TarantulaObject sampleObject = new TarantulaObject(R.drawable.ic_tarantula, realmContext.sampleObject());
-////            sampleObject.setName("따따라니");
-////            realmContext.setTarantulaObject(sampleObject);
+        ArthropodService service = new ArthropodService();
+        ArthropodInfoService infoService = new ArthropodInfoService();
+        ArrayList<ArthropodInfo> s = new ArrayList<>();
+        s = infoService.getArthropodInfos();
+        ArthropodInfo a = infoService.getArthropodInfo("Acanthoscurria geniculata");
+
+        if (service.getArthropods().isEmpty() == true) {
+            Arthropod sample = new Arthropod(R.drawable.ic_tarantula
+                    , infoService.getArthropodInfo("Acanthoscurria geniculata"));
+            sample.setName("따따라니");
+            service.setArthropod(sample);
         }
 
         // Realm에서 읽어오기
-        tarantulaObjectArrayList = (ArrayList<TarantulaObject>) realm.copyFromRealm(realmContext.getTarantulaObjects());
+        arthropodArrayList = service.getArthropods();
 
         // Adapter에 지정한다.
         mRecyclerView.setLayoutManager(mLayoutManager);
-        RealmRecyclerViewAdapter myAdapter = new RealmRecyclerViewAdapter(tarantulaObjectArrayList);
+        RealmRecyclerViewAdapter myAdapter = new RealmRecyclerViewAdapter(arthropodArrayList);
         mRecyclerView.setAdapter(myAdapter);
     }
 

@@ -10,18 +10,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.model.TarantulaObject;
+import com.sylvester.ams.model.Arthropod;
 import com.sylvester.ams.controller.Detail;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<TarantulaObject> tarantulaObjectArrayList;
+    private ArrayList<Arthropod> arthropodArrayList;
 
     // MyAdapter를 생성할 때 표시하고자하는 데이터를 전달합니다.
-    public RealmRecyclerViewAdapter(ArrayList<TarantulaObject> tarantulaObjectArrayList) {
-        this.tarantulaObjectArrayList = tarantulaObjectArrayList;
+    public RealmRecyclerViewAdapter(ArrayList<Arthropod> arthropodArrayList) {
+        this.arthropodArrayList = arthropodArrayList;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -41,7 +41,6 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             tv_raise_type = view.findViewById(R.id.tv_raise_type);
             tv_life_stages = view.findViewById(R.id.tv_life_stages);
             tv_last_fed = view.findViewById(R.id.tv_last_fed);
-
         }
     }
 
@@ -56,45 +55,44 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     // onBindViewHolder()함수에서 마침내 RecyclerView의 행에 보여질 ImageView와 TextView를 설정합니다.
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-
         final ViewHolder myViewHolder = (ViewHolder) holder;
-        final TarantulaObject tarantulaObject = tarantulaObjectArrayList.get(position);
+        final Arthropod arthropod = arthropodArrayList.get(position);
 
-        myViewHolder.iv_picture.setImageResource(tarantulaObject.getDrawableId());
+        myViewHolder.iv_picture.setImageResource(arthropod.getDrawableId());
 
-        if(tarantulaObject.getName() != null) {
-            myViewHolder.tv_name.setText(tarantulaObject.getName());
+        if(arthropod.getName() != null) {
+            myViewHolder.tv_name.setText(arthropod.getName());
         } else {
             myViewHolder.tv_name.setVisibility(View.GONE);
         }
 
-        if(tarantulaObject.getTarantulaInfo() != null) {
-            myViewHolder.tv_scientific_name.setText(tarantulaObject.getTarantulaInfo().getScientificName());
+        if(arthropod.getArthropodInfo() != null) {
+            myViewHolder.tv_scientific_name.setText(arthropod.getArthropodInfo().getScientificName());
         } else {
             myViewHolder.tv_scientific_name.setVisibility(View.GONE);
         }
 
-        if(tarantulaObject.getSex() != 0) {
-            myViewHolder.tv_sex.setText(Integer.toString(tarantulaObject.getSex()));
+        if(arthropod.getSex() != 0) {
+            myViewHolder.tv_sex.setText(Integer.toString(arthropod.getSex()));
         } else {
             myViewHolder.tv_sex.setVisibility(View.GONE);
         }
 
-        if(tarantulaObject.getTarantulaInfo().getBehavior() != null) {
-            myViewHolder.tv_raise_type.setText(tarantulaObject.getTarantulaInfo().getBehavior());
+        if(arthropod.getArthropodInfo().getBehavior() != null) {
+            myViewHolder.tv_raise_type.setText(arthropod.getArthropodInfo().getBehavior());
         } else {
             myViewHolder.tv_raise_type.setVisibility(View.GONE);
         }
 
-        if(tarantulaObject.getLife_stages() != null) {
-            myViewHolder.tv_life_stages.setText(tarantulaObject.getLife_stages());
+        if(arthropod.getLife_stages() != null) {
+            myViewHolder.tv_life_stages.setText(arthropod.getLife_stages());
         } else {
             myViewHolder.tv_life_stages.setVisibility(View.GONE);
         }
 
-        if(tarantulaObject.getLast_fed() != null) {
+        if(arthropod.getLast_fed() != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy.mm.dd hh:mm:ss a");
-            String date = formatter.format(tarantulaObject.getLast_fed());
+            String date = formatter.format(arthropod.getLast_fed());
             myViewHolder.tv_last_fed.setText(date);
         } else {
             myViewHolder.tv_last_fed.setVisibility(View.GONE);
@@ -104,7 +102,7 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), Detail.class);
-                intent.putExtra("tarantulaObj", tarantulaObject.getKey());
+                intent.putExtra("arthropod", arthropod.getKey());
                 view.getContext().startActivity(intent);
             }});
     }
@@ -112,6 +110,6 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
     // getItemCount()함수는 RecyclerView의 행 갯수를 리턴합니다.
     @Override
     public int getItemCount() {
-        return tarantulaObjectArrayList.size();
+        return arthropodArrayList.size();
     }
 }

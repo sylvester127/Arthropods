@@ -26,6 +26,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         if (position != mCurrentPosition) {
             Fragment fragment = (Fragment) object;
             CustomViewPager pager = (CustomViewPager) container;
+
             if (fragment != null && fragment.getView() != null) {
                 mCurrentPosition = position;
                 pager.measureCurrentView(fragment.getView());
@@ -35,7 +36,6 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
         // Returning the current tabs
         switch (position) {
             case 0:

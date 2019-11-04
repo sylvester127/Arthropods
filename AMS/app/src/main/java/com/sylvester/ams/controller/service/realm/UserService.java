@@ -7,13 +7,8 @@ import java.util.Date;
 import io.realm.Realm;
 
 public class UserService {
-    private Realm realm;
-
-    public UserService() {
-        this.realm = RealmContext.getInstance().getRealm();
-    }
-
     public boolean checkUpdate(long updateCycle) {
+        Realm realm = RealmContext.getInstance().getRealm();
         boolean result = false;
 
         // DB에 저장한 시간을 받아온다.
@@ -38,12 +33,16 @@ public class UserService {
     }
 
     public User getUser() {
+        Realm realm = RealmContext.getInstance().getRealm();
+
         if (realm.where(User.class).count() == 0)
             return null;
         return realm.where(User.class).findFirst();
     }
 
     public void setUser(final User user) {
+        Realm realm = RealmContext.getInstance().getRealm();
+
         if (user == null) {
             return;
         }

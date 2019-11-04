@@ -2,11 +2,11 @@ package com.sylvester.ams.model;
 
 import io.realm.RealmObject;
 
-public class TarantulaObject extends RealmObject {
+public class Arthropod extends RealmObject {
    private String key;                    // 키
    private int drawableId;                // 사진
    private String name;                   // 개체명
-   private TarantulaInfo tarantulaInfo;   // 종의 정보
+   private ArthropodInfo arthropodInfo;   // 종의 정보
    private String last_fed;               // 마지막 피딩 날짜
    private int hungry;                    // 굶은 날짜
    private boolean postpone_fed;          // 피딩을 중지
@@ -20,14 +20,14 @@ public class TarantulaObject extends RealmObject {
    private String molt_history;
    private String memo;
 
-   public TarantulaObject() {
+   public Arthropod() {
       key = String.valueOf(System.currentTimeMillis());
    }
 
-   public TarantulaObject(int drawableId, TarantulaInfo tarantulaInfo) {
+   public Arthropod(int drawableId, ArthropodInfo arthropodInfo) {
       key = String.valueOf(System.currentTimeMillis());
       this.drawableId = drawableId;
-      this.tarantulaInfo = tarantulaInfo;
+      this.arthropodInfo = arthropodInfo;
       hungry = -1;
    }
 
@@ -44,8 +44,8 @@ public class TarantulaObject extends RealmObject {
       return name;
    }
 
-   public TarantulaInfo getTarantulaInfo() {
-      return tarantulaInfo;
+   public ArthropodInfo getArthropodInfo() {
+      return arthropodInfo;
    }
 
    public String getLast_fed() {

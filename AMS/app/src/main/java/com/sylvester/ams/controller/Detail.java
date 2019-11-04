@@ -1,6 +1,7 @@
 package com.sylvester.ams.controller;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -19,54 +20,48 @@ import android.widget.TextView;
 import com.sylvester.ams.R;
 import com.sylvester.ams.controller.adapters.TabPagerAdapter;
 import com.sylvester.ams.controller.funtion.CustomViewPager;
-import com.sylvester.ams.model.TarantulaInfo;
-import com.sylvester.ams.model.TarantulaObject;
+import com.sylvester.ams.model.Arthropod;
+import com.sylvester.ams.model.ArthropodInfo;
 import com.sylvester.ams.controller.service.realm.RealmContext;
 
 import java.util.ArrayList;
 
 public class Detail extends AppCompatActivity {
-    private RealmContext realmContext = RealmContext.getInstance();
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TarantulaObject tarantulaObject;
-    private ArrayList<TarantulaInfo> tarantulaInfoList;
-    private ArrayList<String> genus;
-    private ArrayList<String> species;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        setupToolbar(); // Custom Toolbar를 추가한다.
+        // Intent 값 받기
+        Intent intent = getIntent();
+        DetailContext.key = intent.getStringExtra("arthropod");
+
+        // Custom Toolbar 를 추가한다.
+        initToolbar();
 
         // Initializing the TabLayout
-        InitTabLayout();
+        initTabLayout();
 
-        // Initializing ViewPager
-        InitViewPager();
-
-        // tarantulaObj를 List에서 레퍼런스를 받아온다.
-        //setTarantulaObj();
-
-        //bindTarantulaObj(); // tarantulaObj의 데이터를 Detail의 각 content에 바인드한다.
+        // Initializing the ViewPager
+        initViewPager();
     }
 
-    private void setupToolbar() {
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void InitTabLayout() {
+    private void initTabLayout() {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         // Set TabSelectedListener
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -84,10 +79,11 @@ public class Detail extends AppCompatActivity {
         });
     }
 
-    private void InitViewPager() {
+    private void initViewPager() {
         viewPager = (CustomViewPager) findViewById(R.id.pager);
 
         // Creating TabPagerAdapter adapter
+
         TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
 
@@ -114,43 +110,43 @@ public class Detail extends AppCompatActivity {
         });
     }
 
-    private void bindTarantulaObj() {
-        // xml에 있는 gui와 바인드한다.
-        TextView tv_late_fed = findViewById(R.id.tv_late_fed);                      // 마지막 피딩일
-        TextView tv_hungry = findViewById(R.id.tv_hungry);                          // 굶은 기간
-        Button ib_fed = findViewById(R.id.ib_fed);                                  // 피딩 버튼
-        CheckBox cb_postpone_fed = findViewById(R.id.cb_postpone_fed);              // 피딩을 중지
-        EditText et_fed_cycle = findViewById(R.id.et_fed_cycle);                    // 피딩주기
-        EditText et_postpone_fed_date = findViewById(R.id.et_postpone_fed_date);    // 탈피 후 피딩 연기일
-        EditText et_temperature_low = findViewById(R.id.et_temperature_low);        // 적정온도
-        EditText et_temperature_high = findViewById(R.id.et_temperature_high);
-        EditText et_humidity_low = findViewById(R.id.et_humidity_low);              // 적정습도
-        EditText et_humidity_high = findViewById(R.id.et_humidity_high);
-
-        // realm에 저장되어있는 상태와 동기화한다.
-        if (tarantulaObject.getLast_fed() != null)
-            tv_late_fed.setText(tarantulaObject.getLast_fed());
-
-        if(tarantulaObject.getHungry() != -1)
-            tv_hungry.setText(Integer.toString(tarantulaObject.getHungry()));
-
-        cb_postpone_fed.setChecked(tarantulaObject.isPostpone_fed());
-
-        // genus ArrayList
-        genus.add("리스트에 Genus가 없으면 새로 추가");
-
-        // tarantulaInfoList에서 genus 중복제거
-        int j = 1;
-        for (int i = 1; i < tarantulaInfoList.size(); i++) {
-            String temp = tarantulaInfoList.get(i - 1).getScientificName();
-            temp = temp.split(" ")[0];
-
-            if (!temp.equals(genus.get(j - 1))) {
-                genus.add(temp);
-                j++;
-            }
-        }
-    }
+//    private void bindTarantulaObj() {
+//        // xml에 있는 gui와 바인드한다.
+//        TextView tv_late_fed = findViewById(R.id.tv_late_fed);                      // 마지막 피딩일
+//        TextView tv_hungry = findViewById(R.id.tv_hungry);                          // 굶은 기간
+//        Button ib_fed = findViewById(R.id.ib_fed);                                  // 피딩 버튼
+//        CheckBox cb_postpone_fed = findViewById(R.id.cb_postpone_fed);              // 피딩을 중지
+//        EditText et_fed_cycle = findViewById(R.id.et_fed_cycle);                    // 피딩주기
+//        EditText et_postpone_fed_date = findViewById(R.id.et_postpone_fed_date);    // 탈피 후 피딩 연기일
+//        EditText et_temperature_low = findViewById(R.id.et_temperature_low);        // 적정온도
+//        EditText et_temperature_high = findViewById(R.id.et_temperature_high);
+//        EditText et_humidity_low = findViewById(R.id.et_humidity_low);              // 적정습도
+//        EditText et_humidity_high = findViewById(R.id.et_humidity_high);
+//
+//        // realm에 저장되어있는 상태와 동기화한다.
+//        if (arthropod.getLast_fed() != null)
+//            tv_late_fed.setText(arthropod.getLast_fed());
+//
+//        if(arthropod.getHungry() != -1)
+//            tv_hungry.setText(Integer.toString(arthropod.getHungry()));
+//
+//        cb_postpone_fed.setChecked(arthropod.isPostpone_fed());
+//
+//        // genus ArrayList
+//        genus.add("리스트에 Genus가 없으면 새로 추가");
+//
+//        // tarantulaInfoList에서 genus 중복제거
+//        int j = 1;
+//        for (int i = 1; i < arthropodInfoList.size(); i++) {
+//            String temp = arthropodInfoList.get(i - 1).getScientificName();
+//            temp = temp.split(" ")[0];
+//
+//            if (!temp.equals(genus.get(j - 1))) {
+//                genus.add(temp);
+//                j++;
+//            }
+//        }
+//    }
 
     private void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

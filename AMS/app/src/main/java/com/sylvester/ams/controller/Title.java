@@ -11,7 +11,7 @@ import android.view.animation.*;
 import android.widget.TextView;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.controller.funtion.MyAsyncTask;
+import com.sylvester.ams.controller.funtion.UpdateAsync;
 import com.sylvester.ams.controller.service.realm.RealmContext;
 import com.sylvester.ams.controller.service.realm.UserService;
 import com.sylvester.ams.model.User;
@@ -19,8 +19,8 @@ import com.sylvester.ams.model.User;
 import java.util.Date;
 
 public class Title extends AppCompatActivity {
-    RealmContext realmContext;
-    Context context = this;
+    private RealmContext realmContext;
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,8 @@ public class Title extends AppCompatActivity {
                 service.setUser(user);
 
                 popupUpdateDialog(user);
-            } else
+            }
+//            else
                 activityHandler();
         }
     }
@@ -84,7 +85,7 @@ public class Title extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // 데이터를 관리하는 일이 끝나기 전에 진행상황을 보여준다.
-                        MyAsyncTask task = new MyAsyncTask(context);
+                        UpdateAsync task = new UpdateAsync(context);
                         task.execute();
                     }
                 });
