@@ -1,9 +1,6 @@
 package com.sylvester.ams.controller;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,67 +10,83 @@ import android.widget.TextView;
 import com.sylvester.ams.R;
 import com.sylvester.ams.controller.funtion.UpdateAsync;
 import com.sylvester.ams.controller.service.realm.RealmContext;
-import com.sylvester.ams.controller.service.realm.UserService;
-import com.sylvester.ams.model.User;
 
 import java.util.Date;
 
 public class Title extends AppCompatActivity {
-    private RealmContext realmContext;
-    private Context context = this;
+    private long lastCon;
+    private static final int FIRST_CON = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // contentView activity_title 로 설정
         setContentView(R.layout.activity_title);
+        TitleContext.context = this;
 
-        // realm 을 초기화하고 RealmContext 인스턴스를 얻는다.
+        // realm 을 초기화하고 RealmContext 개체를 생성한다.
         RealmContext.initRealm(this);
-        RealmContext.with(this);
-        realmContext = RealmContext.getInstance();
+        RealmContext.with(this.getApplication());
 
         tweenTextAlpha();
 
-        bindModel();
+        // SharedPreferences 선언
+        TitleContext.preferences = getSharedPreferences("pref", MODE_PRIVATE);
+
+        // 1번째 인자는 키, 2번째는 기본값
+        // lastCon 라는 키값으로 값을 받아온다.
+        lastCon = TitleContext.preferences.getLong("lastCon", FIRST_CON);
+
+
+        // 처음 실행했거나 업데이트 주기가 지났으면 update 다이얼로그를 띄워준다.
+        if (checkUpdate(30))
+            popupUpdateDialog();
+        else
+            TitleContext.activityHandler();
     }
 
-    // User 정보가 없으면 초기화를 하고 있으면 갱신하는 함수
-    private void bindModel() {
-        UserService service = new UserService();
-        User user = service.getUser();
+    private void tweenTextAlpha() {
+        TextView tv_wait = (TextView) findViewById(R.id.tv_wait);
 
-        if (user == null) {    // 설치한 후 실행을 한 번도 안했다면
-            user = new User(new Date(), true);
+        // 애니메이션을 이용하여 알파값을 조절한다.
+        Animation animation = AnimationUtils.loadAnimation(TitleContext.context, R.anim.alpha);
+        tv_wait.startAnimation(animation);
+    }
 
-            popupUpdateDialog(user);    // 업데이트 다이얼로그를 띄운다.
+    public boolean checkUpdate(long updateCycle) {
+        boolean result = false;
 
-            user.setFirstOn(false);
-            service.setUser(user);
-        } else {
-            // 한 달에 한번 절지류 데이터를 받아온다.
-            if (service.checkUpdate(30)) {
-                user.setUpdateDate(new Date());
-                service.setUser(user);
+        // 처음 실행했으면 true 를 리턴한다.
+        if (lastCon == FIRST_CON)
+            result = true;
+        else {
+            // 현재시간을 받아온다.
+            Date now = new Date(System.currentTimeMillis());
 
-                popupUpdateDialog(user);
+            // 현재와 과거 시간 차이를 구하고 일수로 변환한다.
+            long duration = Math.abs(now.getTime() - lastCon);
+            duration = duration / (24 * 60 * 60 * 1000);
+
+            // 업데이트 주기가 지났으면 true 를 리턴한다.
+            if (updateCycle < duration) {
+                result = true;
             }
-//            else
-                activityHandler();
         }
+        return result;
     }
 
     // 다이얼로그를 띄우는 함수
-    private void popupUpdateDialog(User user) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        String message, button;
-        final boolean firstOn = user.isFirstOn();
-        if (firstOn) {  // 앱을 처음 실행 했을 때
+    private void popupUpdateDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(TitleContext.context);
+        String message;
+        String button;
+
+        // 처음 실행 했을 때와 업데이트 주기마다 다른 메시지와 버튼의 문구를 띄워준다.
+        if (lastCon == FIRST_CON) {
             message = "추가 데이터를 받아옵니다.\n" +
                     "\nWi-Fi가 아닐 경우 데이터 요금이 발생할 수 있습니다.";
             button = "확인";
-        } else {  // 앱을 2번 이상 실행 했을 때
+        } else {
             message = "최신 버전이 등록되었습니다.\n" +
                     "지금 최신 버전으로 업데이트 하시겠습니까\n?" +
                     "\nWi-Fi가 아닐 경우 데이터 요금이 발생할 수 있습니다.";
@@ -85,49 +98,28 @@ public class Title extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // 데이터를 관리하는 일이 끝나기 전에 진행상황을 보여준다.
-                        UpdateAsync task = new UpdateAsync(context);
+                        UpdateAsync task = new UpdateAsync();
                         task.execute();
                     }
                 });
         builder.setNegativeButton("나중에",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (firstOn) {  // 처음 실행인 경우 앱 종료
+                        if (lastCon == FIRST_CON) {  // 처음 실행인 경우 앱 종료
                             finish();
                         } else {    // 처음 실행이 아닌경우 기존 데이터만으로 실행
-                            activityHandler();
+//                            activityHandler();
+                            TitleContext.activityHandler();
                         }
                     }
                 });
 
         AlertDialog alertDialog = builder.show();
-        TextView messTextView = (TextView) alertDialog.findViewById(android.R.id.message);
-        messTextView.setTextSize(14);   // 메세지 텍스트 크기를 조절한다.
+
         alertDialog.setCanceledOnTouchOutside(false);   // alertDialog 외 화면을 터치해도 취소버튼을 누르지않게 한다.
+        TextView messTextView = (TextView) alertDialog.findViewById(android.R.id.message);
+        messTextView.setTextSize(14);   // 메세지의 텍스트 크기를 조절한다.
 
         alertDialog.show();
-    }
-
-    // TextView의 알파값을 조절하여 깜박이게하는 함수
-    private void tweenTextAlpha() {
-        TextView tv_wait = (TextView) findViewById(R.id.tv_wait);
-
-        // 애니메이션을 이용하여 알파값을 조절한다.
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
-        tv_wait.startAnimation(animation);
-    }
-
-    private void activityHandler() {
-        double sec = 1.5;   // 지연 시간
-        Handler hand = new Handler();   // Handler 생성
-
-        hand.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                Intent intent = new Intent(context, List.class);  // 다음 화면으로 넘어갈 클래스 지정한다.
-                context.startActivity(intent);  // 다음 액티비티로 이동한다.
-            }
-        }, (long) sec * 1000);   // 1초 뒤에 핸들러가 실행한다.
     }
 }

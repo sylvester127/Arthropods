@@ -1,15 +1,13 @@
 package com.sylvester.ams.controller.funtion;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.widget.Toast;
 
+import com.sylvester.ams.controller.TitleContext;
 import com.sylvester.ams.controller.service.realm.ArthropodInfoService;
 import com.sylvester.ams.model.ArthropodInfo;
-import com.sylvester.ams.controller.List;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -17,22 +15,17 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ArthropodInfo>> {
-    private Context context;
     private ProgressDialog asyncDialog;
     private String address;
     private ArrayList<ArthropodInfo> tempList;
-
-    public UpdateAsync(Context context) {
-        this.context = context;
-    }
 
     // doInBackground가 실행되기 이전에 수행할 동작들을 구현한다.
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
 
-        // 다이얼로그를 띄운다.
-        asyncDialog = new ProgressDialog(context);
+        // ProgressDialog 를 띄운다.
+        asyncDialog = new ProgressDialog(TitleContext.context);
         asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         asyncDialog.setMessage("데이터를 받아오는 중 입니다...");
         asyncDialog.setCanceledOnTouchOutside(false);
@@ -40,20 +33,21 @@ public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ArthropodInfo
         // show dialog
         asyncDialog.show();
 
-        // 변수 초기화
+        // 데이터를 받아올 url 주소 설정
         address = "https://www.tarantupedia.com/list";
 
-        // realm에 넘겨줄 임시 리스트
+        // 데이터를 받아올 임시 리스트
         tempList = new ArrayList<>();
     }
 
-    // background 스레드로 일처리를 한다.
+    // background 쓰레드로 일처리를 한다.
     @Override
     protected ArrayList<ArthropodInfo> doInBackground(String... strings) {
         try {
-            URL url = new URL(address); // URL화 한다.
+            URL url = new URL(address); // String 의 주소를 URL 화 한다.
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));  // 문자열 셋 세팅
+            // 받아올 문자를 UTF-8 타입으로 받아온다
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
 
             String line;
 
@@ -121,19 +115,13 @@ public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ArthropodInfo
         ArthropodInfoService service = new ArthropodInfoService();
         service.setArthropodInfos(tempList);
 
-        asyncDialog.dismiss();;
-        Toast.makeText(context, "데이터 받아오기 완료", Toast.LENGTH_SHORT).show();
+        SharedPreferences.Editor editor = TitleContext.preferences.edit();
+        editor.putLong("lastCon",System.currentTimeMillis());
+        editor.commit();
 
-        double sec = 1.5;   // 지연 시간
-        Handler hand = new Handler();   // Handler 생성
+        asyncDialog.dismiss();
+        Toast.makeText(TitleContext.context, "데이터 받아오기 완료", Toast.LENGTH_SHORT).show();
 
-        hand.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                Intent intent = new Intent(context, List.class);  // 다음 화면으로 넘어갈 클래스 지정한다.
-                context.startActivity(intent);  // 다음 액티비티로 이동한다.
-            }
-        }, (long)sec * 1000);   // 1초 뒤에 핸들러가 실행한다.
+        TitleContext.activityHandler();
     }
 }
