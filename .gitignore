@@ -75,6 +75,12 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 
+# Mac OS X clutter
+*.DS_Store
+
+# Windows clutter
+Thumbs.db
+
 # Version control
 vcs.xml
 
