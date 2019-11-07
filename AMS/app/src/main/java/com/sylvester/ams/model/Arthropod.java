@@ -1,107 +1,171 @@
 package com.sylvester.ams.model;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Arthropod extends RealmObject {
-   private String key;                    // 키
-   private int drawableId;                // 사진
-   private String name;                   // 개체명
-   private ArthropodInfo arthropodInfo;   // 종의 정보
-   private String last_fed;               // 마지막 피딩 날짜
-   private int hungry;                    // 굶은 날짜
-   private boolean postpone_fed;          // 피딩을 중지
-   private int fed_cycle;                 // 피딩 사이클
-   private int postpone_fed_date;
-   private int sex;                       // 성별
-   private String recive_date;
-   private String last_rehouse;           // 마지막 집갈이
-   private String status;                 // 개체 상태
-   private String life_stages;            // 탈피횟수
-   private String molt_history;
-   private String memo;
+   @PrimaryKey
+   private long id;                       // 아이디
 
+   private String imgDir;                 // 사진
+   private String name;                   // 개체이름
+   private int sexCode;                   // 성별코드  0:미구분, 1:수, 2:암
+   private float size;                    // 개체 크기
+   private float habitCode;               // 개체의 습성   0:배회성, 1:버로우성, 2:나무위성
+   private Date lastFeedDate;             // 마지막 먹이급여 날짜
+   private boolean postponeFeed;          // 피딩을 중지
+   private int feedingCycle;              // 피딩 사이클
+   private Date receiveDate;              // 입양, 태어난 일
+   private String receivePlace;           // 입양 보낸 사람, 브리더
+   private Date lastRehousingDate;        // 마지막 집갈이 날짜
+   private String statusCode;             // 개체 상태
+   private boolean molt;                  // 탈기인지 아닌지 체크
+   private String moltCount;              // 탈피횟수
+   private String molt_history;           // 탈피기록
+   private String memo;                   // 메모
+
+   // 생성자
    public Arthropod() {
-      key = String.valueOf(System.currentTimeMillis());
+      id = System.currentTimeMillis();
+      this.imgDir = imgDir;
    }
 
-   public Arthropod(int drawableId, ArthropodInfo arthropodInfo) {
-      key = String.valueOf(System.currentTimeMillis());
-      this.drawableId = drawableId;
-      this.arthropodInfo = arthropodInfo;
-      hungry = -1;
+   // getter, setter
+   public long getId() {
+      return id;
    }
 
-   // getter
-   public String getKey() {
-      return key;
+   public void setId(long id) {
+      this.id = id;
    }
 
-   public int getDrawableId() {
-      return drawableId;
+   public String getImgDir() {
+      return imgDir;
+   }
+
+   public void setImgDir(String imgDir) {
+      this.imgDir = imgDir;
    }
 
    public String getName() {
       return name;
    }
 
-   public ArthropodInfo getArthropodInfo() {
-      return arthropodInfo;
+   public void setName(String name) {
+      this.name = name;
    }
 
-   public String getLast_fed() {
-      return last_fed;
+   public int getSexCode() {
+      return sexCode;
    }
 
-   public int getHungry() {
-      return hungry;
+   public void setSexCode(int sexCode) {
+      this.sexCode = sexCode;
    }
 
-   public boolean isPostpone_fed() {
-      return postpone_fed;
+   public float getSize() {
+      return size;
    }
 
-   public int getFed_cycle() {
-      return fed_cycle;
+   public void setSize(float size) {
+      this.size = size;
    }
 
-   public int getPostpone_fed_date() {
-      return postpone_fed_date;
+   public float getHabitCode() {
+      return habitCode;
    }
 
-   public int getSex() {
-      return sex;
+   public void setHabitCode(float habitCode) {
+      this.habitCode = habitCode;
    }
 
-   public String getRecive_date() {
-      return recive_date;
+   public Date getLastFeedDate() {
+      return lastFeedDate;
    }
 
-   public String getLast_rehouse() {
-      return last_rehouse;
+   public void setLastFeedDate(Date lastFeedDate) {
+      this.lastFeedDate = lastFeedDate;
    }
 
-   public String getStatus() {
-      return status;
+   public boolean isPostponeFeed() {
+      return postponeFeed;
    }
 
-   public String getLife_stages() {
-      return life_stages;
+   public void setPostponeFeed(boolean postponeFeed) {
+      this.postponeFeed = postponeFeed;
+   }
+
+   public int getFeedingCycle() {
+      return feedingCycle;
+   }
+
+   public void setFeedingCycle(int feedingCycle) {
+      this.feedingCycle = feedingCycle;
+   }
+
+   public Date getReceiveDate() {
+      return receiveDate;
+   }
+
+   public void setReceiveDate(Date receiveDate) {
+      this.receiveDate = receiveDate;
+   }
+
+   public String getReceivePlace() {
+      return receivePlace;
+   }
+
+   public void setReceivePlace(String receivePlace) {
+      this.receivePlace = receivePlace;
+   }
+
+   public Date getLastRehousingDate() {
+      return lastRehousingDate;
+   }
+
+   public void setLastRehousingDate(Date lastRehousingDate) {
+      this.lastRehousingDate = lastRehousingDate;
+   }
+
+   public String getStatusCode() {
+      return statusCode;
+   }
+
+   public void setStatusCode(String statusCode) {
+      this.statusCode = statusCode;
+   }
+
+   public boolean isMolt() {
+      return molt;
+   }
+
+   public void setMolt(boolean molt) {
+      this.molt = molt;
+   }
+
+   public String getMoltCount() {
+      return moltCount;
+   }
+
+   public void setMoltCount(String moltCount) {
+      this.moltCount = moltCount;
    }
 
    public String getMolt_history() {
       return molt_history;
    }
 
+   public void setMolt_history(String molt_history) {
+      this.molt_history = molt_history;
+   }
+
    public String getMemo() {
       return memo;
    }
 
-   // setter
-   public void setKey(String key) {
-      this.key = key;
-   }
-
-   public void setName(String name) {
-      this.name = name;
+   public void setMemo(String memo) {
+      this.memo = memo;
    }
 }
