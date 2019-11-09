@@ -7,37 +7,37 @@ import io.realm.annotations.PrimaryKey;
 
 public class Arthropod extends RealmObject {
    @PrimaryKey
-   private long id;                       // 아이디
+   private int id;                     // 아이디
 
-   private String imgDir;                 // 사진
-   private String name;                   // 개체이름
-   private int sexCode;                   // 성별코드  0:미구분, 1:수, 2:암
-   private float size;                    // 개체 크기
-   private float habitCode;               // 개체의 습성   0:배회성, 1:버로우성, 2:나무위성
-   private Date lastFeedDate;             // 마지막 먹이급여 날짜
-   private boolean postponeFeed;          // 피딩을 중지
-   private int feedingCycle;              // 피딩 사이클
-   private Date receiveDate;              // 입양, 태어난 일
-   private String receivePlace;           // 입양 보낸 사람, 브리더
-   private Date lastRehousingDate;        // 마지막 집갈이 날짜
-   private String statusCode;             // 개체 상태
-   private boolean molt;                  // 탈기인지 아닌지 체크
-   private String moltCount;              // 탈피횟수
-   private String molt_history;           // 탈피기록
-   private String memo;                   // 메모
+   private String imgDir;              // 사진
+   private String name;                // 개체이름
+   private int sexCode;                // 성별코드  0:미구분, 1:수, 2:암
+   private float size;                 // 개체 크기
+   private float habitCode;            // 개체의 습성   0:배회성, 1:버로우성, 2:나무위성
+   private Date lastFeedDate;          // 마지막 먹이급여 날짜
+   private boolean postponeFeed;       // 피딩을 중지
+   private int feedingCycle;           // 피딩 사이클
+   private Date receiveDate;           // 입양, 태어난 일
+   private String receivePlace;        // 입양 보낸 사람, 브리더
+   private Date lastRehousingDate;     // 마지막 집갈이 날짜
+   private String statusCode;          // 개체 상태
+   private boolean molt;               // 탈기인지 아닌지 체크
+   private String moltCount;           // 탈피횟수
+   private String molt_history;        // 탈피기록
+   private String memo;                // 메모
+   private long regdate;               // 등록일자
 
    // 생성자
    public Arthropod() {
-      id = System.currentTimeMillis();
-      this.imgDir = imgDir;
+      regdate = System.currentTimeMillis();
    }
 
    // getter, setter
-   public long getId() {
+   public int getId() {
       return id;
    }
 
-   public void setId(long id) {
+   public void setId(int id) {
       this.id = id;
    }
 
@@ -167,5 +167,13 @@ public class Arthropod extends RealmObject {
 
    public void setMemo(String memo) {
       this.memo = memo;
+   }
+
+   public long getRegdate() {
+      return regdate;
+   }
+
+   public void setRegdate(long regdate) {
+      this.regdate = regdate;
    }
 }
