@@ -16,6 +16,14 @@ public class ScientificName extends RealmObject{
     private Habitat habitat;                    // 서식지 정보
 
     // 생성자
+    public ScientificName() {
+
+    }
+
+    public ScientificName(int id, String genus, String species) {
+        this(id, genus, species, "", null, null);
+    }
+
     public ScientificName(int id, String genus, String species, String commonName,
                           ArrayList<Arthropod> arthropods, Habitat habitat) {
         this.id = id;
