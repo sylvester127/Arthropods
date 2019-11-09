@@ -8,7 +8,6 @@ import android.view.animation.*;
 import android.widget.TextView;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.controller.funtion.UpdateAsync;
 import com.sylvester.ams.controller.service.realm.RealmContext;
 
 import java.util.Date;
