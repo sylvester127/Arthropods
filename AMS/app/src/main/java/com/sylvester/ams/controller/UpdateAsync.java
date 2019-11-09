@@ -1,23 +1,22 @@
-package com.sylvester.ams.controller.funtion;
+package com.sylvester.ams.controller;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.sylvester.ams.controller.TitleContext;
 import com.sylvester.ams.controller.service.realm.ArthropodInfoService;
-import com.sylvester.ams.model.ArthropodInfo;
+import com.sylvester.ams.model.ScientificName;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ArthropodInfo>> {
+public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ScientificName>> {
     private ProgressDialog asyncDialog;
     private String address;
-    private ArrayList<ArthropodInfo> tempList;
+    private ArrayList<ScientificName> tempList;
 
     // doInBackground가 실행되기 이전에 수행할 동작들을 구현한다.
     @Override
@@ -42,7 +41,7 @@ public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ArthropodInfo
 
     // background 쓰레드로 일처리를 한다.
     @Override
-    protected ArrayList<ArthropodInfo> doInBackground(String... strings) {
+    protected ArrayList<ScientificName> doInBackground(String... strings) {
         try {
             URL url = new URL(address); // String 의 주소를 URL 화 한다.
 
@@ -91,10 +90,10 @@ public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ArthropodInfo
                     // 임시 리스트에 저장
                     if(saveCheck == 2)
                     {
-                        ArthropodInfo arthropodInfo = new ArthropodInfo();
-                        arthropodInfo.setScientificName(tempS);
-                        arthropodInfo.setDistribution(tempD);
-                        tempList.add(arthropodInfo);
+                        ScientificName scientificName = new ScientificName();
+                        scientificName.setScientificName(tempS);
+                        scientificName.setDistribution(tempD);
+                        tempList.add(scientificName);
                         startSaveCheck = false;
                         saveCheck = 0;
                     }
@@ -103,13 +102,13 @@ public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ArthropodInfo
             reader.close();
         }
         catch (Exception e) {
-            System.out.print("Err: " + e.getMessage());
+            Toast.makeText(TitleContext.context, "데이터 받아오기 실패", Toast.LENGTH_SHORT).show();
         }
         return tempList;
     }
 
     @Override
-    protected void onPostExecute(ArrayList<ArthropodInfo> result) {
+    protected void onPostExecute(ArrayList<ScientificName> result) {
         super.onPostExecute(result);
 
         ArthropodInfoService service = new ArthropodInfoService();
