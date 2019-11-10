@@ -8,6 +8,8 @@ import android.os.Handler;
 public class TitleContext {
     public static Context context;
     public static SharedPreferences preferences;
+    public static long lastCon;
+    public static final int FIRST_CON = -1;
 
     public static void activityHandler() {
         double sec = 1.5;   // 지연 시간
@@ -22,5 +24,11 @@ public class TitleContext {
                 context.startActivity(intent);
             }
         }, (long) sec * 1000);   // 1.5초 뒤에 Handler 가 실행한다.
+    }
+
+    public static boolean getEqual(){
+        if (lastCon == FIRST_CON)
+            return true;
+        return false;
     }
 }

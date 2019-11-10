@@ -13,14 +13,12 @@ import com.sylvester.ams.controller.service.realm.RealmContext;
 import java.util.Date;
 
 public class Title extends AppCompatActivity {
-    private long lastCon;
-    private static final int FIRST_CON = -1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // contentView activity_title 로 설정
         setContentView(R.layout.activity_title);
+
         TitleContext.context = this;
 
         // realm 을 초기화하고 RealmContext 개체를 생성한다.
@@ -34,7 +32,7 @@ public class Title extends AppCompatActivity {
 
         // 1번째 인자는 키, 2번째는 기본값
         // lastCon 라는 키값으로 값을 받아온다.
-        lastCon = TitleContext.preferences.getLong("lastCon", FIRST_CON);
+        TitleContext.lastCon = TitleContext.preferences.getLong("lastCon", TitleContext.FIRST_CON);
 
 
         // 처음 실행했거나 업데이트 주기가 지났으면 update 다이얼로그를 띄워준다.
@@ -56,14 +54,14 @@ public class Title extends AppCompatActivity {
         boolean result = false;
 
         // 처음 실행했으면 true 를 리턴한다.
-        if (lastCon == FIRST_CON)
+        if (TitleContext.getEqual())
             result = true;
         else {
             // 현재시간을 받아온다.
             Date now = new Date(System.currentTimeMillis());
 
             // 현재와 과거 시간 차이를 구하고 일수로 변환한다.
-            long duration = Math.abs(now.getTime() - lastCon);
+            long duration = Math.abs(now.getTime() - TitleContext.lastCon);
             duration = duration / (24 * 60 * 60 * 1000);
 
             // 업데이트 주기가 지났으면 true 를 리턴한다.
@@ -81,7 +79,7 @@ public class Title extends AppCompatActivity {
         String button;
 
         // 처음 실행 했을 때와 업데이트 주기마다 다른 메시지와 버튼의 문구를 띄워준다.
-        if (lastCon == FIRST_CON) {
+        if (TitleContext.getEqual()) {
             message = "추가 데이터를 받아옵니다.\n" +
                     "\nWi-Fi가 아닐 경우 데이터 요금이 발생할 수 있습니다.";
             button = "확인";
@@ -104,7 +102,7 @@ public class Title extends AppCompatActivity {
         builder.setNegativeButton("나중에",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        if (lastCon == FIRST_CON) {  // 처음 실행인 경우 앱 종료
+                        if (TitleContext.getEqual()) {  // 처음 실행인 경우 앱 종료
                             finish();
                         } else {    // 처음 실행이 아닌경우 기존 데이터만으로 실행
 //                            activityHandler();
