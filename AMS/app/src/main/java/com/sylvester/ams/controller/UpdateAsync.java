@@ -1,125 +1,102 @@
 package com.sylvester.ams.controller;
 
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.widget.Toast;
 
-import com.sylvester.ams.controller.service.realm.ArthropodInfoService;
-import com.sylvester.ams.model.ScientificName;
+import com.sylvester.ams.service.ArthropodInfoService;
+import com.sylvester.ams.service.realm.RealmArthropodInfoService;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-public class UpdateAsync extends AsyncTask<String, Void, ArrayList<ScientificName>> {
-    private ProgressDialog asyncDialog;
-    private String address;
-    private ArrayList<ScientificName> tempList;
+public class UpdateAsync extends AsyncTask<Void, Void, Boolean> {
+    private ProgressDialog updateDialog;
+    private String addressURL;
+    private List<String> scientificNames;
+    private List<String> habitats;
 
-    // doInBackground가 실행되기 이전에 수행할 동작들을 구현한다.
+    // doInBackground 가 실행되기 이전에 수행할 동작들을 구현한다.
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
 
         // ProgressDialog 를 띄운다.
-        asyncDialog = new ProgressDialog(TitleContext.context);
-        asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        asyncDialog.setMessage("데이터를 받아오는 중 입니다...");
-        asyncDialog.setCanceledOnTouchOutside(false);
+        updateDialog = new ProgressDialog(TitleContext.context);
+        updateDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        updateDialog.setMessage("데이터를 받아오는 중 입니다...");
+        updateDialog.setCanceledOnTouchOutside(false);
 
         // show dialog
-        asyncDialog.show();
+        updateDialog.show();
 
         // 데이터를 받아올 url 주소 설정
-        address = "https://www.tarantupedia.com/list";
+        addressURL = "https://wsc.nmbe.ch/family/100/Theraphosidae";
 
         // 데이터를 받아올 임시 리스트
-        tempList = new ArrayList<>();
+        scientificNames = new ArrayList<>();
+        habitats = new ArrayList<>();
     }
 
     // background 쓰레드로 일처리를 한다.
     @Override
-    protected ArrayList<ScientificName> doInBackground(String... strings) {
+    protected Boolean doInBackground(Void... voids) {
+        boolean updateComplete = true;
+
         try {
-            URL url = new URL(address); // String 의 주소를 URL 화 한다.
+            Document doc = Jsoup.connect(addressURL).maxBodySize(0).timeout(15 * 1000).get();
 
-            // 받아올 문자를 UTF-8 타입으로 받아온다
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+            // article 부분만 뽑아온다.
+            Elements elem = doc.select("div.speciesTitle");
+            Iterator<Element> iterator1 = elem.select("strong i").iterator();
+            Iterator<Element> iterator2 = elem.select("span").iterator();
 
-            String line;
-
-            boolean lineCheckfir = false, lineCheckSec = false;
-            boolean startSaveCheck = false;
-            int saveCheck = 0;
-            String tempS = "", tempD = "";
-
-            while ((line = reader.readLine()) != null) {
-                if(line.contains("Species List")) {
-                    lineCheckfir = true;
-                }
-                else if(line.contains("</article")) {
-                    lineCheckfir = false;
-                }
-
-                if(line.contains("<h4 class=\"uk-h5 uk-margin-remove\">")) { lineCheckSec = true; }
-                else if(line.contains("</h4")) { lineCheckSec = false; }
-
-                // 필요한 부분만 파싱한다.
-                if(lineCheckfir && lineCheckSec) {
-                    //System.out.println(line);
-                    if(startSaveCheck)
-                        saveCheck++;
-
-                    // 학명 파싱
-                    if(line.contains("<i> <a title=")) {
-                        tempS = line.split(">")[2].split("<")[0];
-                        tempS = tempS.trim();
-                        startSaveCheck = true;
-                        //System.out.println(temp);
-                    }
-
-                    // 서식지
-                    if(line.contains("<span class=\"uk-article-meta uk-margin-left\">")) {
-                        tempD = line.split(">")[1].split("<")[0];
-                        tempD = tempD.trim();
-                        //System.out.println(temp);
-                    }
-
-                    // 임시 리스트에 저장
-                    if(saveCheck == 2)
-                    {
-                        ScientificName scientificName = new ScientificName();
-                        scientificName.setScientificName(tempS);
-                        scientificName.setDistribution(tempD);
-                        tempList.add(scientificName);
-                        startSaveCheck = false;
-                        saveCheck = 0;
-                    }
-                }
+            while (iterator1.hasNext()) {
+                String scientificName = iterator1.next().text();
+                String habitat = iterator2.next().text();
+                habitat = habitat.replaceAll("\\|\\s(\\?|j)?\\s?\\|", "\b").split("\\[")[0];
+                scientificNames.add(scientificName);
+                habitats.add(habitat);
             }
-            reader.close();
+
+            ArthropodInfoService service = new RealmArthropodInfoService();
+            service.insertArthropodInfo(habitats, scientificNames);
+        } catch (Exception e) {
+            updateComplete = false;
         }
-        catch (Exception e) {
-            Toast.makeText(TitleContext.context, "데이터 받아오기 실패", Toast.LENGTH_SHORT).show();
-        }
-        return tempList;
+        return updateComplete;
     }
 
     @Override
-    protected void onPostExecute(ArrayList<ScientificName> result) {
-        super.onPostExecute(result);
+    protected void onPostExecute(Boolean updateComplete) {
+        super.onPostExecute(updateComplete);
+        updateDialog.dismiss();
 
-        ArthropodInfoService service = new ArthropodInfoService();
-        service.setArthropodInfos(tempList);
+        if (updateComplete)
+            Toast.makeText(TitleContext.context, "데이터 받아오기 완료", Toast.LENGTH_SHORT).show();
+        else {
+            if (TitleContext.getEqual()) {
+                Toast.makeText(TitleContext.context, "데이터 받아오기 실패. 잠시후 재시도 해주세요", Toast.LENGTH_SHORT).show();
 
-        SharedPreferences.Editor editor = TitleContext.preferences.edit();
-        editor.putLong("lastCon",System.currentTimeMillis());
-        editor.commit();
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.exit(0);
 
-        asyncDialog.dismiss();
-        Toast.makeText(TitleContext.context, "데이터 받아오기 완료", Toast.LENGTH_SHORT).show();
+                    }
+                }, 1);
+            }
+            Toast.makeText(TitleContext.context, "데이터 받아오기 실패", Toast.LENGTH_SHORT).show();
+
+        }
 
         TitleContext.activityHandler();
     }
