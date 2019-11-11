@@ -44,12 +44,12 @@
                 android:text="사육정보" />
         </android.support.design.widget.TabLayout>
 
-        <com.sylvester.ams.controller.funtion.CustomViewPager
+        <com.sylvester.ams.controller.CustomViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </com.sylvester.ams.controller.funtion.CustomViewPager>
+        </com.sylvester.ams.controller.CustomViewPager>
 
     </LinearLayout>
 
