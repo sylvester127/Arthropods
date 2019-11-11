@@ -1,7 +1,6 @@
 package com.sylvester.ams.model;
 
-import java.util.ArrayList;
-
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -12,7 +11,7 @@ public class ScientificName extends RealmObject{
     private String genus;                       // 종명
     private String species;                     // 속명
     private String commonName;                  // 커먼네임
-    private ArrayList<Arthropod> arthropods;    // 관리하는 절지동물 목록
+    private RealmList<Arthropod> arthropods;    // 관리하는 절지동물 목록
     private Habitat habitat;                    // 서식지 정보
 
     // 생성자
@@ -25,7 +24,7 @@ public class ScientificName extends RealmObject{
     }
 
     public ScientificName(int id, String genus, String species, String commonName,
-                          ArrayList<Arthropod> arthropods, Habitat habitat) {
+                          RealmList<Arthropod> arthropods, Habitat habitat) {
         this.id = id;
         this.genus = genus;
         this.species = species;
@@ -67,11 +66,11 @@ public class ScientificName extends RealmObject{
         this.commonName = commonName;
     }
 
-    public ArrayList<Arthropod> getArthropods() {
+    public RealmList<Arthropod> getArthropods() {
         return arthropods;
     }
 
-    public void setArthropods(ArrayList<Arthropod> arthropods) {
+    public void setArthropods(RealmList<Arthropod> arthropods) {
         this.arthropods = arthropods;
     }
 
