@@ -12,7 +12,7 @@ public class ScientificName extends RealmObject{
     private String species;                     // 속명
     private String commonName;                  // 커먼네임
     private RealmList<Arthropod> arthropods;    // 관리하는 절지동물 목록
-    private Habitat habitat;                    // 서식지 정보
+    private RealmList<Habitat> habitats;                    // 서식지 정보
 
     // 생성자
     public ScientificName() {
@@ -24,13 +24,13 @@ public class ScientificName extends RealmObject{
     }
 
     public ScientificName(int id, String genus, String species, String commonName,
-                          RealmList<Arthropod> arthropods, Habitat habitat) {
+                          RealmList<Arthropod> arthropods, RealmList<Habitat> habitats) {
         this.id = id;
         this.genus = genus;
         this.species = species;
         this.commonName = commonName;
         this.arthropods = arthropods;
-        this.habitat = habitat;
+        this.habitats = habitats;
     }
 
     // getter and setter
@@ -74,11 +74,11 @@ public class ScientificName extends RealmObject{
         this.arthropods = arthropods;
     }
 
-    public Habitat getHabitat() {
-        return habitat;
+    public RealmList<Habitat> getHabitats() {
+        return habitats;
     }
 
-    public void setHabitat(Habitat habitat) {
-        this.habitat = habitat;
+    public void setHabitats(RealmList<Habitat> habitats) {
+        this.habitats = habitats;
     }
 }
