@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller.service.realm;
+package com.sylvester.ams.service.realm;
 
 import android.app.Activity;
 import android.app.Application;

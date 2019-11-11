@@ -1,7 +1,7 @@
-package com.sylvester.ams.controller.service.realm;
+package com.sylvester.ams.service.realm;
 
 import com.sylvester.ams.model.Arthropod;
-import com.sylvester.ams.model.ArthropodInfo;
+import com.sylvester.ams.model.ScientificName;
 
 import java.util.ArrayList;
 
@@ -10,9 +10,9 @@ import io.realm.RealmResults;
 
 public class ArthropodService {
     //query example
-    public ArthropodInfo setArthropod() {
+    public ScientificName setArthropod() {
         Realm realm = RealmContext.getInstance().getRealm();
-        return realm.copyFromRealm(realm.where(ArthropodInfo.class)
+        return realm.copyFromRealm(realm.where(ScientificName.class)
                 .equalTo("scientificName", "Acanthoscurria geniculata").findFirst());
     }
 
