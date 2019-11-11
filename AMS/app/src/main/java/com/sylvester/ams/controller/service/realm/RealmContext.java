@@ -3,14 +3,10 @@ package com.sylvester.ams.controller.service.realm;
 import android.app.Activity;
 import android.app.Application;
 
-import com.sylvester.ams.model.ArthropodInfo;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
 
 public class RealmContext implements Serializable {
     private static RealmContext instance;
