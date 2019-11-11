@@ -12,7 +12,7 @@ public class ScientificName extends RealmObject{
     private String species;                     // 속명
     private String commonName;                  // 커먼네임
     private RealmList<Arthropod> arthropods;    // 관리하는 절지동물 목록
-    private RealmList<Habitat> habitats;                    // 서식지 정보
+    private RealmList<Habitat> habitats;        // 서식지 정보
 
     // 생성자
     public ScientificName() {
