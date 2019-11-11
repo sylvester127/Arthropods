@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
-import com.sylvester.ams.controller.funtion.CustomViewPager;
+import com.sylvester.ams.controller.CustomViewPager;
 import com.sylvester.ams.controller.DetailBasicInfo;
 import com.sylvester.ams.controller.DetailBreedingInfo;
 import com.sylvester.ams.controller.DetailFeeding;
