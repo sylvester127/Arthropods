@@ -4,7 +4,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class ScientificName extends RealmObject{
+public class ScientificName extends RealmObject {
     @PrimaryKey
     private int id;                             // 학명 아이디(PK)
 
@@ -19,8 +19,8 @@ public class ScientificName extends RealmObject{
 
     }
 
-    public ScientificName(int id, String genus, String species) {
-        this(id, genus, species, "", null, null);
+    public ScientificName(int id, String genus, String species, RealmList<Habitat> habitats) {
+        this(id, genus, species, "", null, habitats);
     }
 
     public ScientificName(int id, String genus, String species, String commonName,

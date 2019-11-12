@@ -61,13 +61,11 @@ public class UpdateAsync extends AsyncTask<Void, Void, Boolean> {
             while (iterator1.hasNext()) {
                 String scientificName = iterator1.next().text();
                 String habitat = iterator2.next().text();
-                habitat = habitat.replaceAll("\\|\\s(\\?|j)?\\s?\\|", "\b").split("\\[")[0];
+                habitat = habitat.replaceAll("\\|\\s(\\?|j)?\\s?\\|", "").split("\\[")[0];
                 scientificNames.add(scientificName);
                 habitats.add(habitat);
             }
 
-            ArthropodInfoService service = new RealmArthropodInfoService();
-            service.insertArthropodInfo(habitats, scientificNames);
         } catch (Exception e) {
             updateComplete = false;
         }
@@ -77,6 +75,10 @@ public class UpdateAsync extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean updateComplete) {
         super.onPostExecute(updateComplete);
+
+        ArthropodInfoService service= new RealmArthropodInfoService();
+        service.insertArthropodInfo(habitats, scientificNames);
+
         updateDialog.dismiss();
 
         if (updateComplete)
@@ -92,10 +94,9 @@ public class UpdateAsync extends AsyncTask<Void, Void, Boolean> {
                         System.exit(0);
 
                     }
-                }, 1);
+                }, 1500);
             }
             Toast.makeText(TitleContext.context, "데이터 받아오기 실패", Toast.LENGTH_SHORT).show();
-
         }
 
         TitleContext.activityHandler();

@@ -1,6 +1,7 @@
 package com.sylvester.ams.service;
 
+import java.util.List;
+
 public interface ArthropodInfoService {
-    void insertArthropods();
-    void insertHabitats();
+    void insertArthropodInfo(final List<String> habitats, final List<String> scientificNameList);
 }

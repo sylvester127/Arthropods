@@ -16,6 +16,10 @@ public class Habitat extends RealmObject {
 
     }
 
+    public Habitat(int id, String habitatName) {
+        this(id, "", habitatName, "", "", "");
+    }
+
     public Habitat(int id, String continentType, String habitatName, String environment, String temperature, String humidity) {
         this.id = id;
         this.continentType = continentType;
