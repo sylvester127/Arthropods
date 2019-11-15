@@ -1,9 +1,11 @@
-package com.sylvester.ams.controller;
+package com.sylvester.ams.controller.title;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
+
+import com.sylvester.ams.controller.list.ArthropodList;
 
 public class TitleContext {
     public static Context context;

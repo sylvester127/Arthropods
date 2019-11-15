@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller;
+package com.sylvester.ams.controller.title;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;

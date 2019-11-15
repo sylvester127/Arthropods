@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller;
+package com.sylvester.ams.controller.list;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.controller.adapters.RealmRecyclerViewAdapter;
 import com.sylvester.ams.service.ArthropodService;
 import com.sylvester.ams.service.realm.RealmArthropodService;
 import com.sylvester.ams.model.Arthropod;

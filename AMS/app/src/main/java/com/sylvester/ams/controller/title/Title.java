@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller;
+package com.sylvester.ams.controller.title;
 
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;

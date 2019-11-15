@@ -9,7 +9,7 @@
         android:roundIcon="@drawable/ic_tarantula"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".controller.Title">
+        <activity android:name=".controller.title.Title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controller.ArthropodList"
+            android:name=".controller.list.ArthropodList"
             android:label="@string/title_activity_tarantula_drawer"
             android:theme="@style/AppTheme" />
         <activity

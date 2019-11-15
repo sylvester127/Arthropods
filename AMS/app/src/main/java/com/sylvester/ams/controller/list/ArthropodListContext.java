@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller;
+package com.sylvester.ams.controller.list;
 
 import android.content.Context;
 

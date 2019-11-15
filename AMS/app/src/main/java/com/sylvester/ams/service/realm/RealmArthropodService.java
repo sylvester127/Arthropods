@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.View;
 
-import com.sylvester.ams.R;
-import com.sylvester.ams.controller.ArthropodListContext;
+import com.sylvester.ams.controller.list.ArthropodListContext;
 import com.sylvester.ams.model.Arthropod;
 import com.sylvester.ams.model.ScientificName;
 import com.sylvester.ams.service.ArthropodService;

@@ -2,7 +2,7 @@ package com.sylvester.ams.service.realm;
 
 import android.content.SharedPreferences;
 
-import com.sylvester.ams.controller.TitleContext;
+import com.sylvester.ams.controller.title.TitleContext;
 import com.sylvester.ams.model.Habitat;
 import com.sylvester.ams.model.ScientificName;
 import com.sylvester.ams.service.ArthropodInfoService;

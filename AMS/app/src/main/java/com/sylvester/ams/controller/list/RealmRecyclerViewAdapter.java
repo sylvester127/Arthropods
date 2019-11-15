@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller.adapters;
+package com.sylvester.ams.controller.list;
 
 import android.content.Intent;
 import android.support.v7.widget.CardView;
