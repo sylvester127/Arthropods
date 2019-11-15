@@ -1,6 +1,7 @@
 package com.sylvester.ams.controller;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.NavigationView;
@@ -14,28 +15,22 @@ import android.view.MenuItem;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.controller.adapters.RealmRecyclerViewAdapter;
-import com.sylvester.ams.controller.service.realm.ArthropodInfoService;
-import com.sylvester.ams.controller.service.realm.ArthropodService;
-import com.sylvester.ams.controller.service.realm.RealmContext;
+import com.sylvester.ams.service.ArthropodService;
+import com.sylvester.ams.service.realm.RealmArthropodService;
 import com.sylvester.ams.model.Arthropod;
-import com.sylvester.ams.model.ArthropodInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import io.realm.Realm;
-
-public class List extends AppCompatActivity
+public class ArthropodList extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private Realm realm;
-    private RealmContext realmContext;
-    private ArrayList<Arthropod> arthropodArrayList = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private List<Arthropod> arthropodArrayList = new ArrayList<>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        ArthropodListContext.context = this;
 
         // Toolbar를 생성한다.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -45,10 +40,9 @@ public class List extends AppCompatActivity
         // Drawer layout의 동작을 설정한다.
         initDrawerLayout(toolbar);
 
-        bindModel();
+        initRecycleView();
     }
 
-    // Drawer layout의 동작을 설정하는 함수
     private void initDrawerLayout(Toolbar toolbar) {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,40 +54,28 @@ public class List extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void bindModel() {
-        realmContext = RealmContext.getInstance();
-        realm = realmContext.getRealm();
+    private void initRecycleView() {
+        RecyclerView recyclerView = findViewById(R.id.rv_list);
 
-        mRecyclerView = findViewById(R.id.rv_list);
+        // RecycleView 의 크기가 변경되지 않을 때, 최적화를 위해 사용한다.
+        recyclerView.setHasFixedSize(true);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        // 세로로 아이템들을 보여주기 위해 Linear layout manager를 이용한다.
-        mLayoutManager = new LinearLayoutManager(this);
+        // 세로로 아이템들을 보여주기 위해 Linear layout manager 를 이용한다.
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // RecyclerView의 리스트에 아무것도 들어있지 않는다면, 샘플을 생성한다.
-        ArthropodService service = new ArthropodService();
-        ArthropodInfoService infoService = new ArthropodInfoService();
-        ArrayList<ArthropodInfo> s = new ArrayList<>();
-        s = infoService.getArthropodInfos();
-        ArthropodInfo a = infoService.getArthropodInfo("Acanthoscurria geniculata");
+        ArthropodService service = new RealmArthropodService();
 
-        if (service.getArthropods().isEmpty() == true) {
-            Arthropod sample = new Arthropod(R.drawable.ic_tarantula
-                    , infoService.getArthropodInfo("Acanthoscurria geniculata"));
-            sample.setName("따따라니");
-            service.setArthropod(sample);
+        if (service.getArthropods().isEmpty()) {
+            service.insertSample();
         }
 
         // Realm에서 읽어오기
         arthropodArrayList = service.getArthropods();
 
         // Adapter에 지정한다.
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        RealmRecyclerViewAdapter myAdapter = new RealmRecyclerViewAdapter(arthropodArrayList);
-        mRecyclerView.setAdapter(myAdapter);
+        RealmRecyclerViewAdapter myAdapter = new RealmRecyclerViewAdapter((ArrayList<Arthropod>) arthropodArrayList);
+        recyclerView.setAdapter(myAdapter);
     }
 
     @Override
@@ -131,11 +113,10 @@ public class List extends AppCompatActivity
     }
 
     // Drawer에 추가된 항목의 select 이벤트를 처리하는 함수
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        int id = menuItem.getItemId();
 
         if (id == R.id.nav_add) {
             // Handle the camera action

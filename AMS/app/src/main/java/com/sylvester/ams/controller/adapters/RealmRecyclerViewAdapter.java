@@ -12,18 +12,24 @@ import android.widget.TextView;
 import com.sylvester.ams.R;
 import com.sylvester.ams.model.Arthropod;
 import com.sylvester.ams.controller.Detail;
+import com.sylvester.ams.model.ScientificName;
+import com.sylvester.ams.service.ArthropodService;
+import com.sylvester.ams.service.realm.RealmArthropodService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<Arthropod> arthropodArrayList;
+public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RealmRecyclerViewAdapter.ViewHolder> {
+    private ArrayList<Arthropod> arthropods;
+    ArthropodService service;
 
-    // MyAdapter를 생성할 때 표시하고자하는 데이터를 전달합니다.
-    public RealmRecyclerViewAdapter(ArrayList<Arthropod> arthropodArrayList) {
-        this.arthropodArrayList = arthropodArrayList;
+    // 생성자
+    public RealmRecyclerViewAdapter(ArrayList<Arthropod> arthropods) {
+        this.arthropods = arthropods;
+        service = new RealmArthropodService();
     }
 
+    // 아이템 뷰를 저장하는 뷰홀더 클래스
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item
         CardView cardView;
@@ -44,72 +50,65 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    // onCreateViewHolder()함수는 RecyclerView의 행을 표시하는데 사용되는 레이아웃 xml을 가져오는 역할을 합니다.
+    // viewType 형태의 아이템 뷰를 위한 뷰홀더 객체 생성
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_list_cardview_row, parent, false);
+    public RealmRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.custom_list_cardview_row, parent, false);
+        RealmRecyclerViewAdapter.ViewHolder vh = new RealmRecyclerViewAdapter.ViewHolder(view);
 
-        return new ViewHolder(v);
+        return vh;
     }
 
-    // onBindViewHolder()함수에서 마침내 RecyclerView의 행에 보여질 ImageView와 TextView를 설정합니다.
+    // position 에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        final ViewHolder myViewHolder = (ViewHolder) holder;
-        final Arthropod arthropod = arthropodArrayList.get(position);
+    public void onBindViewHolder(RealmRecyclerViewAdapter.ViewHolder holder, final int position) {
+        final Arthropod arthropod = arthropods.get(position);
+        ScientificName scientificName = service.getScientificName(arthropod);
+        
+        holder.iv_picture.setImageBitmap(service.getArthropodImg(arthropod));
 
-        myViewHolder.iv_picture.setImageResource(arthropod.getDrawableId());
+        if (arthropod.getName() != null)
+            holder.tv_name.setText(arthropod.getName());
+        else
+            holder.tv_name.setVisibility(View.GONE);
 
-        if(arthropod.getName() != null) {
-            myViewHolder.tv_name.setText(arthropod.getName());
-        } else {
-            myViewHolder.tv_name.setVisibility(View.GONE);
+        if (!scientificName.equals(null)) {
+            holder.tv_scientific_name.setText(scientificName.getGenus() +" "+ scientificName.getSpecies());
         }
 
-        if(arthropod.getArthropodInfo() != null) {
-            myViewHolder.tv_scientific_name.setText(arthropod.getArthropodInfo().getScientificName());
-        } else {
-            myViewHolder.tv_scientific_name.setVisibility(View.GONE);
-        }
+        holder.tv_sex.setText(arthropod.getSex());
 
-        if(arthropod.getSex() != 0) {
-            myViewHolder.tv_sex.setText(Integer.toString(arthropod.getSex()));
-        } else {
-            myViewHolder.tv_sex.setVisibility(View.GONE);
-        }
+        if (!arthropod.getHabit().equals(""))
+            holder.tv_raise_type.setText(arthropod.getHabit());
+        else
+            holder.tv_raise_type.setVisibility(View.GONE);
 
-        if(arthropod.getArthropodInfo().getBehavior() != null) {
-            myViewHolder.tv_raise_type.setText(arthropod.getArthropodInfo().getBehavior());
-        } else {
-            myViewHolder.tv_raise_type.setVisibility(View.GONE);
-        }
+        if (!arthropod.getMoltCount().equals(""))
+            holder.tv_life_stages.setText(arthropod.getMoltCount());
+        else
+            holder.tv_life_stages.setVisibility(View.GONE);
 
-        if(arthropod.getLife_stages() != null) {
-            myViewHolder.tv_life_stages.setText(arthropod.getLife_stages());
-        } else {
-            myViewHolder.tv_life_stages.setVisibility(View.GONE);
-        }
-
-        if(arthropod.getLast_fed() != null) {
+        if (arthropod.getLastFeedDate() != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy.mm.dd hh:mm:ss a");
-            String date = formatter.format(arthropod.getLast_fed());
-            myViewHolder.tv_last_fed.setText(date);
-        } else {
-            myViewHolder.tv_last_fed.setVisibility(View.GONE);
-        }
+            String date = formatter.format(arthropod.getLastFeedDate());
+            holder.tv_last_fed.setText(date);
+        } else
+            holder.tv_last_fed.setVisibility(View.GONE);
 
-        myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), Detail.class);
-                intent.putExtra("arthropod", arthropod.getKey());
+                intent.putExtra("arthropod", arthropod.getId());
                 view.getContext().startActivity(intent);
-            }});
+            }
+        });
     }
 
-    // getItemCount()함수는 RecyclerView의 행 갯수를 리턴합니다.
+    // 전체 아이템 갯수 리턴
     @Override
     public int getItemCount() {
-        return arthropodArrayList.size();
+        return arthropods.size();
     }
 }
