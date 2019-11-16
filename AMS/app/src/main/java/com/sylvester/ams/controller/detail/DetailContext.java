@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller;
+package com.sylvester.ams.controller.detail;
 
 public class DetailContext {
     private static DetailContext instence;

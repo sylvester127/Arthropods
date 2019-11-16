@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller;
+package com.sylvester.ams.controller.detail;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.controller.adapters.ContentsPagerAdapter;
 import com.sylvester.ams.service.ArthropodService;
 import com.sylvester.ams.service.realm.RealmArthropodService;
 

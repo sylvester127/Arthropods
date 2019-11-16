@@ -21,7 +21,7 @@
             android:label="@string/title_activity_tarantula_drawer"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".controller.Detail"
+            android:name=".controller.detail.Detail"
             android:windowSoftInputMode="adjustResize"/>
     </application>
 </manifest>

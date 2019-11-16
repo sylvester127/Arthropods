@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller;
+package com.sylvester.ams.controller.detail;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

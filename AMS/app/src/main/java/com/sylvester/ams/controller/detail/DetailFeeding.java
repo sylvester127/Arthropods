@@ -1,4 +1,4 @@
-package com.sylvester.ams.controller;
+package com.sylvester.ams.controller.detail;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 
 import com.sylvester.ams.R;
 
-public class DetailBreedingInfo extends Fragment {
+public class DetailFeeding extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detail_breeding_info, container, false);
+        return inflater.inflate(R.layout.fragment_detail_feeding, container, false);
     }
 }

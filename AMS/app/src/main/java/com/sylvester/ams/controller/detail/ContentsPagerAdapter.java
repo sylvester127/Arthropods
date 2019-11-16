@@ -1,14 +1,14 @@
-package com.sylvester.ams.controller.adapters;
+package com.sylvester.ams.controller.detail;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
-import com.sylvester.ams.controller.CustomViewPager;
-import com.sylvester.ams.controller.DetailBasicInfo;
-import com.sylvester.ams.controller.DetailBreedingInfo;
-import com.sylvester.ams.controller.DetailFeeding;
+import com.sylvester.ams.controller.detail.CustomViewPager;
+import com.sylvester.ams.controller.detail.DetailBasicInfo;
+import com.sylvester.ams.controller.detail.DetailBreedingInfo;
+import com.sylvester.ams.controller.detail.DetailFeeding;
 
 public class ContentsPagerAdapter extends FragmentStatePagerAdapter {
     private int pageCount;
