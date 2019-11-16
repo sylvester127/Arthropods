@@ -11,5 +11,7 @@ public interface ArthropodService {
     List<Arthropod> getArthropods();
     ScientificName getScientificName(Arthropod arthropod);
     Bitmap getArthropodImg(Arthropod arthropod);
+    Bitmap getArthropodImg(int id);
     void insertSample();
+    Arthropod getArthropod(int id);
 }

@@ -35,14 +35,14 @@ public class Arthropod extends RealmObject {
     // 생성자
     public Arthropod() {
         this(0, "", "", 0, 0, 0, null, false,
-                0, null, "", null, "",
-                false, "", "", "", null);
+                0, new Date(), "", new Date(), "소유중",
+                false, "N1", "", "", null);
     }
 
     public Arthropod(int id, String imgDir, String name) {
         this(id, imgDir, name, 0, 0, 0, null, false,
-                0, null, "", null, "",
-                false, "", "", "", null);
+                0, new Date(), "", new Date(), "소유중",
+                false, "N1", "", "", null);
     }
 
     public Arthropod(int id, String imgDir, String name, int sexCode, float size, int habitCode,
@@ -217,11 +217,11 @@ public class Arthropod extends RealmObject {
         this.moltCount = moltCount;
     }
 
-    public String getMolt_history() {
+    public String getMoltHistory() {
         return molt_history;
     }
 
-    public void setMolt_history(String molt_history) {
+    public void setMoltHistory(String molt_history) {
         this.molt_history = molt_history;
     }
 

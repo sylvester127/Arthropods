@@ -96,9 +96,10 @@
             android:text="사육 타입 : " />
 
         <EditText
-            android:id="@+id/et_behavior"
+            android:id="@+id/et_habit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:background="@drawable/custom_edit_text"
             android:ems="4"
             android:hint="@string/detail_tv_NA"
@@ -149,7 +150,7 @@
             android:text="입양/부화 날짜" />
 
         <EditText
-            android:id="@+id/et_receive_date"
+            android:id="@+id/et_receiveDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_edit_text"
@@ -177,7 +178,7 @@
             android:text="마지막 집갈이 날짜" />
 
         <EditText
-            android:id="@+id/et_last_rehouse"
+            android:id="@+id/et_lastRehousingDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_edit_text"
@@ -203,7 +204,7 @@
             android:text="탈피 횟수 : " />
 
         <EditText
-            android:id="@+id/et_life_stages"
+            android:id="@+id/et_moltCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_edit_text"
@@ -256,7 +257,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/et_molt_history"
+            android:id="@+id/et_moltHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"

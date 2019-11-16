@@ -5,8 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class CustomViewPager extends ViewPager
-{
+public class CustomViewPager extends ViewPager {
     private View mCurrentView;
 
     public CustomViewPager(Context context) {
@@ -19,11 +18,12 @@ public class CustomViewPager extends ViewPager
         initPageChangeListener();
     }
 
+    // position 에 해당하는 페이지 생성
     private void initPageChangeListener() {
         addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                requestLayout();
+                requestLayout();    // layout을 갱신한다.
             }
         });
     }
@@ -34,8 +34,10 @@ public class CustomViewPager extends ViewPager
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             return;
         }
+
         int height = 0;
         mCurrentView.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+
         int h = mCurrentView.getMeasuredHeight();
         if (h > height) height = h;
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);

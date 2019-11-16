@@ -12,19 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.controller.adapters.TabPagerAdapter;
-import com.sylvester.ams.controller.funtion.CustomViewPager;
-import com.sylvester.ams.model.Arthropod;
-import com.sylvester.ams.model.ArthropodInfo;
-import com.sylvester.ams.controller.service.realm.RealmContext;
-
-import java.util.ArrayList;
+import com.sylvester.ams.controller.adapters.ContentsPagerAdapter;
+import com.sylvester.ams.service.ArthropodService;
+import com.sylvester.ams.service.realm.RealmArthropodService;
 
 public class Detail extends AppCompatActivity {
     private TabLayout tabLayout;
@@ -35,18 +28,21 @@ public class Detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // Intent 값 받기
-        Intent intent = getIntent();
-        DetailContext.key = intent.getStringExtra("arthropod");
-
-        // Custom Toolbar 를 추가한다.
+        // Custom Toolbar 설정
         initToolbar();
 
-        // Initializing the TabLayout
-        initTabLayout();
+        // TabLayout, ViewPager 설정
+        initContentLayout();
 
-        // Initializing the ViewPager
-        initViewPager();
+        addListener();
+
+        // Intent 값 받기
+        Intent intent = getIntent();
+        DetailContext.id = intent.getIntExtra("arthropodId", -1);
+
+        ArthropodService service = new RealmArthropodService();
+        ImageView iv_picture = (ImageView) findViewById(R.id.iv_picture);
+        iv_picture.setImageBitmap(service.getArthropodImg(DetailContext.id));
     }
 
     private void initToolbar() {
@@ -56,11 +52,28 @@ public class Detail extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void initTabLayout() {
+    private void initContentLayout() {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        // tab 정렬 방식에 대한 옵션
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        // Set TabSelectedListener
+        viewPager = (CustomViewPager) findViewById(R.id.pager);
+
+        // pagerAdapter 객체 생성
+        ContentsPagerAdapter pagerAdapter = new ContentsPagerAdapter(
+                getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(pagerAdapter);
+
+        // disable viewPager horizontal scroll
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+    }
+
+    private void addListener() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -77,17 +90,8 @@ public class Detail extends AppCompatActivity {
 
             }
         });
-    }
 
-    private void initViewPager() {
-        viewPager = (CustomViewPager) findViewById(R.id.pager);
-
-        // Creating TabPagerAdapter adapter
-
-        TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(pagerAdapter);
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout){
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 viewPager.getParent().requestDisallowInterceptTouchEvent(false);
@@ -96,16 +100,6 @@ public class Detail extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 tabLayout.getTabAt(position).select();
-            }
-        });
-
-        // disable viewPager horizontal scroll
-        viewPager.setOnTouchListener(new View.OnTouchListener()
-        {
-            @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
-                return true;
             }
         });
     }
@@ -124,13 +118,13 @@ public class Detail extends AppCompatActivity {
 //        EditText et_humidity_high = findViewById(R.id.et_humidity_high);
 //
 //        // realm에 저장되어있는 상태와 동기화한다.
-//        if (arthropod.getLast_fed() != null)
-//            tv_late_fed.setText(arthropod.getLast_fed());
+//        if (arthropod.getLastFeedDate() != null)
+//            tv_late_fed.setText(arthropod.getLastFeedDate());
 //
 //        if(arthropod.getHungry() != -1)
 //            tv_hungry.setText(Integer.toString(arthropod.getHungry()));
 //
-//        cb_postpone_fed.setChecked(arthropod.isPostpone_fed());
+//        cb_postpone_fed.setChecked(arthropod.isPostponeFeed());
 //
 //        // genus ArrayList
 //        genus.add("리스트에 Genus가 없으면 새로 추가");
@@ -186,10 +180,10 @@ public class Detail extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             return true;
-        } else if(id == android.R.id.home) {
+        } else if (id == android.R.id.home) {
             //toolbar의 back키 눌렀을 때 동작
             finish();
-            //Intent intent = new Intent(getApplicationContext(), List.class);  // 다음 화면으로 넘어갈 클래스 지정
+            //Intent intent = new Intent(getApplicationContext(), ArthropodList.class);  // 다음 화면으로 넘어갈 클래스 지정
             //startActivity(intent);  // 다음 화면으로 넘어간다.
             return true;
         }

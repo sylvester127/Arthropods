@@ -34,7 +34,7 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RealmRecycler
         // each data item
         CardView cardView;
         ImageView iv_picture;
-        TextView tv_name, tv_scientific_name, tv_sex, tv_raise_type, tv_life_stages, tv_last_fed;
+        TextView tv_name, tv_scientific_name, tv_content, tv_last_fed;
 
         ViewHolder(View view) {
             super(view);
@@ -43,9 +43,7 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RealmRecycler
             iv_picture = view.findViewById(R.id.iv_picture);
             tv_name = view.findViewById(R.id.tv_name);
             tv_scientific_name = view.findViewById(R.id.tv_scientific_name);
-            tv_sex = view.findViewById(R.id.tv_sex);
-            tv_raise_type = view.findViewById(R.id.tv_raise_type);
-            tv_life_stages = view.findViewById(R.id.tv_life_stages);
+            tv_content = view.findViewById(R.id.tv_content);
             tv_last_fed = view.findViewById(R.id.tv_last_fed);
         }
     }
@@ -77,17 +75,16 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RealmRecycler
             holder.tv_scientific_name.setText(scientificName.getGenus() +" "+ scientificName.getSpecies());
         }
 
-        holder.tv_sex.setText(arthropod.getSex());
+        String content = "";
+        content += arthropod.getSex();
 
         if (!arthropod.getHabit().equals(""))
-            holder.tv_raise_type.setText(arthropod.getHabit());
-        else
-            holder.tv_raise_type.setVisibility(View.GONE);
+            content += ", " + arthropod.getHabit();
 
         if (!arthropod.getMoltCount().equals(""))
-            holder.tv_life_stages.setText(arthropod.getMoltCount());
-        else
-            holder.tv_life_stages.setVisibility(View.GONE);
+            content += ", " + arthropod.getMoltCount();
+
+        holder.tv_content.setText(content);
 
         if (arthropod.getLastFeedDate() != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy.mm.dd hh:mm:ss a");
@@ -100,7 +97,7 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RealmRecycler
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), Detail.class);
-                intent.putExtra("arthropod", arthropod.getId());
+                intent.putExtra("arthropodId", arthropod.getId());
                 view.getContext().startActivity(intent);
             }
         });

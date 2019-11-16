@@ -28,8 +28,8 @@ public class RealmArthropodService implements ArthropodService {
     @Override
     public List<Arthropod> getArthropods() {
         List<Arthropod> arthropods = new ArrayList<>();
-        RealmResults<Arthropod> results = realm.where(Arthropod.class).findAll();
 
+        RealmResults<Arthropod> results = realm.where(Arthropod.class).findAll();
         arthropods.addAll(realm.copyFromRealm(results));
 
         return arthropods;
@@ -44,6 +44,27 @@ public class RealmArthropodService implements ArthropodService {
 
     @Override
     public Bitmap getArthropodImg(Arthropod arthropod) {
+        Context context = ArthropodListContext.context;
+
+        AssetManager am = context.getResources().getAssets();
+        String path = arthropod.getImgDir();
+
+        Bitmap bm = null;
+
+        try {
+            InputStream is = am.open(path);
+            bm = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bm;
+    }
+
+    @Override
+    public Bitmap getArthropodImg(int id) {
+        Arthropod arthropod = realm.where(Arthropod.class).equalTo("id", id).findFirst();
         Context context = ArthropodListContext.context;
 
         AssetManager am = context.getResources().getAssets();
@@ -83,6 +104,13 @@ public class RealmArthropodService implements ArthropodService {
                 scientificName.getArthropods().add(arthropod);
             }
         });
+    }
+
+    @Override
+    public Arthropod getArthropod(int id) {
+        Arthropod arthropod = realm.where(Arthropod.class).equalTo("id", id).findFirst();
+
+        return arthropod;
     }
 
     // Arthropod 쿼리

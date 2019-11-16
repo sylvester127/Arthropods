@@ -3,12 +3,14 @@ package com.sylvester.ams.service.realm;
 import android.content.SharedPreferences;
 
 import com.sylvester.ams.controller.title.TitleContext;
+import com.sylvester.ams.model.Arthropod;
 import com.sylvester.ams.model.Habitat;
 import com.sylvester.ams.model.ScientificName;
 import com.sylvester.ams.service.ArthropodInfoService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +60,7 @@ public class RealmArthropodInfoService implements ArthropodInfoService {
                     RealmResults<Habitat> results = realm.where(Habitat.class)
                             .in("habitatName", temp).findAll();
                     RealmList<Habitat> list = new RealmList<>();
-                    list.addAll(results.subList(0,results.size()));
+                    list.addAll(results.subList(0, results.size()));
 
                     ScientificName scientificName = new ScientificName(i, genus, species, list);
                     realm.copyToRealm(scientificName);
@@ -69,5 +71,37 @@ public class RealmArthropodInfoService implements ArthropodInfoService {
                 editor.commit();
             }
         });
+    }
+
+    @Override
+    public List<String> getGenus() {
+        List<ScientificName> scientificNames = new ArrayList<>();
+        List<String> genus = new ArrayList<>();
+        Set<String> tempList = new LinkedHashSet<>();
+
+        RealmResults<ScientificName> results = realm.where(ScientificName.class).findAll();
+        scientificNames.addAll(realm.copyFromRealm(results));
+
+        for (ScientificName s : scientificNames)
+            tempList.add(s.getGenus());
+
+        genus.addAll(tempList);
+
+        return genus;
+    }
+
+    @Override
+    public List<String> getSpecies(String genus) {
+        List<ScientificName> scientificNames = new ArrayList<>();
+        List<String> species = new ArrayList<>();
+
+        RealmResults<ScientificName> results = realm.where(ScientificName.class)
+                .equalTo("genus", genus).findAll();
+        scientificNames.addAll(realm.copyFromRealm(results));
+
+        for (ScientificName s : scientificNames)
+            species.add(s.getSpecies());
+
+        return species;
     }
 }
