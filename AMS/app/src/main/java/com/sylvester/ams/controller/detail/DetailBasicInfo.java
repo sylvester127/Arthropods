@@ -34,8 +34,8 @@ public class DetailBasicInfo extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_basic_info, container, false);
 
         // 리스트에서 받아온 개체정보를 받아온다.
-        infoService = new RealmArthropodInfoService();
-        service = new RealmArthropodService();
+        infoService = DetailContext.getInfoService();
+        service = DetailContext.getService();
         arthropod = service.getArthropod(DetailContext.id);
 
         // DetailBasicInfo의 각 content에 모델을 바인드한다.

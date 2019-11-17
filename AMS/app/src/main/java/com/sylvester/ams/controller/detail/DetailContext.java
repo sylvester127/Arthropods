@@ -1,13 +1,22 @@
 package com.sylvester.ams.controller.detail;
 
-public class DetailContext {
-    private static DetailContext instence;
-    public static int id;
+import com.sylvester.ams.service.realm.RealmArthropodInfoService;
+import com.sylvester.ams.service.realm.RealmArthropodService;
 
-    public static DetailContext getInstance() {
-        if (instence == null)
-            return new DetailContext();
-        else
-            return instence;
+public class DetailContext {
+    public static int id;
+    private static RealmArthropodInfoService infoService;
+    private static RealmArthropodService service;
+
+    public static RealmArthropodInfoService getInfoService() {
+        if (infoService == null)
+            infoService = new RealmArthropodInfoService();
+        return infoService;
+    }
+
+    public static RealmArthropodService getService() {
+        if (service == null)
+            service = new RealmArthropodService();
+        return service;
     }
 }

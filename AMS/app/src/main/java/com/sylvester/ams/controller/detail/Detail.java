@@ -15,7 +15,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.sylvester.ams.R;
+import com.sylvester.ams.model.Arthropod;
+import com.sylvester.ams.model.ScientificName;
 import com.sylvester.ams.service.ArthropodService;
+import com.sylvester.ams.service.realm.RealmArthropodInfoService;
 import com.sylvester.ams.service.realm.RealmArthropodService;
 
 public class Detail extends AppCompatActivity {
@@ -27,6 +30,10 @@ public class Detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        // Intent 값 받기
+        Intent intent = getIntent();
+        DetailContext.id = intent.getIntExtra("arthropodId", -1);
+
         // Custom Toolbar 설정
         initToolbar();
 
@@ -35,11 +42,7 @@ public class Detail extends AppCompatActivity {
 
         addListener();
 
-        // Intent 값 받기
-        Intent intent = getIntent();
-        DetailContext.id = intent.getIntExtra("arthropodId", -1);
-
-        ArthropodService service = new RealmArthropodService();
+        ArthropodService service = DetailContext.getService();
         ImageView iv_picture = (ImageView) findViewById(R.id.iv_picture);
         iv_picture.setImageBitmap(service.getArthropodImg(DetailContext.id));
     }
