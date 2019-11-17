@@ -3,18 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="5dp"
     android:orientation="vertical"
     tools:context=".controller.detail.DetailBasicInfo">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:layout_marginVertical="5dp">
 
         <EditText
             android:id="@+id/et_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/custom_edit_text"
             android:ems="10"
             android:hint="@string/detail_et_name"
@@ -26,12 +27,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
-
 
         <EditText
             android:id="@+id/et_genus"
@@ -39,12 +37,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/custom_edit_text"
+            android:clickable="false"
             android:cursorVisible="false"
+            android:focusable="false"
             android:hint="@string/detail_et_genus"
             android:inputType="text"
-            android:singleLine="true"
-            android:focusable="false"
-            android:clickable="false"/>
+            android:singleLine="true" />
 
         <EditText
             android:id="@+id/et_species"
@@ -52,28 +50,25 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/custom_edit_text"
+            android:clickable="false"
             android:cursorVisible="false"
+            android:focusable="false"
             android:hint="@string/detail_et_species"
             android:inputType="text"
-            android:singleLine="true"
-            android:focusable="false"
-            android:clickable="false"/>
+            android:singleLine="true" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="5dp"
             android:gravity="center"
             android:text="@string/detail_tv_sex" />
 
@@ -81,9 +76,9 @@
             android:id="@+id/et_sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:background="@drawable/custom_edit_text"
             android:ems="4"
+            android:gravity="center"
             android:hint="미구분"
             android:inputType="text"
             android:singleLine="true" />
@@ -93,15 +88,15 @@
             android:layout_height="match_parent"
             android:layout_marginStart="15dp"
             android:gravity="center"
-            android:text="사육 타입 : " />
+            android:text="@string/detail_tv_habit" />
 
         <EditText
             android:id="@+id/et_habit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:background="@drawable/custom_edit_text"
             android:ems="4"
+            android:gravity="center"
             android:hint="@string/detail_tv_NA"
             android:inputType="text"
             android:singleLine="true" />
@@ -110,9 +105,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
@@ -126,9 +119,9 @@
             android:id="@+id/et_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:background="@drawable/custom_edit_text"
             android:ems="8"
+            android:gravity="center"
             android:inputType="textCapWords"
             android:singleLine="true"
             android:text="소유중" />
@@ -137,9 +130,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="vertical">
 
@@ -165,9 +156,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="vertical">
 
@@ -192,76 +181,61 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="탈피 횟수 : " />
-
-        <EditText
-            android:id="@+id/et_moltCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/custom_edit_text"
-            android:ems="5"
-            android:gravity="center"
-            android:hint="@string/detail_tv_NA"
-            android:inputType="text"
-            android:singleLine="true" />
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="right|center_vertical"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:text="기록 추가 : " />
+                android:gravity="center_vertical"
+                android:text="탈피 횟수 : " />
 
-            <Button
-                android:id="@+id/btn_molt_history"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_detail_add_box"
-                android:gravity="center" />
+            <EditText
+                android:id="@+id/et_moltCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_edit_text"
+                android:ems="5"
+                android:gravity="center"
+                android:hint="@string/detail_tv_NA"
+                android:inputType="text"
+                android:singleLine="true" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right|center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="기록 추가 : " />
+
+                <Button
+                    android:id="@+id/btn_molt_history"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/ic_detail_add_box"
+                    android:gravity="center" />
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:text="탈피 기록 : " />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/et_moltHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/custom_edit_text"
             android:ems="10"
@@ -273,10 +247,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="5dp"
-        android:orientation="horizontal">
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -284,24 +257,15 @@
             android:gravity="center"
             android:text="메모 : "
             android:textSize="12sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/et_memo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
             android:background="@drawable/custom_edit_text"
             android:ems="10"
             android:inputType="textMultiLine"
             android:lines="2"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical" />
     </LinearLayout>
 </LinearLayout>
