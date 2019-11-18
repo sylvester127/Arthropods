@@ -24,7 +24,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
             tools:src="@drawable/ic_tarantula" />
 
         <LinearLayout
@@ -67,7 +67,10 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_detail_favorite_border" />
+            android:background="@drawable/ic_detail_favorite_border"
+            android:text="feed"
+            android:textSize="10sp" />
+
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

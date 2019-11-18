@@ -16,12 +16,13 @@
     <string name="detail_et_genus" translatable="false">"Genus: "</string>
     <string name="detail_tv_recent_fed_date">최근 피딩 날짜 : </string>
     <string name="detail_tv_NA" translatable="false">N/A</string>
-    <string name="detail_tv_starve_date">굶은 기간 : </string>
-    <string name="detail_stop_fed">피딩 중지</string>
-    <string name="detail_fed">피딩주기 : </string>
-    <string name="detail_postpone_fed">탈피 후 피딩 연기일 : </string>
-    <string name="detail_tv_sex">성별 : </string>
+    <string name="detail_tv_starve_date">"굶은 기간 : "</string>
+    <string name="detail_stop_fed">"피딩 중지"</string>
+    <string name="detail_fed">"피딩주기 : "</string>
+    <string name="detail_postpone_fed">"탈피 후 피딩 연기일 : "</string>
+    <string name="detail_tv_sex">"성별 : "</string>
     <string name="detail_tv_habit">"사육 타입 : "</string>
+    <string name="detail_tv_status">"상태 : "</string>
     <string name="detail_et_species" translatable="false">Species:</string>
 
     <!-- TODO: Remove or change this placeholder text -->

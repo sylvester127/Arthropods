@@ -108,40 +108,10 @@ public class Detail extends AppCompatActivity {
 
 //    private void bindTarantulaObj() {
 //        // xml에 있는 gui와 바인드한다.
-//        TextView tv_late_fed = findViewById(R.id.tv_late_fed);                      // 마지막 피딩일
-//        TextView tv_hungry = findViewById(R.id.tv_hungry);                          // 굶은 기간
-//        Button ib_fed = findViewById(R.id.ib_fed);                                  // 피딩 버튼
-//        CheckBox cb_postpone_fed = findViewById(R.id.cb_postpone_fed);              // 피딩을 중지
-//        EditText et_fed_cycle = findViewById(R.id.et_fed_cycle);                    // 피딩주기
-//        EditText et_postpone_fed_date = findViewById(R.id.et_postpone_fed_date);    // 탈피 후 피딩 연기일
 //        EditText et_temperature_low = findViewById(R.id.et_temperature_low);        // 적정온도
 //        EditText et_temperature_high = findViewById(R.id.et_temperature_high);
 //        EditText et_humidity_low = findViewById(R.id.et_humidity_low);              // 적정습도
 //        EditText et_humidity_high = findViewById(R.id.et_humidity_high);
-//
-//        // realm에 저장되어있는 상태와 동기화한다.
-//        if (arthropod.getLastFeedDate() != null)
-//            tv_late_fed.setText(arthropod.getLastFeedDate());
-//
-//        if(arthropod.getHungry() != -1)
-//            tv_hungry.setText(Integer.toString(arthropod.getHungry()));
-//
-//        cb_postpone_fed.setChecked(arthropod.isPostponeFeed());
-//
-//        // genus ArrayList
-//        genus.add("리스트에 Genus가 없으면 새로 추가");
-//
-//        // tarantulaInfoList에서 genus 중복제거
-//        int j = 1;
-//        for (int i = 1; i < arthropodInfoList.size(); i++) {
-//            String temp = arthropodInfoList.get(i - 1).getScientificName();
-//            temp = temp.split(" ")[0];
-//
-//            if (!temp.equals(genus.get(j - 1))) {
-//                genus.add(temp);
-//                j++;
-//            }
-//        }
 //    }
 
     private void showDialog() {

@@ -3,14 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginHorizontal="5dp"
     android:orientation="vertical"
     tools:context=".controller.detail.DetailFeeding">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="5dp">
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -24,14 +25,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
                     android:text="@string/detail_tv_recent_fed_date" />
 
                 <TextView
-                    android:id="@+id/tv_late_fed"
+                    android:id="@+id/tv_lastFeedDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/detail_tv_NA"/>
+                    android:hint="@string/detail_tv_NA" />
 
             </LinearLayout>
 
@@ -44,14 +44,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
                     android:text="@string/detail_tv_starve_date" />
 
                 <TextView
                     android:id="@+id/tv_hungry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/detail_tv_NA"/>
+                    android:hint="@string/detail_tv_NA" />
             </LinearLayout>
 
         </LinearLayout>
@@ -62,12 +61,12 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/ib_fed"
+                android:id="@+id/ib_feed"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="right"
                 android:background="@drawable/ic_detail_favorite_border"
-                android:text="fed"
+                android:text="feed"
                 android:textColor="@android:color/tab_indicator_text"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -80,10 +79,9 @@
         android:layout_height="wrap_content">
 
         <CheckBox
-            android:id="@+id/cb_postpone_fed"
+            android:id="@+id/cb_postponeFeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
             android:checked="false"
             android:text="@string/detail_stop_fed"
             android:textColor="@android:color/tab_indicator_text" />
@@ -93,58 +91,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:gravity="center_vertical"
+            android:text="@string/detail_fed" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
-                android:gravity="center_vertical"
-                android:text="@string/detail_fed" />
-
-            <EditText
-                android:id="@+id/et_fed_cycle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/custom_edit_text"
-                android:ems="2"
-                android:gravity="center_vertical"
-                android:inputType="numberDecimal"
-                android:singleLine="true" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
-                android:gravity="center_vertical"
-                android:text="@string/detail_postpone_fed" />
-
-            <EditText
-                android:id="@+id/et_postpone_fed_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/custom_edit_text"
-                android:ems="2"
-                android:gravity="center"
-                android:inputType="numberDecimal"
-                android:singleLine="true" />
-
-        </LinearLayout>
-
+        <EditText
+            android:id="@+id/et_feedingCycle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_edit_text"
+            android:ems="2"
+            android:gravity="center_vertical"
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
     </LinearLayout>
 
 </LinearLayout>
