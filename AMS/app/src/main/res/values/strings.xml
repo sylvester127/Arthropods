@@ -10,6 +10,7 @@
     <!-- menu_tarantula_list -->
     <string name="action_search">검색</string>
     <string name="action_sort">정렬</string>
+    <string name="action_add">저장하기</string>
 
     <!-- activity_detail -->
     <string name="detail_et_name">이름:</string>
@@ -27,5 +28,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="action_save">저장</string>
 
 </resources>

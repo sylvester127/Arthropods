@@ -4,15 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_more"
+        android:id="@+id/action_more_vert"
         android:title=""
-        android:icon="@drawable/ic_menu_vert"
+        android:icon="@drawable/ic_navigation_more_vert"
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/action_sort"
-                android:title="@string/action_sort"
-                android:icon="@drawable/ic_menu_sort"
+                android:id="@+id/action_save"
+                android:icon="@drawable/ic_content_save"
+                android:title="@string/action_save"
                 app:showAsAction="never" />
         </menu>
     </item>

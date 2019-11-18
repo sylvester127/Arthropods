@@ -43,11 +43,11 @@ public class RealmArthropodService implements ArthropodService {
     }
 
     @Override
-    public Bitmap getArthropodImg(Arthropod arthropod) {
+    public Bitmap getArthropodImg() {
         Context context = ArthropodListContext.context;
 
         AssetManager am = context.getResources().getAssets();
-        String path = arthropod.getImgDir();
+        String path = "tarantulaImg.jpg";
 
         Bitmap bm = null;
 
@@ -84,7 +84,50 @@ public class RealmArthropodService implements ArthropodService {
     }
 
     @Override
+    public Bitmap getArthropodImg(Arthropod arthropod) {
+        Context context = ArthropodListContext.context;
+
+        AssetManager am = context.getResources().getAssets();
+        String path = arthropod.getImgDir();
+
+        Bitmap bm = null;
+
+        try {
+            InputStream is = am.open(path);
+            bm = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bm;
+    }
+
+    @Override
     public void insertSample() {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Number maxValue = realm.where(Arthropod.class).max("id");
+
+                int pk;
+                if (maxValue == null)
+                    pk = 0;
+                else
+                    pk = maxValue.intValue() + 1;
+
+                Arthropod arthropod = new Arthropod(pk, "tarantulaImg.jpg", "따따라니");
+
+                ScientificName scientificName = realm.where(ScientificName.class).equalTo("genus",
+                        "Acanthoscurria").equalTo("species", "geniculata").findFirst();
+
+                scientificName.getArthropods().add(arthropod);
+            }
+        });
+    }
+
+    @Override
+    public void insertArthropod() {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {

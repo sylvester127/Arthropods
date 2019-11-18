@@ -216,7 +216,7 @@
                     android:id="@+id/btn_molt_history"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:background="@drawable/ic_detail_add_box"
+                    android:background="@drawable/ic_content_add_box"
                     android:gravity="center" />
             </LinearLayout>
         </LinearLayout>

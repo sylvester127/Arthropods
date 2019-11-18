@@ -1,5 +1,6 @@
 package com.sylvester.ams.controller.list;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,10 +11,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sylvester.ams.R;
+import com.sylvester.ams.controller.detail.Detail;
 import com.sylvester.ams.service.ArthropodService;
 import com.sylvester.ams.service.realm.RealmArthropodService;
 import com.sylvester.ams.model.Arthropod;
@@ -23,7 +26,8 @@ import java.util.List;
 
 public class ArthropodList extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private List<Arthropod> arthropodArrayList = new ArrayList<>();;
+    private List<Arthropod> arthropodArrayList = new ArrayList<>();
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,22 +115,26 @@ public class ArthropodList extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // Drawer에 추가된 항목의 select 이벤트를 처리하는 함수
+    // Drawer 에 추가된 항목의 select 이벤트를 처리하는 함수
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         // Handle navigation view item clicks here.
         int id = menuItem.getItemId();
 
-        if (id == R.id.nav_add) {
-            // Handle the camera action
-        } else if (id == R.id.nav_notifications) {
-
-        } else if (id == R.id.nav_delete) {
-
-        } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_help) {
-
+        switch (id) {
+            case R.id.nav_add:
+                // 개체를 추가하는 액션
+                Intent intent = new Intent(this, Detail.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_notifications:
+                break;
+            case R.id.nav_delete:
+                break;
+            case R.id.nav_settings:
+                break;
+            case R.id.nav_help:
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

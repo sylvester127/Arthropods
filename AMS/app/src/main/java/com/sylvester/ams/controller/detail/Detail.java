@@ -24,6 +24,7 @@ import com.sylvester.ams.service.realm.RealmArthropodService;
 public class Detail extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private ArthropodService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +43,13 @@ public class Detail extends AppCompatActivity {
 
         addListener();
 
-        ArthropodService service = DetailContext.getService();
+        service = DetailContext.getInstance().getService();
         ImageView iv_picture = (ImageView) findViewById(R.id.iv_picture);
-        iv_picture.setImageBitmap(service.getArthropodImg(DetailContext.id));
+
+        if (DetailContext.id != -1)
+            iv_picture.setImageBitmap(service.getArthropodImg(DetailContext.id));
+        else
+            iv_picture.setImageBitmap(service.getArthropodImg());
     }
 
     private void initToolbar() {
@@ -106,34 +111,7 @@ public class Detail extends AppCompatActivity {
         });
     }
 
-//    private void bindTarantulaObj() {
-//        // xml에 있는 gui와 바인드한다.
-//        EditText et_temperature_low = findViewById(R.id.et_temperature_low);        // 적정온도
-//        EditText et_temperature_high = findViewById(R.id.et_temperature_high);
-//        EditText et_humidity_low = findViewById(R.id.et_humidity_low);              // 적정습도
-//        EditText et_humidity_high = findViewById(R.id.et_humidity_high);
-//    }
-
-    private void showDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("AlertDialog Title");
-        builder.setMessage("AlertDialog Content");
-        builder.setPositiveButton("예",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        builder.setNegativeButton("아니오",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-        builder.show();
-    }
-
-    // ToolBar에 menu.xml을 인플레이트함
+    // ToolBar 에 menu.xml 을 인플레이트함
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -149,8 +127,13 @@ public class Detail extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search) {
+        if (id == R.id.action_save) {
+            // 저장하기를 눌렀을 때
+            if (DetailContext.ScientificName != null && !DetailContext.ScientificName.equals("")) {
+                service.insertArthropod();
+            } else {
+            }
+
             return true;
         } else if (id == android.R.id.home) {
             //toolbar의 back키 눌렀을 때 동작

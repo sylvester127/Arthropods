@@ -30,8 +30,8 @@ public class DetailFeeding extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_feeding, container, false);
 
         // 리스트에서 받아온 개체정보를 받아온다.
-        infoService = DetailContext.getInfoService();
-        service = DetailContext.getService();
+        infoService = DetailContext.getInstance().getInfoService();
+        service = DetailContext.getInstance().getService();
         arthropod = service.getArthropod(DetailContext.id);
 
         // DetailBasicInfo의 각 content에 모델을 바인드한다.

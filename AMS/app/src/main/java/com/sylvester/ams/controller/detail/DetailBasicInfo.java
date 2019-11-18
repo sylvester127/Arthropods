@@ -34,66 +34,52 @@ public class DetailBasicInfo extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_basic_info, container, false);
 
         // 리스트에서 받아온 개체정보를 받아온다.
-        infoService = DetailContext.getInfoService();
-        service = DetailContext.getService();
+        infoService = DetailContext.getInstance().getInfoService();
+        service = DetailContext.getInstance().getService();
         arthropod = service.getArthropod(DetailContext.id);
 
-        // DetailBasicInfo의 각 content에 모델을 바인드한다.
+        // DetailBasicInfo 의 각 content 에 모델을 바인드한다.
         if (arthropod != null) {
             scientificName = service.getScientificName(arthropod);
             genus = scientificName.getGenus();
-
-            bindModel(view);
+        } else {
+            arthropod = new Arthropod();
+            genus = "";
         }
+
+        bindModel(view);
+
+        addListener(view);
 
         return view;
     }
 
     private void bindModel(View view) {
         // xml에 있는 gui와 모델을 바인드한다.
-        EditText et_name = view.findViewById(R.id.et_name);                     // 개체이름
-        EditText et_genus = view.findViewById(R.id.et_genus);                   // 종
-        EditText et_species = view.findViewById(R.id.et_species);               // 속
-        EditText et_sex = view.findViewById(R.id.et_sex);                       // 성별
-        EditText et_habit = view.findViewById(R.id.et_habit);                   // 사육 타입, 활동 방식
-        EditText et_status = view.findViewById(R.id.et_status);                 // 개체 상태
-        EditText et_receiveDate = view.findViewById(R.id.et_receiveDate);     // 입양, 브리딩 날짜
-        EditText et_lastRehousingDate = view.findViewById(R.id.et_lastRehousingDate);     // 마지막 집갈이 날짜
-        EditText et_moltCount = view.findViewById(R.id.et_moltCount);       // 탈피 횟수
-        Button btn_molt_history = view.findViewById(R.id.btn_molt_history);     // 탈피 기록 추가
-        EditText et_moltHistory = view.findViewById(R.id.et_moltHistory);     // 탈피 기록
-        EditText et_memo = view.findViewById(R.id.et_memo);                     // 메모
+        EditText et_name = view.findViewById(R.id.et_name);                                 // 개체이름
+        EditText et_genus = view.findViewById(R.id.et_genus);                               // 종
+        EditText et_species = view.findViewById(R.id.et_species);                           // 속
+        EditText et_sex = view.findViewById(R.id.et_sex);                                   // 성별
+        EditText et_habit = view.findViewById(R.id.et_habit);                               // 사육 타입, 활동 방식
+        EditText et_status = view.findViewById(R.id.et_status);                             // 개체 상태
+        EditText et_receiveDate = view.findViewById(R.id.et_receiveDate);                   // 입양, 브리딩 날짜
+        EditText et_lastRehousingDate = view.findViewById(R.id.et_lastRehousingDate);       // 마지막 집갈이 날짜
+        EditText et_moltCount = view.findViewById(R.id.et_moltCount);                       // 탈피 횟수
+        EditText et_moltHistory = view.findViewById(R.id.et_moltHistory);                   // 탈피 기록
+        EditText et_memo = view.findViewById(R.id.et_memo);                                 // 메모
 
         // 개체의 이름
         et_name.setText(arthropod.getName());
 
-        // 개체의 종
-        et_genus.setText(scientificName.getGenus());
-        et_genus.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    String title = "Genus";
-
-                    showDialog(title, infoService.getGenus());
-                }
-                return false;
-            }
-        });
-
-        // 개체의 속
-        et_species.setText(scientificName.getSpecies());
-        et_species.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    String title = "Species";
-
-                    showDialog(title, infoService.getSpecies(genus));
-                }
-                return false;
-            }
-        });
+        if (scientificName != null) {
+            // 개체의 종
+            et_genus.setText(scientificName.getGenus());
+            // 개체의 속
+            et_species.setText(scientificName.getSpecies());
+        } else {
+            et_genus.setText("");
+            et_species.setText("");
+        }
 
         // 개체의 성별
         et_sex.setText(arthropod.getSex());
@@ -112,6 +98,37 @@ public class DetailBasicInfo extends Fragment {
         et_moltHistory.setText(arthropod.getMoltHistory());
         // 메모
         et_memo.setText(arthropod.getMemo());
+    }
+
+    private void addListener(View view) {
+        EditText et_genus = view.findViewById(R.id.et_genus);       // 종
+        EditText et_species = view.findViewById(R.id.et_species);   // 속
+        Button btn_molt_history = view.findViewById(R.id.btn_molt_history);     // 탈피 기록 추가
+
+
+        et_genus.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    String title = "Genus";
+
+                    showDialog(title, infoService.getGenus());
+                }
+                return false;
+            }
+        });
+
+        et_species.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    String title = "Species";
+
+                    showDialog(title, infoService.getSpecies(genus));
+                }
+                return false;
+            }
+        });
     }
 
     private void showDialog(String title, List<String> scientificName) {

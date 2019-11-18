@@ -11,4 +11,5 @@
     <string name="detail_tv_starve_date">"days hungry : "</string>
     <string name="detail_tv_habit">"habit : "</string>
     <string name="detail_tv_status">"status : "</string>
+    <string name="action_add">save</string>
 </resources>

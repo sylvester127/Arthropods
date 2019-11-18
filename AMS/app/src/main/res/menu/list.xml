@@ -6,18 +6,18 @@
     <item
         android:id="@+id/action_search"
         android:title="@string/action_search"
-        android:icon="@drawable/ic_menu_search"
+        android:icon="@drawable/ic_action_search"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_more"
+        android:id="@+id/action_more_vert"
         android:title=""
-        android:icon="@drawable/ic_menu_vert"
+        android:icon="@drawable/ic_navigation_more_vert"
         app:showAsAction="always">
         <menu>
             <item
                 android:id="@+id/action_sort"
                 android:title="@string/action_sort"
-                android:icon="@drawable/ic_menu_sort"
+                android:icon="@drawable/ic_content_sort"
                 app:showAsAction="never" />
         </menu>
     </item>
