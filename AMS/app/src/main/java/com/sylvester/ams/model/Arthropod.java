@@ -34,7 +34,7 @@ public class Arthropod extends RealmObject {
 
     // 생성자
     public Arthropod() {
-        this(0, "", "", 0, 0, 0, null, false,
+        this(0, "tarantulaImg.jpg", "", 0, 0, 0, null, false,
                 0, new Date(), "", new Date(), "소유중",
                 false, "N1", "", "", null);
     }

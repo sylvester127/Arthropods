@@ -5,11 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
-import com.sylvester.ams.controller.detail.CustomViewPager;
-import com.sylvester.ams.controller.detail.DetailBasicInfo;
-import com.sylvester.ams.controller.detail.DetailBreedingInfo;
-import com.sylvester.ams.controller.detail.DetailFeeding;
-
 public class ContentsPagerAdapter extends FragmentStatePagerAdapter {
     private int pageCount;
     private int mCurrentPosition = -1;

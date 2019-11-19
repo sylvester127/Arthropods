@@ -3,6 +3,7 @@ package com.sylvester.ams.controller.detail;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,22 +35,29 @@ public class DetailBasicInfo extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_basic_info, container, false);
 
         // 리스트에서 받아온 개체정보를 받아온다.
-        infoService = DetailContext.getInstance().getInfoService();
-        service = DetailContext.getInstance().getService();
-        arthropod = service.getArthropod(DetailContext.id);
+        infoService = DetailContext.getInfoService();
+        service = DetailContext.getService();
+        arthropod = DetailContext.arthropod;
+        genus = "";
 
         // DetailBasicInfo 의 각 content 에 모델을 바인드한다.
-        if (arthropod != null) {
+        if (arthropod.getScientificName() != null) {
             scientificName = service.getScientificName(arthropod);
             genus = scientificName.getGenus();
-        } else {
-            arthropod = new Arthropod();
-            genus = "";
         }
 
         bindModel(view);
 
         addListener(view);
+
+        Detail detail = new Detail();
+        Log.d("debug111", "베이직인포");
+        detail.setDetailMenuListener(new DetailMenuListener() {
+            @Override
+            public void onClickSave(Arthropod arthropod) {
+                Log.d("debug111", "베이직인포의 온클릭세이브");
+            }
+        });
 
         return view;
     }
@@ -155,5 +163,7 @@ public class DetailBasicInfo extends Fragment {
         builder.setTitle(title);
 
         alertDialog.show();
+
+
     }
 }

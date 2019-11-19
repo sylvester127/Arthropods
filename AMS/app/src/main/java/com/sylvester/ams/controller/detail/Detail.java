@@ -1,13 +1,12 @@
 package com.sylvester.ams.controller.detail;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -16,24 +15,20 @@ import android.widget.ImageView;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.model.Arthropod;
-import com.sylvester.ams.model.ScientificName;
 import com.sylvester.ams.service.ArthropodService;
-import com.sylvester.ams.service.realm.RealmArthropodInfoService;
-import com.sylvester.ams.service.realm.RealmArthropodService;
 
 public class Detail extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private DetailMenuListener detailMenuListener;
     private ArthropodService service;
+    private Arthropod arthropod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        // Intent 값 받기
-        Intent intent = getIntent();
-        DetailContext.id = intent.getIntExtra("arthropodId", -1);
+        DetailContext.context = this;
 
         // Custom Toolbar 설정
         initToolbar();
@@ -41,15 +36,22 @@ public class Detail extends AppCompatActivity {
         // TabLayout, ViewPager 설정
         initContentLayout();
 
-        addListener();
+        // Intent 값을 받아 넘겨지는 개체를 구한다
+        Intent intent = getIntent();
+        int id = intent.getIntExtra("arthropodId", -1);
 
-        service = DetailContext.getInstance().getService();
+        // 개체 이미지 설정
         ImageView iv_picture = (ImageView) findViewById(R.id.iv_picture);
+        service = DetailContext.getService();
 
-        if (DetailContext.id != -1)
-            iv_picture.setImageBitmap(service.getArthropodImg(DetailContext.id));
+        if (id != -1)
+            // 넘겨지는 개체의 사진으로 iv_picture 의 이미지를 설정
+            DetailContext.arthropod = service.getArthropod(id);
         else
-            iv_picture.setImageBitmap(service.getArthropodImg());
+            // 넘겨지는 개체 고유 아이디가 없을 경우, 기본 사진으로 대체하여 설정
+            DetailContext.arthropod = new Arthropod();
+
+        iv_picture.setImageBitmap(service.getArthropodImg(DetailContext.arthropod));
     }
 
     private void initToolbar() {
@@ -78,9 +80,8 @@ public class Detail extends AppCompatActivity {
                 return true;
             }
         });
-    }
 
-    private void addListener() {
+        // tabLayout 리스너
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -98,6 +99,7 @@ public class Detail extends AppCompatActivity {
             }
         });
 
+        // viewPager 리스너
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout) {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -119,30 +121,42 @@ public class Detail extends AppCompatActivity {
         return true;
     }
 
-    // ToolBar에 추가된 항목의 select 이벤트를 처리하는 함수
+    // toolBar 에 추가된 항목의 select 이벤트를 처리하는 함수
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            // save 버튼을 눌렀을 때 동작
+            case R.id.action_save:
+                Log.d("debug111", "detail 버튼 누름");
+//                if (DetailContext.ScientificName != null && !DetailContext.ScientificName.equals("")) {
+                if (detailMenuListener != null) {
+                    Log.d("debug111", "detail");
+                    detailMenuListener.onClickSave(DetailContext.arthropod);
+                }
+                else
+                    Log.d("debug111", "널");
 
-        if (id == R.id.action_save) {
-            // 저장하기를 눌렀을 때
-            if (DetailContext.ScientificName != null && !DetailContext.ScientificName.equals("")) {
-                service.insertArthropod();
-            } else {
-            }
-
-            return true;
-        } else if (id == android.R.id.home) {
-            //toolbar의 back키 눌렀을 때 동작
-            finish();
-            //Intent intent = new Intent(getApplicationContext(), ArthropodList.class);  // 다음 화면으로 넘어갈 클래스 지정
-            //startActivity(intent);  // 다음 화면으로 넘어간다.
-            return true;
+//                service.insertArthropod();
+                return true;
+            // back 키를 눌렀을 때 동작
+            case android.R.id.home:
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setDetailMenuListener(DetailMenuListener listener) {
+        Log.d("debug111", "디테일의 셋리스너");
+        detailMenuListener = listener;
+        if (detailMenuListener != null)
+        Log.d("debug111", "널 아님");
+        else
+            Log.d("debug111", "널");
+
     }
 }
