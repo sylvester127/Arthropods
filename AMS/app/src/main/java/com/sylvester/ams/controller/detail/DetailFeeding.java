@@ -2,6 +2,7 @@ package com.sylvester.ams.controller.detail;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,13 @@ public class DetailFeeding extends Fragment {
             bindModel(view);
         }
 
+        Detail activity = (Detail) getActivity();
+        activity.setFeedListener(new DetailMenuListener() {
+            @Override
+            public void onClickSave(Arthropod arthropod) {
+                Log.d("debug", "feeding");
+            }
+        });
 
         return view;
     }

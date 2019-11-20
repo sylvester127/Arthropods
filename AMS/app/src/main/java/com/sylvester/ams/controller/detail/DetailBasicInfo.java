@@ -15,15 +15,43 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sylvester.ams.R;
+import com.sylvester.ams.model.Arthropod;
 import com.sylvester.ams.model.ScientificName;
 import com.sylvester.ams.service.realm.RealmArthropodInfoService;
 import com.sylvester.ams.service.realm.RealmArthropodService;
-import com.sylvester.ams.model.Arthropod;
 
 import java.text.DateFormat;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailBasicInfo extends Fragment {
+    @BindView(R.id.et_name)
+    EditText et_name;                   // 개체이름
+    @BindView(R.id.et_genus)
+    EditText et_genus;                  // 종
+    @BindView(R.id.et_species)
+    EditText et_species;                // 속
+    @BindView(R.id.et_sex)
+    EditText et_sex;                    // 성별
+    @BindView(R.id.et_habit)
+    EditText et_habit;                  // 사육 타입, 활동 방식
+    @BindView(R.id.et_status)
+    EditText et_status;                 // 개체 상태
+    @BindView(R.id.et_receiveDate)
+    EditText et_receiveDate;            // 입양, 브리딩 날짜
+    @BindView(R.id.et_lastRehousingDate)
+    EditText et_lastRehousingDate;      // 마지막 집갈이 날짜
+    @BindView(R.id.et_moltCount)
+    EditText et_moltCount;              // 탈피 횟수
+    @BindView(R.id.et_moltHistory)
+    EditText et_moltHistory;            // 탈피 기록
+    @BindView(R.id.et_memo)
+    EditText et_memo;                   // 메모
+    @BindView(R.id.btn_molt_history)
+    Button btn_molt_history;            // 탈피 기록 추가
+
     private RealmArthropodInfoService infoService;
     private RealmArthropodService service;
     private Arthropod arthropod;
@@ -33,6 +61,7 @@ public class DetailBasicInfo extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_basic_info, container, false);
+        ButterKnife.bind(this, view);
 
         // 리스트에서 받아온 개체정보를 받아온다.
         infoService = DetailContext.getInfoService();
@@ -46,36 +75,14 @@ public class DetailBasicInfo extends Fragment {
             genus = scientificName.getGenus();
         }
 
-        bindModel(view);
+        bindModel();
 
         addListener(view);
-
-        Detail detail = new Detail();
-        Log.d("debug111", "베이직인포");
-        detail.setDetailMenuListener(new DetailMenuListener() {
-            @Override
-            public void onClickSave(Arthropod arthropod) {
-                Log.d("debug111", "베이직인포의 온클릭세이브");
-            }
-        });
 
         return view;
     }
 
-    private void bindModel(View view) {
-        // xml에 있는 gui와 모델을 바인드한다.
-        EditText et_name = view.findViewById(R.id.et_name);                                 // 개체이름
-        EditText et_genus = view.findViewById(R.id.et_genus);                               // 종
-        EditText et_species = view.findViewById(R.id.et_species);                           // 속
-        EditText et_sex = view.findViewById(R.id.et_sex);                                   // 성별
-        EditText et_habit = view.findViewById(R.id.et_habit);                               // 사육 타입, 활동 방식
-        EditText et_status = view.findViewById(R.id.et_status);                             // 개체 상태
-        EditText et_receiveDate = view.findViewById(R.id.et_receiveDate);                   // 입양, 브리딩 날짜
-        EditText et_lastRehousingDate = view.findViewById(R.id.et_lastRehousingDate);       // 마지막 집갈이 날짜
-        EditText et_moltCount = view.findViewById(R.id.et_moltCount);                       // 탈피 횟수
-        EditText et_moltHistory = view.findViewById(R.id.et_moltHistory);                   // 탈피 기록
-        EditText et_memo = view.findViewById(R.id.et_memo);                                 // 메모
-
+    private void bindModel() {
         // 개체의 이름
         et_name.setText(arthropod.getName());
 
@@ -109,8 +116,14 @@ public class DetailBasicInfo extends Fragment {
     }
 
     private void addListener(View view) {
-        EditText et_genus = view.findViewById(R.id.et_genus);       // 종
-        EditText et_species = view.findViewById(R.id.et_species);   // 속
+        Detail activity = (Detail) getActivity();
+        activity.setBasicListener(new DetailMenuListener() {
+            @Override
+            public void onClickSave(Arthropod arthropod) {
+                Log.d("debug", "basic");
+            }
+        });
+
         Button btn_molt_history = view.findViewById(R.id.btn_molt_history);     // 탈피 기록 추가
 
 
@@ -166,4 +179,5 @@ public class DetailBasicInfo extends Fragment {
 
 
     }
+
 }

@@ -11,6 +11,7 @@ public class DetailContext {
     private static RealmArthropodInfoService infoService;
     private static RealmArthropodService service;
     public static Arthropod arthropod;
+    public static String scientificName;
     public static Context context;
 
     public static DetailContext getInstance() {

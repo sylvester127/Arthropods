@@ -1,12 +1,13 @@
 package com.sylvester.ams.controller.detail;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -20,9 +21,10 @@ import com.sylvester.ams.service.ArthropodService;
 public class Detail extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private DetailMenuListener detailMenuListener;
     private ArthropodService service;
-    private Arthropod arthropod;
+    private DetailMenuListener basicListener;
+    private DetailMenuListener feedListener;
+//    private DetailMenuListener basicListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,16 +132,25 @@ public class Detail extends AppCompatActivity {
         switch (item.getItemId()) {
             // save 버튼을 눌렀을 때 동작
             case R.id.action_save:
-                Log.d("debug111", "detail 버튼 누름");
-//                if (DetailContext.ScientificName != null && !DetailContext.ScientificName.equals("")) {
-                if (detailMenuListener != null) {
-                    Log.d("debug111", "detail");
-                    detailMenuListener.onClickSave(DetailContext.arthropod);
-                }
-                else
-                    Log.d("debug111", "널");
+                    if (basicListener != null && feedListener != null) {
+                        basicListener.onClickSave(DetailContext.arthropod);
+                        feedListener.onClickSave(DetailContext.arthropod);
 
-//                service.insertArthropod();
+//                        if (DetailContext.scientificName != null && !DetailContext.scientificName.equals(""))
+//                            service.insertArthropod();
+//                        else {
+//                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                            builder.setMessage("학명을 입력해주세요.");
+//                            builder.setPositiveButton("확인",
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                        }
+//                                    });
+//                            AlertDialog alertDialog = builder.create();
+//
+//                            alertDialog.show();
+//                        }
+                    }
                 return true;
             // back 키를 눌렀을 때 동작
             case android.R.id.home:
@@ -150,13 +161,15 @@ public class Detail extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void setDetailMenuListener(DetailMenuListener listener) {
-        Log.d("debug111", "디테일의 셋리스너");
-        detailMenuListener = listener;
-        if (detailMenuListener != null)
-        Log.d("debug111", "널 아님");
-        else
-            Log.d("debug111", "널");
-
+    public void setBasicListener(DetailMenuListener listener) {
+        this.basicListener = listener;
     }
+
+    public void setFeedListener(DetailMenuListener listener) {
+        this.feedListener = listener;
+    }
+
+//    public void setBasicListener(DetailMenuListener listener) {
+//        this.basicListener = listener;
+//    }
 }
