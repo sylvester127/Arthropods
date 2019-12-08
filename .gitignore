@@ -20,8 +20,8 @@ out/
 release/
 
 # Gradle files
-.gradle/
-build/
+*/.gradle/
+*/build/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -129,10 +129,10 @@ hs_err_pid*
 # Generated files
 
 # Gradle files
-.gradle
+*/.gradle
 
 # Signing files
-.signing/
+*/.signing/
 
 # Local configuration file (sdk path, etc)
 
