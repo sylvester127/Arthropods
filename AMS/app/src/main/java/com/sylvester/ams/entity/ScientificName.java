@@ -1,4 +1,4 @@
-package com.sylvester.ams.model;
+package com.sylvester.ams.entity;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

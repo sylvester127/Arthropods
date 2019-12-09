@@ -2,8 +2,8 @@ package com.sylvester.ams.service;
 
 import android.graphics.Bitmap;
 
-import com.sylvester.ams.model.Arthropod;
-import com.sylvester.ams.model.ScientificName;
+import com.sylvester.ams.entity.Arthropod;
+import com.sylvester.ams.entity.ScientificName;
 
 import java.util.List;
 

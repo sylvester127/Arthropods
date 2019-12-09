@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,7 +18,7 @@ import com.sylvester.ams.R;
 import com.sylvester.ams.controller.detail.Detail;
 import com.sylvester.ams.service.ArthropodService;
 import com.sylvester.ams.service.realm.RealmArthropodService;
-import com.sylvester.ams.model.Arthropod;
+import com.sylvester.ams.entity.Arthropod;
 
 import java.util.ArrayList;
 import java.util.List;

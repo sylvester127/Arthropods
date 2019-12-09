@@ -1,4 +1,4 @@
-package com.sylvester.ams.model;
+package com.sylvester.ams.entity;
 
 import java.util.Date;
 

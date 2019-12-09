@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.model.Arthropod;
-import com.sylvester.ams.model.ScientificName;
+import com.sylvester.ams.entity.Arthropod;
+import com.sylvester.ams.entity.ScientificName;
 import com.sylvester.ams.service.realm.RealmArthropodInfoService;
 import com.sylvester.ams.service.realm.RealmArthropodService;
 

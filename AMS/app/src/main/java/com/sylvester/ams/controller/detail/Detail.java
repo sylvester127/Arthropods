@@ -1,11 +1,9 @@
 package com.sylvester.ams.controller.detail;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,7 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.sylvester.ams.R;
-import com.sylvester.ams.model.Arthropod;
+import com.sylvester.ams.entity.Arthropod;
 import com.sylvester.ams.service.ArthropodService;
 
 public class Detail extends AppCompatActivity {

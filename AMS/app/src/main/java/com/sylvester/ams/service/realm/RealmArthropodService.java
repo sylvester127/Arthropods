@@ -6,8 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.sylvester.ams.controller.list.ArthropodListContext;
-import com.sylvester.ams.model.Arthropod;
-import com.sylvester.ams.model.ScientificName;
+import com.sylvester.ams.entity.Arthropod;
+import com.sylvester.ams.entity.ScientificName;
 import com.sylvester.ams.service.ArthropodService;
 
 import java.io.IOException;
