@@ -13,9 +13,9 @@ public class Arthropod extends RealmObject {
 
     private String imgDir;              // 사진
     private String name;                // 개체이름
-    private int sexCode;                // 성별코드  0:미구분, 1:수, 2:암
+    private String gender;              // 성별: 미구분, 수, 암
     private float size;                 // 개체 크기
-    private int habitCode;              // 개체의 습성   0:배회성, 1:버로우성, 2:나무위성
+    private String habit;               // 개체의 습성: 배회성, 버로우성, 나무위성
     private Date lastFeedDate;          // 마지막 먹이급여 날짜
     private boolean postponeFeed;       // 피딩을 중지
     private int feedingCycle;           // 피딩 사이클
@@ -34,27 +34,27 @@ public class Arthropod extends RealmObject {
 
     // 생성자
     public Arthropod() {
-        this(0, "tarantulaImg.jpg", "", 0, 0, 0, null, false,
-                0, new Date(), "", new Date(), "소유중",
+        this(0, "tarantulaImg.jpg", "", "미구분", 0, "배회성", null,
+                false, 0, new Date(), "", new Date(), "소유중",
                 false, "N1", "", "", null);
     }
 
     public Arthropod(int id, String imgDir, String name) {
-        this(id, imgDir, name, 0, 0, 0, null, false,
+        this(id, imgDir, name, "미구분", 0, "배회성", null, false,
                 0, new Date(), "", new Date(), "소유중",
                 false, "N1", "", "", null);
     }
 
-    public Arthropod(int id, String imgDir, String name, int sexCode, float size, int habitCode,
+    public Arthropod(int id, String imgDir, String name, String gender, float size, String habit,
                      Date lastFeedDate, boolean postponeFeed, int feedingCycle, Date receiveDate,
                      String receivePlace, Date lastRehousingDate, String status, boolean molt,
                      String moltCount, String molt_history, String memo, RealmResults<ScientificName> scientificName) {
         this.id = id;
         this.imgDir = imgDir;
         this.name = name;
-        this.sexCode = sexCode;
+        this.gender = gender;
         this.size = size;
-        this.habitCode = habitCode;
+        this.habit = habit;
         this.lastFeedDate = lastFeedDate;
         this.postponeFeed = postponeFeed;
         this.feedingCycle = feedingCycle;
@@ -96,23 +96,11 @@ public class Arthropod extends RealmObject {
     }
 
     public String getSex() {
-        String sex = "";
-        switch (sexCode) {
-            case 0:
-                sex = "미구분";
-                break;
-            case 1:
-                sex = "수컷";
-                break;
-            case 2:
-                sex = "암컷";
-                break;
-        }
-        return sex;
+        return gender;
     }
 
-    public void setSexCode(int sexCode) {
-        this.sexCode = sexCode;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public float getSize() {
@@ -124,25 +112,11 @@ public class Arthropod extends RealmObject {
     }
 
     public String getHabit() {
-        String habit = "";
-        switch (habitCode) {
-            case 0:
-                habit = "배회성";
-                break;
-            case 1:
-                habit = "버로우성";
-                break;
-            case 2:
-                habit = "나무위성";
-                break;
-            default:
-                break;
-        }
         return habit;
     }
 
-    public void setHabitCode(int habitCode) {
-        this.habitCode = habitCode;
+    public void setHabit(String habit) {
+        this.habit = habit;
     }
 
     public Date getLastFeedDate() {

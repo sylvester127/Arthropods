@@ -16,7 +16,12 @@ import com.sylvester.ams.R;
 import com.sylvester.ams.entity.Arthropod;
 import com.sylvester.ams.service.ArthropodService;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class Detail extends AppCompatActivity {
+    @BindView(R.id.iv_picture) ImageView iv_picture;
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ArthropodService service;
@@ -28,6 +33,7 @@ public class Detail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        ButterKnife.bind(this);
         DetailContext.context = this;
 
         // Custom Toolbar 설정
@@ -41,16 +47,18 @@ public class Detail extends AppCompatActivity {
         int id = intent.getIntExtra("arthropodId", -1);
 
         // 개체 이미지 설정
-        ImageView iv_picture = (ImageView) findViewById(R.id.iv_picture);
         service = DetailContext.getService();
 
-        if (id != -1)
+        if (id != -1) {
             // 넘겨지는 개체의 사진으로 iv_picture 의 이미지를 설정
             DetailContext.arthropod = service.getArthropod(id);
-        else
+            DetailContext.scientificName = DetailContext.arthropod.getScientificName().toString();
+        }
+        else {
             // 넘겨지는 개체 고유 아이디가 없을 경우, 기본 사진으로 대체하여 설정
             DetailContext.arthropod = new Arthropod();
-
+            DetailContext.scientificName = "";
+        }
         iv_picture.setImageBitmap(service.getArthropodImg(DetailContext.arthropod));
     }
 

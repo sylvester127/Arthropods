@@ -1,5 +1,6 @@
 package com.sylvester.ams.controller.detail;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,42 +23,30 @@ import com.sylvester.ams.service.realm.RealmArthropodInfoService;
 import com.sylvester.ams.service.realm.RealmArthropodService;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailBasicInfo extends Fragment {
-    @BindView(R.id.et_name)
-    EditText et_name;                   // 개체이름
-    @BindView(R.id.et_genus)
-    EditText et_genus;                  // 종
-    @BindView(R.id.et_species)
-    EditText et_species;                // 속
-    @BindView(R.id.et_sex)
-    EditText et_sex;                    // 성별
-    @BindView(R.id.et_habit)
-    EditText et_habit;                  // 사육 타입, 활동 방식
-    @BindView(R.id.et_status)
-    EditText et_status;                 // 개체 상태
-    @BindView(R.id.et_receiveDate)
-    EditText et_receiveDate;            // 입양, 브리딩 날짜
-    @BindView(R.id.et_lastRehousingDate)
-    EditText et_lastRehousingDate;      // 마지막 집갈이 날짜
-    @BindView(R.id.et_moltCount)
-    EditText et_moltCount;              // 탈피 횟수
-    @BindView(R.id.et_moltHistory)
-    EditText et_moltHistory;            // 탈피 기록
-    @BindView(R.id.et_memo)
-    EditText et_memo;                   // 메모
-    @BindView(R.id.btn_molt_history)
-    Button btn_molt_history;            // 탈피 기록 추가
+    @BindView(R.id.et_name) EditText et_name;                               // 개체이름
+    @BindView(R.id.et_genus) EditText et_genus;                             // 종
+    @BindView(R.id.et_species) EditText et_species;                         // 속
+    @BindView(R.id.et_sex) EditText et_sex;                                 // 성별
+    @BindView(R.id.et_habit) EditText et_habit;                             // 사육 타입, 활동 방식
+    @BindView(R.id.et_status) EditText et_status;                           // 개체 상태
+    @BindView(R.id.et_receiveDate) EditText et_receiveDate;                 // 입양, 브리딩 날짜
+    @BindView(R.id.et_lastRehousingDate) EditText et_lastRehousingDate;     // 마지막 집갈이 날짜
+    @BindView(R.id.et_moltCount) EditText et_moltCount;                     // 탈피 횟수
+    @BindView(R.id.et_moltHistory) EditText et_moltHistory;                 // 탈피 기록
+    @BindView(R.id.et_memo) EditText et_memo;                               // 메모
+    @BindView(R.id.btn_molt_history) Button btn_molt_history;               // 탈피 기록 추가
 
     private RealmArthropodInfoService infoService;
     private RealmArthropodService service;
     private Arthropod arthropod;
     private ScientificName scientificName;
-    private String genus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,12 +57,10 @@ public class DetailBasicInfo extends Fragment {
         infoService = DetailContext.getInfoService();
         service = DetailContext.getService();
         arthropod = DetailContext.arthropod;
-        genus = "";
 
         // DetailBasicInfo 의 각 content 에 모델을 바인드한다.
         if (arthropod.getScientificName() != null) {
             scientificName = service.getScientificName(arthropod);
-            genus = scientificName.getGenus();
         }
 
         bindModel();
@@ -120,12 +108,25 @@ public class DetailBasicInfo extends Fragment {
         activity.setBasicListener(new DetailMenuListener() {
             @Override
             public void onClickSave(Arthropod arthropod) {
-                Log.d("debug", "basic");
+                arthropod.setName(et_name.getText().toString());
+                DetailContext.scientificName = et_genus.getText().toString();
+                DetailContext.scientificName += " " + et_species.getText().toString();
+
+                arthropod.setGender(et_sex.getText().toString());
+                arthropod.setHabit(et_habit.getText().toString());
+                arthropod.setStatus(et_status.getText().toString());
+                DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+                try {
+                    arthropod.setReceiveDate(format.parse(et_receiveDate.getText().toString()));
+                    arthropod.setLastRehousingDate(format.parse(et_lastRehousingDate.getText().toString()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                arthropod.setMoltCount(et_moltCount.getText().toString());
+                arthropod.setMoltHistory(et_moltHistory.getText().toString());
+                arthropod.setMemo(et_memo.getText().toString());
             }
         });
-
-        Button btn_molt_history = view.findViewById(R.id.btn_molt_history);     // 탈피 기록 추가
-
 
         et_genus.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -145,14 +146,18 @@ public class DetailBasicInfo extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     String title = "Species";
 
-                    showDialog(title, infoService.getSpecies(genus));
+                    String gendus = DetailContext.scientificName.split(" ")[0];
+                    if (gendus.equals(""))
+                        return false;
+
+                    showDialog(title, infoService.getSpecies(gendus));
                 }
                 return false;
             }
         });
     }
 
-    private void showDialog(String title, List<String> scientificName) {
+    private void showDialog(final String title, final List<String> scientificName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         // dialog view 설정
@@ -171,13 +176,26 @@ public class DetailBasicInfo extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.lv_alertdialog_list);
         listView.setAdapter(arrayAdapter);
 
-        AlertDialog alertDialog = builder.create();
+        final AlertDialog alertDialog = builder.create();
 
         builder.setTitle(title);
 
         alertDialog.show();
 
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (title.equals("Genus")) {
+                    et_genus.setText(scientificName.get(i));
+                    DetailContext.scientificName = et_genus.getText().toString();
+                    et_species.setText("");
+                }
+                else {
+                    et_species.setText(scientificName.get(i));
+                    DetailContext.scientificName += " " + et_species.getText().toString();
+                }
+                alertDialog.dismiss();
+            }
+        });
     }
-
 }
