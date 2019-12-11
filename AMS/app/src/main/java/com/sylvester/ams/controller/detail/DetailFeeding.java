@@ -1,5 +1,6 @@
 package com.sylvester.ams.controller.detail;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,67 +15,66 @@ import android.widget.TextView;
 import com.sylvester.ams.R;
 import com.sylvester.ams.entity.Arthropod;
 import com.sylvester.ams.entity.ScientificName;
-import com.sylvester.ams.service.realm.RealmArthropodInfoService;
-import com.sylvester.ams.service.realm.RealmArthropodService;
+import com.sylvester.ams.service.DetailService;
+import com.sylvester.ams.service.realm.RealmDetailService;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailFeeding extends Fragment {
-    private RealmArthropodInfoService infoService;
-    private RealmArthropodService service;
-    private Arthropod arthropod;
-    private ScientificName scientificName;
+    @BindView(R.id.tv_lastFeedDate) TextView tv_lastFeedDate;   // 마지막 피딩일
+    @BindView(R.id.tv_hungry) TextView tv_hungry;               // 굶은 기간
+    @BindView(R.id.cb_postponeFeed) CheckBox cb_postponeFeed;   // 피딩을 중지
+    @BindView(R.id.et_feedingCycle) EditText et_feedingCycle;   // 피딩주기
+    @BindView(R.id.ib_feed) Button ib_feed;                     // 피딩 버튼
+
+    private DetailService service;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_feeding, container, false);
+        ButterKnife.bind(this, view);
 
-        // 리스트에서 받아온 개체정보를 받아온다.
-        infoService = DetailContext.getInfoService();
-        service = DetailContext.getService();
-        arthropod = DetailContext.arthropod;
+        //        ====================================================================
+        service = new RealmDetailService();
 
-        // DetailBasicInfo의 각 content에 모델을 바인드한다.
-        if (arthropod.getScientificName() != null) {
-            scientificName = service.getScientificName(arthropod);
-
-            bindModel(view);
-        }
+        bindModel();
 
         Detail activity = (Detail) getActivity();
         activity.setFeedListener(new DetailMenuListener() {
             @Override
             public void onClickSave(Arthropod arthropod) {
-                Log.d("debug", "feeding");
+                DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
+                try {
+                    arthropod.setLastFeedDate(format.parse(tv_lastFeedDate.getText().toString()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                arthropod.setPostponeFeed(cb_postponeFeed.isChecked());
+                arthropod.setFeedingCycle(Integer.parseInt(et_feedingCycle.getText().toString()));
             }
         });
 
         return view;
     }
 
-    private void bindModel(View view) {
-        TextView tv_lastFeedDate = view.findViewById(R.id.tv_lastFeedDate);              // 마지막 피딩일
-        TextView tv_hungry = view.findViewById(R.id.tv_hungry);                          // 굶은 기간
-        Button ib_feed = view.findViewById(R.id.ib_feed);                                  // 피딩 버튼
-        CheckBox cb_postponeFeed = view.findViewById(R.id.cb_postponeFeed);              // 피딩을 중지
-        EditText et_feedingCycle = view.findViewById(R.id.et_feedingCycle);              // 피딩주기
-
+    private void bindModel() {
         DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
 
-        if (arthropod.getLastFeedDate() != null) {
-            tv_lastFeedDate.setText(format.format(arthropod.getLastFeedDate()));
+        if (DetailContext.arthropod.getLastFeedDate() != null) {
+            tv_lastFeedDate.setText(format.format(DetailContext.arthropod.getLastFeedDate()));
 
-            long days = new Date().getTime() - arthropod.getLastFeedDate().getTime();
+            long days = new Date().getTime() - DetailContext.arthropod.getLastFeedDate().getTime();
             days /= (24 * 60 * 60 * 1000);
             tv_hungry.setText(String.valueOf(days));
         }
 
-        cb_postponeFeed.setChecked(arthropod.isPostponeFeed());
+        cb_postponeFeed.setChecked(DetailContext.arthropod.isPostponeFeed());
 
-        et_feedingCycle.setText(String.valueOf(arthropod.getFeedingCycle()));
-
-        arthropod.getMoltCount();
-//        et_afterMoltPostponeFeed.setText();
+        et_feedingCycle.setText(String.valueOf(DetailContext.arthropod.getFeedingCycle()));
     }
 }

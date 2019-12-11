@@ -43,8 +43,8 @@ public class ContentsPagerAdapter extends FragmentStatePagerAdapter {
                 DetailFeeding feedingFragment = new DetailFeeding();
                 return feedingFragment;
             case 2:
-                DetailBreedingInfo breedingFragment = new DetailBreedingInfo();
-                return breedingFragment;
+                DetailHabitatInfo habitatFragment = new DetailHabitatInfo();
+                return habitatFragment;
             default:
                 return null;
         }

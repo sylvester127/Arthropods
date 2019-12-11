@@ -3,32 +3,43 @@ package com.sylvester.ams.controller.detail;
 import android.content.Context;
 
 import com.sylvester.ams.entity.Arthropod;
+import com.sylvester.ams.entity.ScientificName;
 import com.sylvester.ams.service.realm.RealmArthropodInfoService;
 import com.sylvester.ams.service.realm.RealmArthropodService;
 
 public class DetailContext {
-    private static DetailContext instance;
-    private static RealmArthropodInfoService infoService;
-    private static RealmArthropodService service;
-    public static Arthropod arthropod;
-    public static String scientificName;
     public static Context context;
+    public static Arthropod arthropod;
+    private static String genus;
+    private static String species;
 
-    public static DetailContext getInstance() {
-        if (instance == null)
-            instance = new DetailContext();
-        return instance;
+    public static String getGenus() {
+        return genus;
     }
 
-    public static RealmArthropodInfoService getInfoService() {
-        if (infoService == null)
-            infoService = new RealmArthropodInfoService();
-        return infoService;
+    public static void setGenus(String genus) {
+        DetailContext.genus = genus;
     }
 
-    public static RealmArthropodService getService() {
-        if (service == null)
-            service = new RealmArthropodService();
-        return service;
+    public static void setGenus(Arthropod arthropod) {
+        if (arthropod.getScientificName() == null)
+            DetailContext.genus = "";
+        else
+            DetailContext.genus = arthropod.getScientificName().first().getGenus();
+    }
+
+    public static String getSpecies() {
+        return species;
+    }
+
+    public static void setSpecies(String species) {
+        DetailContext.species = species;
+    }
+
+    public static void setSpecies(Arthropod arthropod) {
+        if (arthropod.getScientificName() == null)
+            DetailContext.species = "";
+        else
+            DetailContext.species = arthropod.getScientificName().first().getSpecies();
     }
 }

@@ -1,10 +1,8 @@
 package com.sylvester.ams.controller.detail;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,9 +16,7 @@ import android.widget.TextView;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.entity.Arthropod;
-import com.sylvester.ams.entity.ScientificName;
-import com.sylvester.ams.service.realm.RealmArthropodInfoService;
-import com.sylvester.ams.service.realm.RealmArthropodService;
+import com.sylvester.ams.service.realm.RealmDetailService;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -43,26 +39,18 @@ public class DetailBasicInfo extends Fragment {
     @BindView(R.id.et_memo) EditText et_memo;                               // 메모
     @BindView(R.id.btn_molt_history) Button btn_molt_history;               // 탈피 기록 추가
 
-    private RealmArthropodInfoService infoService;
-    private RealmArthropodService service;
-    private Arthropod arthropod;
-    private ScientificName scientificName;
+    private RealmDetailService service;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_basic_info, container, false);
         ButterKnife.bind(this, view);
 
+        //        ====================================================================
         // 리스트에서 받아온 개체정보를 받아온다.
-        infoService = DetailContext.getInfoService();
-        service = DetailContext.getService();
-        arthropod = DetailContext.arthropod;
+        service = new RealmDetailService();
 
         // DetailBasicInfo 의 각 content 에 모델을 바인드한다.
-        if (arthropod.getScientificName() != null) {
-            scientificName = service.getScientificName(arthropod);
-        }
-
         bindModel();
 
         addListener(view);
@@ -72,35 +60,28 @@ public class DetailBasicInfo extends Fragment {
 
     private void bindModel() {
         // 개체의 이름
-        et_name.setText(arthropod.getName());
-
-        if (scientificName != null) {
-            // 개체의 종
-            et_genus.setText(scientificName.getGenus());
-            // 개체의 속
-            et_species.setText(scientificName.getSpecies());
-        } else {
-            et_genus.setText("");
-            et_species.setText("");
-        }
-
+        et_name.setText(DetailContext.arthropod.getName());
+        // 개체의 종
+        et_genus.setText(DetailContext.getGenus());
+        // 개체의 속
+        et_species.setText(DetailContext.getSpecies());
         // 개체의 성별
-        et_sex.setText(arthropod.getSex());
+        et_sex.setText(DetailContext.arthropod.getSex());
         // 개체의 사육 타입, 활동 방식
-        et_habit.setText(arthropod.getHabit());
+        et_habit.setText(DetailContext.arthropod.getHabit());
         // 개체 상태
-        et_status.setText(arthropod.getStatus());
+        et_status.setText(DetailContext.arthropod.getStatus());
         // 입양, 브리딩 날짜
         DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
-        et_receiveDate.setText(format.format(arthropod.getReceiveDate()));
+        et_receiveDate.setText(format.format(DetailContext.arthropod.getReceiveDate()));
         // 마지막 집갈이 날짜
-        et_lastRehousingDate.setText(format.format(arthropod.getLastRehousingDate()));
+        et_lastRehousingDate.setText(format.format(DetailContext.arthropod.getLastRehousingDate()));
         // 탈피 횟수
-        et_moltCount.setText(arthropod.getMoltCount());
+        et_moltCount.setText(DetailContext.arthropod.getMoltCount());
         // 탈피 기록
-        et_moltHistory.setText(arthropod.getMoltHistory());
+        et_moltHistory.setText(DetailContext.arthropod.getMoltHistory());
         // 메모
-        et_memo.setText(arthropod.getMemo());
+        et_memo.setText(DetailContext.arthropod.getMemo());
     }
 
     private void addListener(View view) {
@@ -109,9 +90,8 @@ public class DetailBasicInfo extends Fragment {
             @Override
             public void onClickSave(Arthropod arthropod) {
                 arthropod.setName(et_name.getText().toString());
-                DetailContext.scientificName = et_genus.getText().toString();
-                DetailContext.scientificName += " " + et_species.getText().toString();
-
+                DetailContext.setGenus(et_genus.getText().toString());
+                DetailContext.setSpecies(et_species.getText().toString());
                 arthropod.setGender(et_sex.getText().toString());
                 arthropod.setHabit(et_habit.getText().toString());
                 arthropod.setStatus(et_status.getText().toString());
@@ -134,7 +114,7 @@ public class DetailBasicInfo extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     String title = "Genus";
 
-                    showDialog(title, infoService.getGenus());
+                    showDialog(title, service.getGenus());
                 }
                 return false;
             }
@@ -146,11 +126,10 @@ public class DetailBasicInfo extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     String title = "Species";
 
-                    String gendus = DetailContext.scientificName.split(" ")[0];
-                    if (gendus.equals(""))
+                    if (DetailContext.getGenus().equals(""))
                         return false;
 
-                    showDialog(title, infoService.getSpecies(gendus));
+                    showDialog(title, service.getSpecies(DetailContext.getGenus()));
                 }
                 return false;
             }
@@ -187,12 +166,11 @@ public class DetailBasicInfo extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (title.equals("Genus")) {
                     et_genus.setText(scientificName.get(i));
-                    DetailContext.scientificName = et_genus.getText().toString();
+                    DetailContext.setGenus(et_genus.getText().toString());
                     et_species.setText("");
-                }
-                else {
+                } else {
                     et_species.setText(scientificName.get(i));
-                    DetailContext.scientificName += " " + et_species.getText().toString();
+                    DetailContext.setSpecies(et_species.getText().toString());
                 }
                 alertDialog.dismiss();
             }

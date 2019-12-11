@@ -156,7 +156,7 @@ public class RealmArthropodService implements ArthropodService {
         return arthropod;
     }
 
-    // Arthropod 쿼리
+    // ArthropodDao 쿼리
     public void setArthropod(final Arthropod arthropod) {
         Realm realm = RealmContext.getInstance().getRealm();
         realm.executeTransaction(new Realm.Transaction() {

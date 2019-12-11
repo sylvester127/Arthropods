@@ -1,11 +1,14 @@
 package com.sylvester.ams.controller.detail;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -14,7 +17,8 @@ import android.widget.ImageView;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.entity.Arthropod;
-import com.sylvester.ams.service.ArthropodService;
+import com.sylvester.ams.service.DetailService;
+import com.sylvester.ams.service.realm.RealmDetailService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +28,7 @@ public class Detail extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private ArthropodService service;
+    private DetailService service;
     private DetailMenuListener basicListener;
     private DetailMenuListener feedListener;
 //    private DetailMenuListener basicListener;
@@ -34,7 +38,6 @@ public class Detail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-        DetailContext.context = this;
 
         // Custom Toolbar 설정
         initToolbar();
@@ -42,24 +45,24 @@ public class Detail extends AppCompatActivity {
         // TabLayout, ViewPager 설정
         initContentLayout();
 
+//        ====================================================================
+        DetailContext.context = this;
+        service = new RealmDetailService();
+
         // Intent 값을 받아 넘겨지는 개체를 구한다
         Intent intent = getIntent();
         int id = intent.getIntExtra("arthropodId", -1);
 
         // 개체 이미지 설정
-        service = DetailContext.getService();
-
-        if (id != -1) {
-            // 넘겨지는 개체의 사진으로 iv_picture 의 이미지를 설정
+        if (id != -1)
             DetailContext.arthropod = service.getArthropod(id);
-            DetailContext.scientificName = DetailContext.arthropod.getScientificName().toString();
-        }
-        else {
-            // 넘겨지는 개체 고유 아이디가 없을 경우, 기본 사진으로 대체하여 설정
+        else
             DetailContext.arthropod = new Arthropod();
-            DetailContext.scientificName = "";
-        }
-        iv_picture.setImageBitmap(service.getArthropodImg(DetailContext.arthropod));
+
+        DetailContext.setGenus(DetailContext.arthropod);
+        DetailContext.setSpecies(DetailContext.arthropod);
+
+        iv_picture.setImageBitmap(service.getArthropodImage(DetailContext.arthropod.getImgDir()));
     }
 
     private void initToolbar() {
@@ -138,25 +141,25 @@ public class Detail extends AppCompatActivity {
         switch (item.getItemId()) {
             // save 버튼을 눌렀을 때 동작
             case R.id.action_save:
-                    if (basicListener != null && feedListener != null) {
-                        basicListener.onClickSave(DetailContext.arthropod);
-                        feedListener.onClickSave(DetailContext.arthropod);
+                if (basicListener != null && feedListener != null) {
+                    basicListener.onClickSave(DetailContext.arthropod);
+                    feedListener.onClickSave(DetailContext.arthropod);
 
-//                        if (DetailContext.scientificName != null && !DetailContext.scientificName.equals(""))
-//                            service.insertArthropod();
-//                        else {
-//                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                            builder.setMessage("학명을 입력해주세요.");
-//                            builder.setPositiveButton("확인",
-//                                    new DialogInterface.OnClickListener() {
-//                                        public void onClick(DialogInterface dialog, int which) {
-//                                        }
-//                                    });
-//                            AlertDialog alertDialog = builder.create();
-//
-//                            alertDialog.show();
-//                        }
-                    }
+                        if (!DetailContext.getGenus().equals("") && !DetailContext.getSpecies().equals(""))
+                            service.insertArthropod(DetailContext.arthropod, DetailContext.getGenus(), DetailContext.getSpecies());
+                        else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            builder.setMessage("학명을 입력해주세요.");
+                            builder.setPositiveButton("확인",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    });
+                            AlertDialog alertDialog = builder.create();
+
+                            alertDialog.show();
+                        }
+                }
                 return true;
             // back 키를 눌렀을 때 동작
             case android.R.id.home:
