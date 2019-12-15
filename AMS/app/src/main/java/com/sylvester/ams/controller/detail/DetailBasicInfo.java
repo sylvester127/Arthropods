@@ -64,7 +64,7 @@ public class DetailBasicInfo extends Fragment {
         etName.setText(DetailContext.arthropod.getName());
         etGenus.setText(DetailContext.getGenus());
         etSpecies.setText(DetailContext.getSpecies());
-        etGender.setText(DetailContext.arthropod.getSex());
+        etGender.setText(DetailContext.arthropod.getGender());
         etHabit.setText(DetailContext.arthropod.getHabit());
         etStatus.setText(DetailContext.arthropod.getStatus());
         etReceiveDate.setText(format.format(DetailContext.arthropod.getReceiveDate()));

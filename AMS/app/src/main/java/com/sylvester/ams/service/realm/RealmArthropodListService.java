@@ -36,18 +36,9 @@ public class RealmArthropodListService implements ArthropodListService {
     }
 
     @Override
-    public ScientificName getScientificName(Arthropod arthropod) {
-        RealmResults<ScientificName> scientificNames = realm.where(Arthropod.class)
-                .equalTo("id", arthropod.getId()).findFirst().getScientificName();
-        return scientificNames.get(0);
-    }
-
-    @Override
-    public Bitmap getArthropodImg(Arthropod arthropod) {
+    public Bitmap getArthropodImg(String path) {
         Context context = ArthropodListContext.context;
-
         AssetManager am = context.getResources().getAssets();
-        String path = arthropod.getImgDir();
 
         Bitmap bm = null;
 
@@ -81,24 +72,6 @@ public class RealmArthropodListService implements ArthropodListService {
                         "Acanthoscurria").equalTo("species", "geniculata").findFirst();
 
                 scientificName.getArthropods().add(arthropod);
-            }
-        });
-    }
-
-    @Override
-    public Arthropod getArthropod(int id) {
-        Arthropod arthropod = realm.where(Arthropod.class).equalTo("id", id).findFirst();
-
-        return arthropod;
-    }
-
-    // ArthropodDao 쿼리
-    public void setArthropod(final Arthropod arthropod) {
-        Realm realm = RealmContext.getInstance().getRealm();
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealm(arthropod);
             }
         });
     }

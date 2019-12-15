@@ -62,9 +62,9 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RealmRecycler
     @Override
     public void onBindViewHolder(RealmRecyclerViewAdapter.ViewHolder holder, final int position) {
         final Arthropod arthropod = arthropods.get(position);
-        ScientificName scientificName = service.getScientificName(arthropod);
+        ScientificName scientificName = arthropod.getScientificName().first();
         
-        holder.iv_picture.setImageBitmap(service.getArthropodImg(arthropod));
+        holder.iv_picture.setImageBitmap(service.getArthropodImg(arthropod.getImgDir()));
 
         if (arthropod.getName() != null)
             holder.tv_name.setText(arthropod.getName());
@@ -76,7 +76,7 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RealmRecycler
         }
 
         String content = "";
-        content += arthropod.getSex();
+        content += arthropod.getGender();
 
         if (!arthropod.getHabit().equals(""))
             content += ", " + arthropod.getHabit();

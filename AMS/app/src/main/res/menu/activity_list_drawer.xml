@@ -7,15 +7,15 @@
         <item
             android:id="@+id/nav_add"
             android:icon="@drawable/ic_action_note_add"
-            android:title="추가" />
+            android:title="개체 추가" />
+<!--        <item-->
+<!--            android:id="@+id/nav_delete"-->
+<!--            android:icon="@drawable/ic_action_delete"-->
+<!--            android:title="@string/action_delete" />-->
         <item
             android:id="@+id/nav_notifications"
             android:icon="@drawable/ic_alert_notification_important"
             android:title="알림" />
-        <item
-            android:id="@+id/nav_delete"
-            android:icon="@drawable/ic_action_delete"
-            android:title="휴지통" />
     </group>
 
     <group android:id="@+id/grp_setting">

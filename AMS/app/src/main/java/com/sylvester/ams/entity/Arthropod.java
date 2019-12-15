@@ -95,7 +95,7 @@ public class Arthropod extends RealmObject {
         this.name = name;
     }
 
-    public String getSex() {
+    public String getGender() {
         return gender;
     }
 
@@ -127,7 +127,7 @@ public class Arthropod extends RealmObject {
         this.lastFeedDate = lastFeedDate;
     }
 
-    public boolean isPostponeFeed() {
+    public boolean getPostponeFeed() {
         return postponeFeed;
     }
 
@@ -175,7 +175,7 @@ public class Arthropod extends RealmObject {
         this.status = status;
     }
 
-    public boolean isMolt() {
+    public boolean getMolt() {
         return molt;
     }
 

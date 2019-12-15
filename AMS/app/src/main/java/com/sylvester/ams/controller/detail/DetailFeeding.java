@@ -70,7 +70,7 @@ public class DetailFeeding extends Fragment {
             tvHungry.setText(String.valueOf(days));
         }
 
-        cbPostponeFeed.setChecked(DetailContext.arthropod.isPostponeFeed());
+        cbPostponeFeed.setChecked(DetailContext.arthropod.getPostponeFeed());
         etFeedingCycle.setText(String.valueOf(DetailContext.arthropod.getFeedingCycle()));
     }
 }

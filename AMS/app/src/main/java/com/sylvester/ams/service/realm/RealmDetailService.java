@@ -113,8 +113,30 @@ public class RealmDetailService implements DetailService {
     }
 
     @Override
-    public void updateArthropod(int id) {
-
+    public void updateArthropod(final int id, final Arthropod arthropod) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Arthropod currentArthropod = realm.where(Arthropod.class).equalTo("id", id).findFirst();
+                currentArthropod.setGender(arthropod.getGender());
+                currentArthropod.setFeedingCycle(arthropod.getFeedingCycle());
+                currentArthropod.setHabit(arthropod.getHabit());
+                currentArthropod.setImgDir(arthropod.getImgDir());
+                currentArthropod.setLastFeedDate(arthropod.getLastFeedDate());
+                currentArthropod.setLastRehousingDate(arthropod.getLastRehousingDate());
+                currentArthropod.setMemo(arthropod.getMemo());
+                currentArthropod.setMolt(arthropod.getMolt());
+                currentArthropod.setMoltCount(arthropod.getMoltCount());
+                currentArthropod.setMoltHistory(arthropod.getMoltHistory());
+                currentArthropod.setName(arthropod.getName());
+                currentArthropod.setPostponeFeed(arthropod.getPostponeFeed());
+                currentArthropod.setReceiveDate(arthropod.getReceiveDate());
+                currentArthropod.setReceivePlace(arthropod.getReceivePlace());
+                currentArthropod.setRegdate(arthropod.getRegdate());
+                currentArthropod.setSize(arthropod.getSize());
+                currentArthropod.setStatus(arthropod.getStatus());
+            }
+        });
     }
 
     @Override
