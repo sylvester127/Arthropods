@@ -3,9 +3,6 @@ package com.sylvester.ams.controller.detail;
 import android.content.Context;
 
 import com.sylvester.ams.entity.Arthropod;
-import com.sylvester.ams.entity.ScientificName;
-import com.sylvester.ams.service.realm.RealmArthropodInfoService;
-import com.sylvester.ams.service.realm.RealmArthropodService;
 
 public class DetailContext {
     public static Context context;

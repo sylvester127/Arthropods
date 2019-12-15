@@ -72,7 +72,7 @@
             android:text="@string/detail_tv_sex" />
 
         <EditText
-            android:id="@+id/et_sex"
+            android:id="@+id/et_gender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_edit_text"

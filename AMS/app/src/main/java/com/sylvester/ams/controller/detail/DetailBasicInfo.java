@@ -26,18 +26,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailBasicInfo extends Fragment {
-    @BindView(R.id.et_name) EditText et_name;                               // 개체이름
-    @BindView(R.id.et_genus) EditText et_genus;                             // 종
-    @BindView(R.id.et_species) EditText et_species;                         // 속
-    @BindView(R.id.et_sex) EditText et_sex;                                 // 성별
-    @BindView(R.id.et_habit) EditText et_habit;                             // 사육 타입, 활동 방식
-    @BindView(R.id.et_status) EditText et_status;                           // 개체 상태
-    @BindView(R.id.et_receiveDate) EditText et_receiveDate;                 // 입양, 브리딩 날짜
-    @BindView(R.id.et_lastRehousingDate) EditText et_lastRehousingDate;     // 마지막 집갈이 날짜
-    @BindView(R.id.et_moltCount) EditText et_moltCount;                     // 탈피 횟수
-    @BindView(R.id.et_moltHistory) EditText et_moltHistory;                 // 탈피 기록
-    @BindView(R.id.et_memo) EditText et_memo;                               // 메모
-    @BindView(R.id.btn_molt_history) Button btn_molt_history;               // 탈피 기록 추가
+    @BindView(R.id.et_name) EditText etName;                               // 개체이름
+    @BindView(R.id.et_genus) EditText etGenus;                             // 종
+    @BindView(R.id.et_species) EditText etSpecies;                         // 속
+    @BindView(R.id.et_gender) EditText etGender;                           // 성별
+    @BindView(R.id.et_habit) EditText etHabit;                             // 사육 타입, 활동 방식
+    @BindView(R.id.et_status) EditText etStatus;                           // 개체 상태
+    @BindView(R.id.et_receiveDate) EditText etReceiveDate;                 // 입양, 브리딩 날짜
+    @BindView(R.id.et_lastRehousingDate) EditText etLastRehousingDate;     // 마지막 집갈이 날짜
+    @BindView(R.id.et_moltCount) EditText etMoltCount;                     // 탈피 횟수
+    @BindView(R.id.et_moltHistory) EditText etMoltHistory;                 // 탈피 기록
+    @BindView(R.id.et_memo) EditText etMemo;                               // 메모
+    @BindView(R.id.btn_molt_history) Button btnMoltHistory;                // 탈피 기록 추가
 
     private RealmDetailService service;
 
@@ -59,29 +59,19 @@ public class DetailBasicInfo extends Fragment {
     }
 
     private void bindModel() {
-        // 개체의 이름
-        et_name.setText(DetailContext.arthropod.getName());
-        // 개체의 종
-        et_genus.setText(DetailContext.getGenus());
-        // 개체의 속
-        et_species.setText(DetailContext.getSpecies());
-        // 개체의 성별
-        et_sex.setText(DetailContext.arthropod.getSex());
-        // 개체의 사육 타입, 활동 방식
-        et_habit.setText(DetailContext.arthropod.getHabit());
-        // 개체 상태
-        et_status.setText(DetailContext.arthropod.getStatus());
-        // 입양, 브리딩 날짜
         DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
-        et_receiveDate.setText(format.format(DetailContext.arthropod.getReceiveDate()));
-        // 마지막 집갈이 날짜
-        et_lastRehousingDate.setText(format.format(DetailContext.arthropod.getLastRehousingDate()));
-        // 탈피 횟수
-        et_moltCount.setText(DetailContext.arthropod.getMoltCount());
-        // 탈피 기록
-        et_moltHistory.setText(DetailContext.arthropod.getMoltHistory());
-        // 메모
-        et_memo.setText(DetailContext.arthropod.getMemo());
+
+        etName.setText(DetailContext.arthropod.getName());
+        etGenus.setText(DetailContext.getGenus());
+        etSpecies.setText(DetailContext.getSpecies());
+        etGender.setText(DetailContext.arthropod.getSex());
+        etHabit.setText(DetailContext.arthropod.getHabit());
+        etStatus.setText(DetailContext.arthropod.getStatus());
+        etReceiveDate.setText(format.format(DetailContext.arthropod.getReceiveDate()));
+        etLastRehousingDate.setText(format.format(DetailContext.arthropod.getLastRehousingDate()));
+        etMoltCount.setText(DetailContext.arthropod.getMoltCount());
+        etMoltHistory.setText(DetailContext.arthropod.getMoltHistory());
+        etMemo.setText(DetailContext.arthropod.getMemo());
     }
 
     private void addListener(View view) {
@@ -89,26 +79,26 @@ public class DetailBasicInfo extends Fragment {
         activity.setBasicListener(new DetailMenuListener() {
             @Override
             public void onClickSave(Arthropod arthropod) {
-                arthropod.setName(et_name.getText().toString());
-                DetailContext.setGenus(et_genus.getText().toString());
-                DetailContext.setSpecies(et_species.getText().toString());
-                arthropod.setGender(et_sex.getText().toString());
-                arthropod.setHabit(et_habit.getText().toString());
-                arthropod.setStatus(et_status.getText().toString());
+                arthropod.setName(etName.getText().toString());
+                DetailContext.setGenus(etGenus.getText().toString());
+                DetailContext.setSpecies(etSpecies.getText().toString());
+                arthropod.setGender(etGender.getText().toString());
+                arthropod.setHabit(etHabit.getText().toString());
+                arthropod.setStatus(etStatus.getText().toString());
                 DateFormat format = DateFormat.getDateInstance(DateFormat.FULL);
                 try {
-                    arthropod.setReceiveDate(format.parse(et_receiveDate.getText().toString()));
-                    arthropod.setLastRehousingDate(format.parse(et_lastRehousingDate.getText().toString()));
+                    arthropod.setReceiveDate(format.parse(etReceiveDate.getText().toString()));
+                    arthropod.setLastRehousingDate(format.parse(etLastRehousingDate.getText().toString()));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                arthropod.setMoltCount(et_moltCount.getText().toString());
-                arthropod.setMoltHistory(et_moltHistory.getText().toString());
-                arthropod.setMemo(et_memo.getText().toString());
+                arthropod.setMoltCount(etMoltCount.getText().toString());
+                arthropod.setMoltHistory(etMoltHistory.getText().toString());
+                arthropod.setMemo(etMemo.getText().toString());
             }
         });
 
-        et_genus.setOnTouchListener(new View.OnTouchListener() {
+        etGenus.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -120,7 +110,7 @@ public class DetailBasicInfo extends Fragment {
             }
         });
 
-        et_species.setOnTouchListener(new View.OnTouchListener() {
+        etSpecies.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -165,12 +155,12 @@ public class DetailBasicInfo extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (title.equals("Genus")) {
-                    et_genus.setText(scientificName.get(i));
-                    DetailContext.setGenus(et_genus.getText().toString());
-                    et_species.setText("");
+                    etGenus.setText(scientificName.get(i));
+                    DetailContext.setGenus(etGenus.getText().toString());
+                    etSpecies.setText("");
                 } else {
-                    et_species.setText(scientificName.get(i));
-                    DetailContext.setSpecies(et_species.getText().toString());
+                    etSpecies.setText(scientificName.get(i));
+                    DetailContext.setSpecies(etSpecies.getText().toString());
                 }
                 alertDialog.dismiss();
             }

@@ -13,20 +13,20 @@ import com.sylvester.ams.R;
 import com.sylvester.ams.entity.Arthropod;
 import com.sylvester.ams.controller.detail.Detail;
 import com.sylvester.ams.entity.ScientificName;
-import com.sylvester.ams.service.ArthropodService;
-import com.sylvester.ams.service.realm.RealmArthropodService;
+import com.sylvester.ams.service.ArthropodListService;
+import com.sylvester.ams.service.realm.RealmArthropodListService;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RealmRecyclerViewAdapter.ViewHolder> {
     private ArrayList<Arthropod> arthropods;
-    ArthropodService service;
+    private ArthropodListService service;
 
     // 생성자
     public RealmRecyclerViewAdapter(ArrayList<Arthropod> arthropods) {
         this.arthropods = arthropods;
-        service = new RealmArthropodService();
+        service = new RealmArthropodListService();
     }
 
     // 아이템 뷰를 저장하는 뷰홀더 클래스
@@ -99,6 +99,7 @@ public class RealmRecyclerViewAdapter extends RecyclerView.Adapter<RealmRecycler
                 Intent intent = new Intent(view.getContext(), Detail.class);
                 intent.putExtra("arthropodId", arthropod.getId());
                 view.getContext().startActivity(intent);
+                ArthropodListContext.activity.finish();
             }
         });
     }

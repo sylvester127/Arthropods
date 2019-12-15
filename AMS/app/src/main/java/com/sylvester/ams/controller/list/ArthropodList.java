@@ -16,8 +16,8 @@ import android.view.MenuItem;
 
 import com.sylvester.ams.R;
 import com.sylvester.ams.controller.detail.Detail;
-import com.sylvester.ams.service.ArthropodService;
-import com.sylvester.ams.service.realm.RealmArthropodService;
+import com.sylvester.ams.service.ArthropodListService;
+import com.sylvester.ams.service.realm.RealmArthropodListService;
 import com.sylvester.ams.entity.Arthropod;
 
 import java.util.ArrayList;
@@ -26,12 +26,12 @@ import java.util.List;
 public class ArthropodList extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private List<Arthropod> arthropodArrayList = new ArrayList<>();
-    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        ArthropodListContext.activity = this;
         ArthropodListContext.context = this;
 
         // Toolbar를 생성한다.
@@ -66,7 +66,7 @@ public class ArthropodList extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // RecyclerView의 리스트에 아무것도 들어있지 않는다면, 샘플을 생성한다.
-        ArthropodService service = new RealmArthropodService();
+        ArthropodListService service = new RealmArthropodListService();
 
         if (service.getArthropods().isEmpty()) {
             service.insertSample();

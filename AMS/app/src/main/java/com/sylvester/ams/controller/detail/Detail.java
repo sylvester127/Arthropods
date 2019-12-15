@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.sylvester.ams.R;
+import com.sylvester.ams.controller.list.ArthropodList;
 import com.sylvester.ams.entity.Arthropod;
 import com.sylvester.ams.service.DetailService;
 import com.sylvester.ams.service.realm.RealmDetailService;
@@ -31,7 +32,6 @@ public class Detail extends AppCompatActivity {
     private DetailService service;
     private DetailMenuListener basicListener;
     private DetailMenuListener feedListener;
-//    private DetailMenuListener basicListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +127,6 @@ public class Detail extends AppCompatActivity {
     // ToolBar 에 menu.xml 을 인플레이트함
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.detail, menu);
         return true;
     }
@@ -145,8 +144,12 @@ public class Detail extends AppCompatActivity {
                     basicListener.onClickSave(DetailContext.arthropod);
                     feedListener.onClickSave(DetailContext.arthropod);
 
-                        if (!DetailContext.getGenus().equals("") && !DetailContext.getSpecies().equals(""))
+                        if (!DetailContext.getGenus().equals("") && !DetailContext.getSpecies().equals("")) {
                             service.insertArthropod(DetailContext.arthropod, DetailContext.getGenus(), DetailContext.getSpecies());
+                            Intent intent = new Intent(this, ArthropodList.class);
+                            startActivity(intent);
+                            finish();
+                        }
                         else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(this);
                             builder.setMessage("학명을 입력해주세요.");
@@ -161,6 +164,11 @@ public class Detail extends AppCompatActivity {
                         }
                 }
                 return true;
+            case R.id.action_delete:
+                service.deleteArthropod(DetailContext.arthropod.getId());
+                Intent intent = new Intent(this, ArthropodList.class);
+                startActivity(intent);
+                finish();
             // back 키를 눌렀을 때 동작
             case android.R.id.home:
                 finish();
@@ -177,8 +185,4 @@ public class Detail extends AppCompatActivity {
     public void setFeedListener(DetailMenuListener listener) {
         this.feedListener = listener;
     }
-
-//    public void setBasicListener(DetailMenuListener listener) {
-//        this.basicListener = listener;
-//    }
 }

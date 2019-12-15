@@ -84,6 +84,12 @@ public class RealmDetailService implements DetailService {
     }
 
     @Override
+    public ScientificName getScientificName(final int arthropodId) {
+        return realm.where(Arthropod.class).equalTo("id", arthropodId).findFirst().
+                getScientificName().first();
+    }
+
+    @Override
     public void insertArthropod(final Arthropod arthropod, final String genus, final String species) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
@@ -112,7 +118,12 @@ public class RealmDetailService implements DetailService {
     }
 
     @Override
-    public void deleteArthropod(int id) {
-
+    public void deleteArthropod(final int id) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.where(Arthropod.class).equalTo("id", id).findFirst().deleteFromRealm();
+            }
+        });
     }
 }
