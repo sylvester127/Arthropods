@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import com.sylvester.ams.controller.title.TitleContext;
 import com.sylvester.ams.entity.Habitat;
 import com.sylvester.ams.entity.ScientificName;
-import com.sylvester.ams.service.ArthropodInfoService;
+import com.sylvester.ams.service.TitleService;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,10 +17,10 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
-public class RealmArthropodInfoService implements ArthropodInfoService {
+public class RealmTitleService implements TitleService {
     private Realm realm;
 
-    public RealmArthropodInfoService() {
+    public RealmTitleService() {
         realm = RealmContext.getInstance().getRealm();
     }
 
@@ -70,37 +70,5 @@ public class RealmArthropodInfoService implements ArthropodInfoService {
                 editor.commit();
             }
         });
-    }
-
-    @Override
-    public List<String> getGenus() {
-        List<ScientificName> scientificNames = new ArrayList<>();
-        List<String> genus = new ArrayList<>();
-        Set<String> tempList = new LinkedHashSet<>();
-
-        RealmResults<ScientificName> results = realm.where(ScientificName.class).findAll();
-        scientificNames.addAll(realm.copyFromRealm(results));
-
-        for (ScientificName s : scientificNames)
-            tempList.add(s.getGenus());
-
-        genus.addAll(tempList);
-
-        return genus;
-    }
-
-    @Override
-    public List<String> getSpecies(String genus) {
-        List<ScientificName> scientificNames = new ArrayList<>();
-        List<String> species = new ArrayList<>();
-
-        RealmResults<ScientificName> results = realm.where(ScientificName.class)
-                .equalTo("genus", genus).findAll();
-        scientificNames.addAll(realm.copyFromRealm(results));
-
-        for (ScientificName s : scientificNames)
-            species.add(s.getSpecies());
-
-        return species;
     }
 }

@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.sylvester.ams.service.ArthropodInfoService;
-import com.sylvester.ams.service.realm.RealmArthropodInfoService;
+import com.sylvester.ams.service.TitleService;
+import com.sylvester.ams.service.realm.RealmTitleService;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -76,7 +76,7 @@ public class UpdateAsync extends AsyncTask<Void, Void, Boolean> {
     protected void onPostExecute(Boolean updateComplete) {
         super.onPostExecute(updateComplete);
 
-        ArthropodInfoService service= new RealmArthropodInfoService();
+        TitleService service= new RealmTitleService();
         service.insertArthropodInfo(habitats, scientificNames);
 
         updateDialog.dismiss();
