@@ -3,6 +3,8 @@ package com.sylvester.ams.controller.detail;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,6 +42,23 @@ public class DetailBasicInfo extends Fragment {
     @BindView(R.id.btn_molt_history) Button btnMoltHistory;                // 탈피 기록 추가
 
     private RealmDetailService service;
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (DetailContext.editData != 0)
+                DetailContext.editData = 2;
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,6 +73,7 @@ public class DetailBasicInfo extends Fragment {
         bindModel();
 
         addListener(view);
+
 
         return view;
     }
@@ -124,6 +144,35 @@ public class DetailBasicInfo extends Fragment {
                 return false;
             }
         });
+
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        etName.addTextChangedListener(textWatcher);
+        etGenus.addTextChangedListener(textWatcher);
+        etSpecies.addTextChangedListener(textWatcher);
+        etGender.addTextChangedListener(textWatcher);
+        etHabit.addTextChangedListener(textWatcher);
+        etStatus.addTextChangedListener(textWatcher);
+        etReceiveDate.addTextChangedListener(textWatcher);
+        etLastRehousingDate.addTextChangedListener(textWatcher);
+        etMoltCount.addTextChangedListener(textWatcher);
+        etMoltHistory.addTextChangedListener(textWatcher);
+        etMemo.addTextChangedListener(textWatcher);
     }
 
     private void showDialog(final String title, final List<String> scientificName) {

@@ -10,5 +10,6 @@ import java.util.List;
 public interface ArthropodListService {
     List<Arthropod> getArthropods();
     Bitmap getArthropodImg(String path);
+    ScientificName getScientificName(int arthropodId);
     void insertSample();
 }

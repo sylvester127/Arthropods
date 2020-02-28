@@ -128,8 +128,8 @@ public class ArthropodList extends AppCompatActivity
                 break;
             case R.id.nav_notifications:
                 break;
-            case R.id.nav_delete:
-                break;
+//            case R.id.nav_delete:
+//                break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_help:

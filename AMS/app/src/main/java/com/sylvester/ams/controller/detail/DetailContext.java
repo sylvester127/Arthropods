@@ -1,12 +1,14 @@
 package com.sylvester.ams.controller.detail;
 
 import android.content.Context;
+import android.text.TextWatcher;
 
 import com.sylvester.ams.entity.Arthropod;
 
 public class DetailContext {
     public static Context context;
     public static Arthropod arthropod;
+    public static int editData;
     private static String genus;
     private static String species;
 

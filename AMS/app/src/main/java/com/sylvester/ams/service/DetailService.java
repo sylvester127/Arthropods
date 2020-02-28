@@ -14,6 +14,6 @@ public interface DetailService {
     List<String> getSpecies(String genus);
     ScientificName getScientificName(int arthropodId);
     void insertArthropod(Arthropod arthropod, String genus, String species);
-    void updateArthropod(int id, Arthropod arthropod);
+    void updateArthropod(Arthropod arthropod, String genus, String species);
     void deleteArthropod(int id);
 }

@@ -54,6 +54,12 @@ public class RealmArthropodListService implements ArthropodListService {
     }
 
     @Override
+    public ScientificName getScientificName(int arthropodId) {
+        return realm.where(Arthropod.class).equalTo("id", arthropodId).findFirst().
+                getScientificName().first();
+    }
+
+    @Override
     public void insertSample() {
         realm.executeTransaction(new Realm.Transaction() {
             @Override

@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -25,7 +24,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class Detail extends AppCompatActivity {
-    @BindView(R.id.iv_picture) ImageView iv_picture;
+    @BindView(R.id.iv_picture)
+    ImageView iv_picture;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -47,6 +47,7 @@ public class Detail extends AppCompatActivity {
 
 //        ====================================================================
         DetailContext.context = this;
+        DetailContext.editData = 0;
         service = new RealmDetailService();
 
         // Intent 값을 받아 넘겨지는 개체를 구한다
@@ -54,9 +55,10 @@ public class Detail extends AppCompatActivity {
         int id = intent.getIntExtra("arthropodId", -1);
 
         // 개체 이미지 설정
-        if (id != -1)
+        if (id != -1) {
             DetailContext.arthropod = service.getArthropod(id);
-        else
+            DetailContext.editData = 1;
+        } else
             DetailContext.arthropod = new Arthropod();
 
         DetailContext.setGenus(DetailContext.arthropod);
@@ -144,24 +146,33 @@ public class Detail extends AppCompatActivity {
                     basicListener.onClickSave(DetailContext.arthropod);
                     feedListener.onClickSave(DetailContext.arthropod);
 
-                        if (!DetailContext.getGenus().equals("") && !DetailContext.getSpecies().equals("")) {
-                            service.insertArthropod(DetailContext.arthropod, DetailContext.getGenus(), DetailContext.getSpecies());
-                            Intent intent = new Intent(this, ArthropodList.class);
-                            startActivity(intent);
-                            finish();
+                    if (!DetailContext.getGenus().equals("") && !DetailContext.getSpecies().equals("")) {
+                        switch (DetailContext.editData) {
+                            case 0:
+                                service.insertArthropod(DetailContext.arthropod, DetailContext.getGenus(), DetailContext.getSpecies());
+                                break;
+                            case 1:
+                                return true;
+                            case 2:
+                                service.updateArthropod(DetailContext.arthropod, DetailContext.getGenus(), DetailContext.getSpecies());
+                                break;
                         }
-                        else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                            builder.setMessage("학명을 입력해주세요.");
-                            builder.setPositiveButton("확인",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                        }
-                                    });
-                            AlertDialog alertDialog = builder.create();
 
-                            alertDialog.show();
-                        }
+                        Intent intent = new Intent(this, ArthropodList.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setMessage("학명을 입력해주세요.");
+                        builder.setPositiveButton("확인",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                });
+                        AlertDialog alertDialog = builder.create();
+
+                        alertDialog.show();
+                    }
                 }
                 return true;
             case R.id.action_delete:
@@ -169,7 +180,7 @@ public class Detail extends AppCompatActivity {
                 Intent intent = new Intent(this, ArthropodList.class);
                 startActivity(intent);
                 finish();
-            // back 키를 눌렀을 때 동작
+                // back 키를 눌렀을 때 동작
             case android.R.id.home:
                 finish();
                 return true;
